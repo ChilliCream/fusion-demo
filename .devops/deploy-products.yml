@@ -13,7 +13,8 @@ pool:
 stages:
   - stage: Build
     jobs:
-      - job: 'Subgraph Configuration'
+      - job: SubgraphConfiguration
+        displayName: 'Subgraph Configuration'
         steps:
           - checkout: self
           - task: UseDotNet@2
@@ -42,7 +43,8 @@ stages:
               targetPath: './Subgraphs/Products/products.fsp'
               artifact: 'products.fsp'
               publishLocation: 'pipeline'
-      - job: 'Subgraph Container'
+      - job: SubgraphContainer
+        displayName: 'Subgraph Container'
         steps:
           - checkout: self
           - task: Docker@2
@@ -55,7 +57,8 @@ stages:
 
   - stage: Development
     jobs: 
-      - deployment: 'Deploy Subgraph'
+      - deployment: DeploySubgraph
+        displayName: 'Deploy Subgraph'
         environment: Development
         strategy:
           runOnce:
@@ -105,8 +108,8 @@ stages:
                   publishLocation: 'pipeline'
   - stage: Production
     jobs: 
-      - deployment: 'Deploy Subgraph'
-        environment: Production
+      - deployment: DeploySubgraph
+        displayName: 'Deploy Subgraph'
         strategy:
           runOnce:
             deploy:
