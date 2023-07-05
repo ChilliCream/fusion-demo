@@ -16,3 +16,4 @@ steps:
       repository: 'shop-gateway'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
+      buildContext: './Gateway'
