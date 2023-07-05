@@ -110,6 +110,7 @@ stages:
     jobs: 
       - deployment: DeploySubgraph
         displayName: 'Deploy Subgraph'
+        environment: Production
         strategy:
           runOnce:
             deploy:
