@@ -16,6 +16,7 @@ steps:
         dotnet tool restore
         dotnet run --project ./Subgraphs/Accounts -- schema export --output schema.graphql
         dotnet fusion subgraph pack -w ./Subgraphs/Accounts
+      failOnStderr: true
   - task: CmdLine@2
     displayName: 'Begin Accounts Subgraph Deployment'
     inputs:
@@ -28,6 +29,7 @@ steps:
         dotnet barista fusion-configuration download --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
         echo dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
         dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
+      failOnStderr: true
   - task: Docker@2
     displayName: 'Build Accounts Subgraph Container'
     inputs:
@@ -45,5 +47,5 @@ steps:
   - task: CmdLine@2
     displayName: 'Complete Accounts Subgraph Deployment'
     inputs:
-      script: |
-        dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp
+      script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp'
+      failOnStderr: true
