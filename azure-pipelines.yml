@@ -9,9 +9,6 @@ steps:
     inputs:
       packageType: 'sdk'
       useGlobalJson: true
-  - task: DotNetCoreCLI@2
+  - task: CmdLine@2
     inputs:
-      command: 'custom'
-      custom: 'publish'
-      arguments: '--os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags $(Version)'
-      workingDirectory: './Gateway'
+      script: dotnet publish --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags 1.0.1
