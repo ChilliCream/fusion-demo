@@ -20,7 +20,11 @@ steps:
       script: |
         echo dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
         dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
-        dotnet barista fusion-configuration barista fusion-configuration download --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
+        echo dotnet barista fusion-configuration publish start
+        dotnet barista fusion-configuration publish start
+        echo dotnet barista fusion-configuration download --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
+        dotnet barista fusion-configuration download --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
+        echo dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
         dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
   - task: Docker@2
     displayName: 'Build Accounts Subgraph Container'
