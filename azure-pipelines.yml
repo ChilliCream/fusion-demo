@@ -11,5 +11,4 @@ steps:
       useGlobalJson: true
   - task: CmdLine@2
     inputs:
-      script: 'dotnet publish --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags 1.0.1'
-      workingDirectory: './Gateway'
+      script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=1.0.1'
