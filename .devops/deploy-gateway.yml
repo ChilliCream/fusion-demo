@@ -18,6 +18,6 @@ steps:
     displayName: 'Publiush Gateway Container'
     inputs:
       containerRegistry: 'Fusion Demo Registry'
-      repository: 'shop-gateway'
+      repository: 'chillicream/shop-gateway'
       command: 'push'
       tags: '$(Version)'
