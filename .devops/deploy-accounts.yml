@@ -1,5 +1,11 @@
 trigger:
-- main
+  branches:
+   include:
+     - master
+  paths:
+    include:
+      - /Subgraphs/Accounts
+      - /.devops/deploy-accounts.yml
 
 pool:
   vmImage: ubuntu-latest

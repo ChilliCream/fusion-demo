@@ -1,5 +1,11 @@
 trigger:
-- main
+  branches:
+   include:
+     - master
+  paths:
+    include:
+      - /Gateway
+      - /.devops/deploy-gateway.yml
 
 pool:
   vmImage: ubuntu-latest

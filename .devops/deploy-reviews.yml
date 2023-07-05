@@ -1,5 +1,11 @@
 trigger:
-- main
+  branches:
+   include:
+     - master
+  paths:
+    include:
+      - /Subgraphs/Reviews
+      - /.devops/deploy-reviews.yml
 
 pool:
   vmImage: ubuntu-latest
