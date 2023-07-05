@@ -10,12 +10,14 @@ steps:
       packageType: 'sdk'
       useGlobalJson: true
   - task: CmdLine@2
+    displayName: 'Export Accounts Subgraph Schema'
     inputs:
       script: |
         dotnet tool restore
         dotnet run --project ./Subgraphs/Accounts -- schema export --output schema.graphql
         dotnet fusion subgraph pack -w ./Subgraphs/Accounts
   - task: CmdLine@2
+    displayName: 'Begin Accounts Subgraph Deployment'
     inputs:
       script: |
         echo dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
@@ -41,6 +43,7 @@ steps:
       containerAppName: 'accounts-subgraph'
       resourceGroup: 'ccc-fusion-us'
   - task: CmdLine@2
+    displayName: 'Complete Accounts Subgraph Deployment'
     inputs:
       script: |
         dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp
