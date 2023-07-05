@@ -6,6 +6,7 @@ pool:
 
 steps:
   - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
     inputs:
       packageType: 'sdk'
       useGlobalJson: true
