@@ -87,7 +87,7 @@ stages:
                 inputs:
                   azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
                   imageToDeploy: 'cccfusionusshop.azurecr.io/products-subgraph:$(Build.BuildId)'
-                  containerAppName: 'products-subgraph'
+                  containerAppName: 'products-subgraph-dev'
                   resourceGroup: 'ccc-fusion-us'
               - task: CmdLine@2
                 displayName: 'Complete Subgraph Deployment'
