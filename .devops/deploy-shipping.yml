@@ -122,7 +122,7 @@ stages:
                   script: |
                     dotnet tool restore
                     dotnet fusion subgraph config set http --url $(SubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/shipping.fsp
-                    dotnet barista fusion-configuration publish begin --tag shipping-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name shipping --stage dev --api-key $(BaristaApiKey)
+                    dotnet barista fusion-configuration publish begin --tag shipping-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name shipping --stage prod --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage prod --output-file ./gateway.fgp --api-key $(BaristaApiKey)
                     dotnet fusion compose -p ./gateway.fgp -s $(System.ArtifactsDirectory)/subgraph --enable-nodes
