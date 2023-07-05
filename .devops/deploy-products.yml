@@ -25,6 +25,12 @@ steps:
         dotnet fusion subgraph config set http --url $(SubgraphUrl) -w ./Subgraphs/Products
         dotnet fusion subgraph pack -w ./Subgraphs/Products
       failOnStderr: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'Upload schema.graphql'
+    inputs:
+      targetPath: './Subgraphs/Products/schema.graphql'
+      artifact: 'schema.graphql'
+      publishLocation: 'pipeline'
   - task: Docker@2
     displayName: 'Build Products Subgraph Container'
     inputs:
@@ -53,3 +59,9 @@ steps:
     inputs:
       script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp --api-key $(BaristaApiKey)'
       failOnStderr: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'Upload Gateway Configuration'
+    inputs:
+      targetPath: './gateway.fgp'
+      artifact: 'schema.graphql'
+      publishLocation: 'pipeline'
