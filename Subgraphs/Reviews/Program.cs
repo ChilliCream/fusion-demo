@@ -11,12 +11,7 @@ builder.Services
     .AddTypes()
     .AddGlobalObjectIdentification()
     .AddMutationConventions()
-    .AddInMemorySubscriptions(
-        new SubscriptionOptions
-        {
-            TopicBufferCapacity = 64,
-            TopicBufferFullMode = TopicBufferFullMode.DropOldest
-        })
+    .AddInMemorySubscriptions()
     .RegisterDbContext<ReviewContext>();
 
 var app = builder.Build();
