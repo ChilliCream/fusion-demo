@@ -1,0 +1,3 @@
+extend type Query {
+    productById(id: ID! @is(field: "id")): Product!
+}
