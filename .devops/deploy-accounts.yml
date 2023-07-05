@@ -22,8 +22,8 @@ steps:
     displayName: 'Begin Accounts Subgraph Deployment'
     inputs:
       script: |
-        echo dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
-        dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
+        echo dotnet barista fusion-configuration publish begin --tag accounts-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
+        dotnet barista fusion-configuration publish begin --tag accounts-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
         echo dotnet barista fusion-configuration publish start
         dotnet barista fusion-configuration publish start
         echo dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
