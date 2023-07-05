@@ -44,5 +44,5 @@ steps:
   - task: CmdLine@2
     displayName: 'Complete Accounts Subgraph Deployment'
     inputs:
-      script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp'
+      script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp --api-key $(BaristaApiKey)'
       failOnStderr: true
