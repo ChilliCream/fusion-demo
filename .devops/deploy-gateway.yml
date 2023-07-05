@@ -13,11 +13,10 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Gateway Container'
     inputs:
-      script: |
-        dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=$(Version)
+      script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=$(Version)'
   - task: AzureContainerApps@1
     inputs:
       azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-      imageToDeploy: 'chillicream/shop-gateway:latest'
+      imageToDeploy: 'chillicream/shop-gateway:$(Version)'
       containerAppName: 'shop-gateway'
       resourceGroup: 'ccc-fusion-us'
