@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ContainerImageName>chillicream/shop-gateway</ContainerImageName>
+    <AssemblyName>Gateway</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
