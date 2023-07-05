@@ -10,13 +10,9 @@ steps:
     inputs:
       packageType: 'sdk'
       useGlobalJson: true
-  - task: CmdLine@2
-    displayName: 'Build Gateway Container'
+  - task: Docker@2
     inputs:
-      script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=$(Version)'
-  - task: AzureContainerApps@1
-    inputs:
-      azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-      imageToDeploy: 'chillicream/shop-gateway:$(Version)'
-      containerAppName: 'shop-gateway'
-      resourceGroup: 'ccc-fusion-us'
+      containerRegistry: 'Fusion Demo Registry'
+      repository: 'shop-gateway'
+      command: 'buildAndPush'
+      Dockerfile: '**/Dockerfile'
