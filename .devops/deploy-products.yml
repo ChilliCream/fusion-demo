@@ -6,6 +6,7 @@ trigger:
     include:
       - Subgraphs/Products
       - .devops/deploy-products.yml
+      - .config
 
 pool:
   vmImage: ubuntu-latest

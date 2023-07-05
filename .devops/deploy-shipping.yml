@@ -6,6 +6,7 @@ trigger:
     include:
       - Subgraphs/Shipping
       - .devops/deploy-shipping.yml
+      - .config
 
 pool:
   vmImage: ubuntu-latest
