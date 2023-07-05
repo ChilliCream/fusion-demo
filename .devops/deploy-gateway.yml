@@ -4,8 +4,8 @@ trigger:
      - master
   paths:
     include:
-      - /Gateway
-      - /.devops/deploy-gateway.yml
+      - Gateway
+      - .devops/deploy-gateway.yml
 
 pool:
   vmImage: ubuntu-latest
