@@ -25,6 +25,13 @@ steps:
         dotnet fusion subgraph config set http --url $(SubgraphUrl) -w ./Subgraphs/Accounts
         dotnet fusion subgraph pack -w ./Subgraphs/Accounts
       failOnStderr: true
+  - task: Docker@2
+    displayName: 'Build Accounts Subgraph Container'
+    inputs:
+      containerRegistry: 'Fusion Demo Registry'
+      repository: 'accounts-subgraph'
+      command: 'buildAndPush'
+      Dockerfile: './Subgraphs/Accounts/dockerfile'
   - task: CmdLine@2
     displayName: 'Begin Accounts Subgraph Deployment'
     inputs:
@@ -34,13 +41,6 @@ steps:
         dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
         dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
       failOnStderr: true
-  - task: Docker@2
-    displayName: 'Build Accounts Subgraph Container'
-    inputs:
-      containerRegistry: 'Fusion Demo Registry'
-      repository: 'accounts-subgraph'
-      command: 'buildAndPush'
-      Dockerfile: './Subgraphs/Accounts/dockerfile'
   - task: AzureContainerApps@1
     displayName: 'Deploy Accounts Subgraph Container'
     inputs:
