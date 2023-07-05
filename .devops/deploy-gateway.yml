@@ -15,5 +15,4 @@ steps:
       containerRegistry: 'Fusion Demo Registry'
       repository: 'shop-gateway'
       command: 'buildAndPush'
-      Dockerfile: '**/Dockerfile'
-      buildContext: './Gateway'
+      Dockerfile: './Gateway/dockerfile'
