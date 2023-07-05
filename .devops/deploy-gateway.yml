@@ -6,14 +6,18 @@ pool:
 
 steps:
   - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
     inputs:
       packageType: 'sdk'
       useGlobalJson: true
   - task: CmdLine@2
+    displayName: 'Build Gateway Container'
     inputs:
-      script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=1.0.1'
+      script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=$(Version)'
   - task: Docker@2
+    displayName: 'Publiush Gateway Container'
     inputs:
       containerRegistry: 'Fusion Demo Registry'
       repository: 'shop-gateway'
       command: 'push'
+      tags: '$(Version)'
