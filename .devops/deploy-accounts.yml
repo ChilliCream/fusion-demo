@@ -5,6 +5,21 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      useGlobalJson: true
+  - task: CmdLine@2
+    inputs:
+      script: |
+        dotnet tool restore
+        dotnet restore ./Subgraphs/Accounts
+        dotnet run --project ./Subgraphs/Accounts -- schema export --output schema.graphql
+        dotnet fusion subgraph pack -w ./Subgraphs/Accounts
+        dotnet barista fusion-configuration publish begin --tag reviews-1.0.0 --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
+        dotnet barista fusion-configuration barista fusion-configuration download --api-id QXBpCmcyOGVhZWE0NWFlODg0ODExODIzMmQ3YTM5NTRkZTljZA== --stage dev --output-file gateway.fgp --api-key $(BaristaApiKey)
+        dotnet fusion compose -p ./gateway -s ./Subgraphs/Accounts --enable-nodes
+        dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp
   - task: Docker@2
     displayName: 'Build Accounts Subgraph Container'
     inputs:
