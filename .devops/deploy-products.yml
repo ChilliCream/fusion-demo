@@ -67,5 +67,5 @@ stages:
           displayName: 'Upload Gateway Configuration'
           inputs:
             targetPath: './gateway.fgp'
-            artifact: 'schema.graphql'
+            artifact: 'gateway.fgp'
             publishLocation: 'pipeline'
