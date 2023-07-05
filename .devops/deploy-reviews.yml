@@ -4,8 +4,8 @@ trigger:
      - main
   paths:
     include:
-      - /Subgraphs/Reviews
-      - /.devops/deploy-reviews.yml
+      - Subgraphs/Reviews
+      - .devops/deploy-reviews.yml
 
 pool:
   vmImage: ubuntu-latest

@@ -4,8 +4,8 @@ trigger:
      - main
   paths:
     include:
-      - /Subgraphs/Accounts
-      - /.devops/deploy-accounts.yml
+      - Subgraphs/Accounts
+      - .devops/deploy-accounts.yml
 
 pool:
   vmImage: ubuntu-latest
