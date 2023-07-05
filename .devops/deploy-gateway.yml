@@ -16,3 +16,9 @@ steps:
       repository: 'shop-gateway'
       command: 'buildAndPush'
       Dockerfile: './Gateway/dockerfile'
+  - task: AzureContainerApps@1
+    inputs:
+      azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
+      imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
+      containerAppName: 'shop-gateway'
+      resourceGroup: 'ccc-fusion-us'
