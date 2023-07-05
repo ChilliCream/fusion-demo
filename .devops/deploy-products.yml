@@ -24,7 +24,7 @@ stages:
               packageType: 'sdk'
               useGlobalJson: true
           - task: CmdLine@2
-            displayName: 'Export Products Subgraph Schema'
+            displayName: 'Create Subgraph Configuration'
             inputs:
               script: |
                 dotnet tool restore
@@ -42,7 +42,7 @@ stages:
         steps:
           - checkout: self
           - task: Docker@2
-            displayName: 'Build Products Subgraph Container'
+            displayName: 'Build Subgraph Container'
             inputs:
               containerRegistry: 'Fusion Demo Registry'
               repository: 'products-subgraph'
@@ -65,14 +65,14 @@ stages:
                   packageType: 'sdk'
                   useGlobalJson: true
               - task: DownloadBuildArtifacts@1
+                displayName: 'Download Subgraph Configuration'
                 inputs:
                   buildType: 'current'
                   downloadType: 'single'
                   artifactName: 'SubgraphConfig'
                   downloadPath: '$(System.ArtifactsDirectory)/subgraph'
-                  cleanDestinationFolder: true
               - task: CmdLine@2
-                displayName: 'Begin Products Subgraph Deployment'
+                displayName: 'Begin Subgraph Deployment'
                 inputs:
                   script: |
                     dotnet tool restore
@@ -83,14 +83,14 @@ stages:
                     dotnet fusion compose -p ./gateway.fgp -s $(System.ArtifactsDirectory)/subgraph --enable-nodes
                   failOnStderr: true
               - task: AzureContainerApps@1
-                displayName: 'Deploy Products Subgraph Container'
+                displayName: 'Deploy Subgraph Container'
                 inputs:
                   azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
                   imageToDeploy: 'cccfusionusshop.azurecr.io/products-subgraph:$(Build.BuildId)'
                   containerAppName: 'products-subgraph'
                   resourceGroup: 'ccc-fusion-us'
               - task: CmdLine@2
-                displayName: 'Complete Products Subgraph Deployment'
+                displayName: 'Complete Subgraph Deployment'
                 inputs:
                   script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp --api-key $(BaristaApiKey)'
                   failOnStderr: true
@@ -110,14 +110,14 @@ stages:
                   packageType: 'sdk'
                   useGlobalJson: true
               - task: DownloadBuildArtifacts@1
+                displayName: 'Download Subgraph Configuration'
                 inputs:
                   buildType: 'current'
                   downloadType: 'single'
                   artifactName: 'SubgraphConfig'
                   downloadPath: '$(System.ArtifactsDirectory)/subgraph'
-                  cleanDestinationFolder: true
               - task: CmdLine@2
-                displayName: 'Begin Products Subgraph Deployment'
+                displayName: 'Begin Subgraph Deployment'
                 inputs:
                   script: |
                     dotnet tool restore
@@ -128,14 +128,14 @@ stages:
                     dotnet fusion compose -p ./gateway.fgp -s $(System.ArtifactsDirectory)/subgraph --enable-nodes
                   failOnStderr: true
               - task: AzureContainerApps@1
-                displayName: 'Deploy Products Subgraph Container'
+                displayName: 'Deploy Subgraph Container'
                 inputs:
                   azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
                   imageToDeploy: 'cccfusionusshop.azurecr.io/products-subgraph:$(Build.BuildId)'
                   containerAppName: 'products-subgraph'
                   resourceGroup: 'ccc-fusion-us'
               - task: CmdLine@2
-                displayName: 'Complete Products Subgraph Deployment'
+                displayName: 'Complete Subgraph Deployment'
                 inputs:
                   script: 'dotnet barista fusion-configuration publish commit --configuration ./gateway.fgp --api-key $(BaristaApiKey)'
                   failOnStderr: true
