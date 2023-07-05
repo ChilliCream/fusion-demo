@@ -59,6 +59,11 @@ stages:
             deploy:
               steps:
               - checkout: self
+              - task: UseDotNet@2
+                displayName: 'Install .NET SDK'
+                inputs:
+                  packageType: 'sdk'
+                  useGlobalJson: true
               - task: DownloadBuildArtifacts@1
                 inputs:
                   buildType: 'current'
