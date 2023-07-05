@@ -12,3 +12,8 @@ steps:
   - task: CmdLine@2
     inputs:
       script: 'dotnet publish ./Gateway --os linux --arch x64 /t:PublishContainer -c Release /p:ContainerImageTags=1.0.1'
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Fusion Demo Registry'
+      repository: 'shop-gateway'
+      command: 'push'
