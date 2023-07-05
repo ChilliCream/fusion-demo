@@ -16,6 +16,7 @@ steps:
       script: |
         dotnet tool restore
         dotnet run --project ./Subgraphs/Accounts -- schema export --output schema.graphql
+        dotnet fusion subgraph config set http --url $(SubgraphUrl) -w ./Subgraphs/Accounts
         dotnet fusion subgraph pack -w ./Subgraphs/Accounts
       failOnStderr: true
   - task: CmdLine@2
