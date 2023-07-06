@@ -1,5 +1,3 @@
-using HotChocolate.Subscriptions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
