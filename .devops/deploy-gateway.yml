@@ -11,25 +11,50 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - task: Docker@2
-    displayName: 'Build Gateway Container'
-    inputs:
-      containerRegistry: 'Fusion Demo Registry'
-      repository: 'shop-gateway'
-      command: 'buildAndPush'
-      Dockerfile: './Gateway/dockerfile'
-  - task: AzureContainerApps@1
-    displayName: 'Deploy Gateway Container to Dev'
-    inputs:
-      azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-      imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
-      containerAppName: 'shop-gateway-dev'
-      resourceGroup: 'ccc-fusion-us'
-  - task: AzureContainerApps@1
-    displayName: 'Deploy Gateway Container to Prod'
-    inputs:
-      azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-      imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
-      containerAppName: 'shop-gateway'
-      resourceGroup: 'ccc-fusion-us'
+stages:
+  - stage: Build
+    jobs:
+      - job: Container
+        displayName: 'Build Containers'
+        steps:
+          - task: Docker@2
+            displayName: 'Build Gateway Container'
+            inputs:
+              containerRegistry: 'Fusion Demo Registry'
+              repository: 'shop-gateway'
+              command: 'buildAndPush'
+              Dockerfile: './Gateway/dockerfile'
+      - job: Dev
+        displayName: 'Deploy Dev Containers'
+        steps:
+          - task: AzureContainerApps@1
+            displayName: 'Deploy Gateway Container to Dev'
+            inputs:
+              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
+              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
+              containerAppName: 'shop-gateway-dev'
+              resourceGroup: 'ccc-fusion-us'
+          - task: AzureContainerApps@1
+            displayName: 'Deploy Gateway Container to Dev EU'
+            inputs:
+              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
+              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
+              containerAppName: 'shop-gateway-dev-eu'
+              resourceGroup: 'ccc-fusion-us'
+      - job: Prod
+        displayName: 'Deploy Prod Containers'
+        steps:
+          - task: AzureContainerApps@1
+            displayName: 'Deploy Gateway Container to Prod'
+            inputs:
+              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
+              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
+              containerAppName: 'shop-gateway'
+              resourceGroup: 'ccc-fusion-us'
+          - task: AzureContainerApps@1
+            displayName: 'Deploy Gateway Container to Prod-EU'
+            inputs:
+              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
+              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
+              containerAppName: 'shop-gateway-eu'
+              resourceGroup: 'ccc-fusion-us'
