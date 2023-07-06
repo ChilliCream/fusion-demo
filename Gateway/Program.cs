@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors();
+
 builder.Services.AddHttpClient();
 builder.Services.AddWebSocketClient();
 
@@ -16,6 +18,10 @@ builder.Services
     });
 
 var app = builder.Build();
+
+app.UseWebSockets();
+
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapGraphQL();
 
