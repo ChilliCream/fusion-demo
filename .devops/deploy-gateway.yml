@@ -26,6 +26,7 @@ stages:
               Dockerfile: './Gateway/dockerfile'
       - job: Dev
         displayName: 'Deploy Dev Containers'
+        dependsOn: Container
         steps:
           - task: AzureContainerApps@1
             displayName: 'Deploy Gateway Container to Dev'
@@ -43,6 +44,7 @@ stages:
               resourceGroup: 'ccc-fusion-us'
       - job: Prod
         displayName: 'Deploy Prod Containers'
+        dependsOn: Container
         steps:
           - task: AzureContainerApps@1
             displayName: 'Deploy Gateway Container to Prod'
