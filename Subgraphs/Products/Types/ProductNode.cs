@@ -3,8 +3,6 @@ namespace Demo.Products.Types;
 [ExtendObjectType<Product>]
 public static class ProductNode
 {
-    public static string Foo => "Hello";
-
     [DataLoader]
     internal static async Task<IReadOnlyDictionary<int, Product>> GetProductByIdAsync(
         IReadOnlyList<int> ids,
