@@ -76,7 +76,7 @@ stages:
                 inputs:
                   script: |
                     dotnet tool restore
-                    dotnet fusion subgraph config set http --url $(DevSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp
+                    dotnet fusion subgraph config set http --url $(DevEuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp
                     dotnet barista fusion-configuration publish begin --tag accounts-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage dev --output-file ./gateway.fgp --api-key $(BaristaApiKey)
@@ -87,8 +87,8 @@ stages:
                 inputs:
                   azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
                   imageToDeploy: 'cccfusionusshop.azurecr.io/accounts-subgraph:$(Build.BuildId)'
-                  containerAppName: 'accounts-subgraph-dev'
-                  resourceGroup: 'ccc-fusion-us'
+                  containerAppName: 'accounts-subgraph-dev-eu'
+                  resourceGroup: 'ccc-fusion-eu'
               - task: CmdLine@2
                 displayName: 'Complete Subgraph Deployment'
                 inputs:
@@ -121,7 +121,7 @@ stages:
                 inputs:
                   script: |
                     dotnet tool restore
-                    dotnet fusion subgraph config set http --url $(SubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp
+                    dotnet fusion subgraph config set http --url $(EuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp
                     dotnet barista fusion-configuration publish begin --tag accounts-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name accounts --stage prod --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage prod --output-file ./gateway.fgp --api-key $(BaristaApiKey)
@@ -132,8 +132,8 @@ stages:
                 inputs:
                   azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
                   imageToDeploy: 'cccfusionusshop.azurecr.io/accounts-subgraph:$(Build.BuildId)'
-                  containerAppName: 'accounts-subgraph'
-                  resourceGroup: 'ccc-fusion-us'
+                  containerAppName: 'accounts-subgraph-eu'
+                  resourceGroup: 'ccc-fusion-eu'
               - task: CmdLine@2
                 displayName: 'Complete Subgraph Deployment'
                 inputs:
