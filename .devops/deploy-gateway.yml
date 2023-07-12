@@ -29,13 +29,6 @@ stages:
         dependsOn: Container
         steps:
           - task: AzureContainerApps@1
-            displayName: 'Deploy Gateway Container to Dev'
-            inputs:
-              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
-              containerAppName: 'shop-gateway-dev'
-              resourceGroup: 'ccc-fusion-us'
-          - task: AzureContainerApps@1
             displayName: 'Deploy Gateway Container to Dev EU'
             inputs:
               azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
@@ -46,13 +39,6 @@ stages:
         displayName: 'Deploy Prod Containers'
         dependsOn: Container
         steps:
-          - task: AzureContainerApps@1
-            displayName: 'Deploy Gateway Container to Prod'
-            inputs:
-              azureSubscription: 'MVP Credits(621759a8-3784-47fa-b2a9-b69c462fce44)'
-              imageToDeploy: 'cccfusionusshop.azurecr.io/shop-gateway:$(Build.BuildId)'
-              containerAppName: 'shop-gateway'
-              resourceGroup: 'ccc-fusion-us'
           - task: AzureContainerApps@1
             displayName: 'Deploy Gateway Container to Prod-EU'
             inputs:
