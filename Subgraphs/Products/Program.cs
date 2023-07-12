@@ -8,7 +8,28 @@ builder.Services
     .AddGraphQLServer()
     .AddTypes()
     .AddGlobalObjectIdentification()
-    .RegisterDbContext<ProductContext>();
+    .RegisterDbContext<ProductContext>()
+    .AddInstrumentation(o => o.RenameRootActivity = true);
+
+builder.Services
+    .AddOpenTelemetry()
+    .ConfigureResource(b => b.AddService("Products-Subgraph", "Demo", Env.Version))
+    .WithTracing(
+        b =>
+        {
+            b.AddHttpClientInstrumentation();
+            b.AddAspNetCoreInstrumentation();
+            b.AddHotChocolateInstrumentation();
+            b.AddOtlpExporter();
+        })
+    .WithMetrics(
+        b =>
+        {
+            b.AddHttpClientInstrumentation();
+            b.AddAspNetCoreInstrumentation();
+            b.AddOtlpExporter();
+        });
+
 
 var app = builder.Build();
 
