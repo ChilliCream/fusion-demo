@@ -24,6 +24,7 @@
     <PackageReference Include="HotChocolate.AspNetCore" Version="13.4.0-preview.4" />
     <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.4.0-preview.4" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.4.0-preview.4" />
+    <PackageReference Include="HotChocolate.Diagnostics" Version="13.4.0-preview.4" />
     <PackageReference Include="HotChocolate.Types.Analyzers" Version="13.4.0-preview.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -34,6 +35,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+
+    <PackageReference Include="OpenTelemetry.Api" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.4" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.14" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.6" />
   </ItemGroup>
 
 </Project>

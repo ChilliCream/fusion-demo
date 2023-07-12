@@ -9,13 +9,6 @@ builder.Services
         o => o.UseSqlite("Data Source=product.db"));
 
 builder.Services
-    .AddGraphQLServer()
-    .AddTypes()
-    .AddGlobalObjectIdentification()
-    .RegisterDbContext<ProductContext>()
-    .AddInstrumentation(o => o.RenameRootActivity = true);
-
-builder.Services
     .AddOpenTelemetry()
     .ConfigureResource(b => b.AddService("Products-Subgraph", "Demo", Env.Version))
     .WithTracing(
@@ -34,6 +27,12 @@ builder.Services
             b.AddOtlpExporter();
         });
 
+builder.Services
+    .AddGraphQLServer()
+    .AddTypes()
+    .AddGlobalObjectIdentification()
+    .RegisterDbContext<ProductContext>()
+    .AddInstrumentation(o => o.RenameRootActivity = true);
 
 var app = builder.Build();
 

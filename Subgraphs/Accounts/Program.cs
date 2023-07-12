@@ -1,3 +1,7 @@
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
@@ -5,10 +9,30 @@ builder.Services
         o => o.UseSqlite("Data Source=account.db"));
 
 builder.Services
+    .AddOpenTelemetry()
+    .ConfigureResource(b => b.AddService("Products-Subgraph", "Demo", Env.Version))
+    .WithTracing(
+        b =>
+        {
+            b.AddHttpClientInstrumentation();
+            b.AddAspNetCoreInstrumentation();
+            b.AddHotChocolateInstrumentation();
+            b.AddOtlpExporter();
+        })
+    .WithMetrics(
+        b =>
+        {
+            b.AddHttpClientInstrumentation();
+            b.AddAspNetCoreInstrumentation();
+            b.AddOtlpExporter();
+        });
+
+builder.Services
     .AddGraphQLServer()
     .AddTypes()
     .AddGlobalObjectIdentification()
-    .RegisterDbContext<AccountContext>();
+    .RegisterDbContext<AccountContext>()
+    .AddInstrumentation(o => o.RenameRootActivity = true);
 
 var app = builder.Build();
 
