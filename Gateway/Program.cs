@@ -24,14 +24,7 @@ builder.Services
 
 builder.Services
     .AddOpenTelemetry()
-    .ConfigureResource(
-        b => 
-            b.AddService("Shop-Gateway", "Demo", config.Version)
-                .AddAttributes(
-                    new KeyValuePair<string, object>[]
-                    {
-                        new("deployment.environment", config.Stage),
-                    }))
+    .ConfigureResource(b => b.AddService("Shop-Gateway", "Demo", config.Version))
     .WithTracing(
         b =>
         {
