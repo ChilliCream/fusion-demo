@@ -3,6 +3,8 @@ namespace Demo.Reviews.Types;
 [ExtendObjectType<Review>(IgnoreProperties = new[] { nameof(Review.AuthorId), nameof(Review.ProductId) })]
 internal static class ReviewNode
 {
+    public static string Foo() => "Bar";
+
     public static Product GetProduct(
         [Parent] Review review)
         => new(review.ProductId);

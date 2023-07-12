@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32.SafeHandles;
-
-namespace Demo.Reviews.Types;
+﻿namespace Demo.Reviews.Types;
 
 [QueryType]
 public static class Query
