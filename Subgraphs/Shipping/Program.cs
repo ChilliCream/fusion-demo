@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddOpenTelemetry()
-    .ConfigureResource(b => b.AddService("Products-Subgraph", "Demo", Env.Version))
+    .ConfigureResource(b => b.AddService("Shipping-Subgraph", "Demo", Env.Version))
     .WithTracing(
         b =>
         {

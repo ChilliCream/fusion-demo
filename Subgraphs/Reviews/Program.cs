@@ -10,7 +10,7 @@ builder.Services
 
 builder.Services
     .AddOpenTelemetry()
-    .ConfigureResource(b => b.AddService("Products-Subgraph", "Demo", Env.Version))
+    .ConfigureResource(b => b.AddService("Reviews-Subgraph", "Demo", Env.Version))
     .WithTracing(
         b =>
         {
