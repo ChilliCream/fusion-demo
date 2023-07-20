@@ -30,6 +30,7 @@ builder.Services
 builder.Services
     .AddGraphQLServer()
     .AddTypes()
+    .AddUploadType()
     .AddGlobalObjectIdentification()
     .AddMutationConventions()
     .RegisterDbContext<ProductContext>()
