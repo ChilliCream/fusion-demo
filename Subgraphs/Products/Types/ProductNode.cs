@@ -23,7 +23,9 @@ public static class ProductNode
         };
     }
 
-    public static Uri? GetPictureUrl([Parent] Product product, IHttpContextAccessor httpContextAccessor)
+    public static Uri? GetPictureUrl(
+        [Parent] Product product, 
+        [Service] IHttpContextAccessor httpContextAccessor)
     {
         var context = httpContextAccessor.HttpContext;
         return product.PictureFileName is null ? null  : new Uri($"{context!.Request.Scheme}://{context!.Request.Host}/images/{product.PictureFileName}");

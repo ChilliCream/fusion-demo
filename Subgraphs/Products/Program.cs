@@ -5,6 +5,9 @@ using OpenTelemetry.Trace;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddHttpContextAccessor();
+
+builder.Services
     .AddDbContextPool<ProductContext>(
         o => o.UseSqlite("Data Source=product.db"));
 
