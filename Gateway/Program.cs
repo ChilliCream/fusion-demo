@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
 
-builder.Services.AddHttpClient().AddHeaderPropagation();
+builder.Services.AddHttpClient("subgraphs").AddHeaderPropagation();
 builder.Services.AddWebSocketClient();
 builder.Services.AddHeaderPropagation(c =>
 {
