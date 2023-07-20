@@ -14,4 +14,6 @@ public class Product
 
     [Required]
     public int Weight { get; set; }
+
+    public string? PictureFileName { get; set; }
 }

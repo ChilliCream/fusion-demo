@@ -31,6 +31,7 @@ builder.Services
     .AddGraphQLServer()
     .AddTypes()
     .AddGlobalObjectIdentification()
+    .AddMutationConventions()
     .RegisterDbContext<ProductContext>()
     .AddInstrumentation(o => o.RenameRootActivity = true);
 

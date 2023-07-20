@@ -1,4 +1,6 @@
-﻿namespace Demo.Products.Types;
+﻿using System.Diagnostics;
+
+namespace Demo.Products.Types;
 
 [QueryType]
 public static class Query
