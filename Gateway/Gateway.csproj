@@ -14,12 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Build.Containers" Version="7.0.305" />
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="7.0.9" />
 
-    <PackageReference Include="HotChocolate.AspNetCore" Version="13.4.0-preview.10" />
-    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.4.0-preview.10" />
-    <PackageReference Include="HotChocolate.Diagnostics" Version="13.4.0-preview.10" />
-    <PackageReference Include="HotChocolate.Fusion" Version="13.4.0-preview.10" />
-    <PackageReference Include="HotChocolate.Types.Analyzers" Version="13.4.0-preview.10">
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.4.0-preview.14" />
+    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.4.0-preview.14" />
+    <PackageReference Include="HotChocolate.Diagnostics" Version="13.4.0-preview.14" />
+    <PackageReference Include="HotChocolate.Fusion" Version="13.4.0-preview.14" />
+    <PackageReference Include="HotChocolate.Types.Analyzers" Version="13.4.0-preview.14">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

@@ -7,8 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient().AddHeaderPropagation();
 builder.Services.AddWebSocketClient();
+builder.Services.AddHeaderPropagation(c =>
+{
+    c.Headers.Add("GraphQL-Preflight");
+    c.Headers.Add("Authorization");
+});
 
 builder.Services
     .AddFusionGatewayServer()
@@ -46,6 +51,8 @@ var app = builder.Build();
 app.UseWebSockets();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+app.UseHeaderPropagation();
 
 app.MapGraphQL();
 
