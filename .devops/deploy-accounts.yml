@@ -76,7 +76,7 @@ stages:
                 inputs:
                   script: |
                     dotnet tool restore
-                    dotnet fusion subgraph config set http --url $(DevEuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp
+                    dotnet fusion subgraph config set http --url $(DevEuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/accounts.fsp --client-name subgraphs
                     dotnet barista fusion-configuration publish begin --tag accounts-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name accounts --stage dev --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage dev --output-file ./Gateway/gateway.fgp --api-key $(BaristaApiKey)
