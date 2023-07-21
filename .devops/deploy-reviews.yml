@@ -76,7 +76,7 @@ stages:
                 inputs:
                   script: |
                     dotnet tool restore
-                    dotnet fusion subgraph config set http --url $(DevEuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/reviews.fsp --client-name subgraphs
+                    dotnet fusion subgraph config set http --url $(DevEuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/reviews.fsp
                     dotnet barista fusion-configuration publish begin --tag reviews-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name reviews --stage dev --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage dev --output-file ./Gateway/gateway.fgp --api-key $(BaristaApiKey)
@@ -121,7 +121,7 @@ stages:
                 inputs:
                   script: |
                     dotnet tool restore
-                    dotnet fusion subgraph config set http --url $(EuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/reviews.fsp --client-name subgraphs
+                    dotnet fusion subgraph config set http --url $(EuSubgraphUrl) -c $(System.ArtifactsDirectory)/subgraph/reviews.fsp
                     dotnet barista fusion-configuration publish begin --tag reviews-$(Build.BuildId) --api-id $(BaristaApiId) --subgraph-name reviews --stage prod --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration publish start --api-key $(BaristaApiKey)
                     dotnet barista fusion-configuration download --api-id $(BaristaApiId) --stage prod --output-file ./Gateway/gateway.fgp --api-key $(BaristaApiKey)
