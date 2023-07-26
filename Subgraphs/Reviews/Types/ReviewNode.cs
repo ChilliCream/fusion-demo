@@ -38,4 +38,6 @@ internal static class ReviewNode
 
         return reviews.ToLookup(t => t.AuthorId);
     }
+
+    public static string FooBarBaz => "FooBarBaz";
 }
