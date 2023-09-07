@@ -13,24 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Build.Containers" Version="7.0.305" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="7.0.9" />
-
-    <PackageReference Include="BananaCakePop.Services" Version="1.2.0-preview.4" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="13.5.0-preview.6" />
-    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.5.0-preview.6" />
-    <PackageReference Include="HotChocolate.Diagnostics" Version="13.5.0-preview.6" />
-    <PackageReference Include="HotChocolate.Fusion" Version="13.5.0-preview.6" />
-
-    <PackageReference Include="OpenTelemetry.Api" Version="1.4.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.4.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.4" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.14" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.4.0" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="0.5.0-beta.2" />
+    <PackageReference Include="BananaCakePop.Services" Version="1.2.0-preview.9" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.6.0-preview.9" />
+    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.6.0-preview.9" />
+    <PackageReference Include="HotChocolate.Fusion" Version="13.6.0-preview.9" />
+    <PackageReference Include="HotChocolate.Diagnostics" Version="13.6.0-preview.9" />
   </ItemGroup>
 
 </Project>

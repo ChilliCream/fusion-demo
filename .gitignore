@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.fsp
 .DS_Store
 .mono
+.idea
