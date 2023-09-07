@@ -399,3 +399,4 @@ FodyWeavers.xsd
 *.fgp
 *.fsp
 .DS_Store
+.mono
