@@ -1,9 +1,3 @@
-extend type Query {
-  productById(id: ID! @is(field: "id")): Product
-  productBySlug(slug: String! @is(field: "slug")): Product
-    @map(select: "product(slug: $slug) { id: productId }")
-}
-
 extend type Product {
   deliveryEstimate(
     size: Int! @require(field: "dimension { size }")
