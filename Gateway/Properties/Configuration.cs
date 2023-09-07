@@ -1,4 +1,4 @@
-public sealed class Configuration
+public static class App
 {
-    public string Version { get; } = typeof(Configuration).Assembly.GetName().Version?.ToString() ?? "0.0.0";
+    public static string Version { get; } = typeof(App).Assembly.GetName().Version?.ToString() ?? "0.0.0";
 }
