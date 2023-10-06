@@ -22,13 +22,7 @@ builder.Services
 
 builder.Services
     .AddFusionGatewayServer()
-    .ConfigureFromCloud(
-        b =>
-        {
-            b.ApiId = config.ApiId;
-            b.ApiKey = config.ApiKey;
-            b.Stage = config.Stage;
-        })
+    .ConfigureFromFile("gateway.fgp")
     .CoreBuilder
     .AddInstrumentation(o => o.RenameRootActivity = true);
 

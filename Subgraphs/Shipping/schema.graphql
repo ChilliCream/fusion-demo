@@ -1,0 +1,17 @@
+schema {
+  query: Query
+}
+
+type DeliveryEstimate {
+  min: Int!
+  max: Int!
+}
+
+type Product {
+  deliveryEstimate(zip: String! weight: Int! size: Int!): DeliveryEstimate!
+  id: ID!
+}
+
+type Query {
+  productById(id: ID!): Product!
+}
