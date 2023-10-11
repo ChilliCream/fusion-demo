@@ -33,4 +33,6 @@ public static class Query
 
     public static Product GetProductById([ID<Product>] int id)
         => new Product(id);
+
+    public static string More => "more";
 }
