@@ -3,17 +3,11 @@
   "isRoot": true,
   "tools": {
     "hotchocolate.fusion.commandline": {
-      "version": "13.6.0-preview.9",
+      "version": "16.0.0-p.4.4",
       "commands": [
         "fusion"
-      ]
-    },
-    "barista": {
-      "version": "1.4.4",
-      "commands": [
-        "Barista"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }
-
