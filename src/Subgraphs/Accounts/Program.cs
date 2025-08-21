@@ -9,11 +9,10 @@ builder
 builder
     .AddGraphQL(Env.AccountApi)
     .AddSubgraphDefaults()
-    .AddTypes();
+    .AddTypes()
+    .InitializeOnStartup(AccountContext.SeedDataAsync);
 
 var app = builder.Build();
-
-await DatabaseHelper.SeedDatabaseAsync(app);
 
 app.MapGraphQL();
 

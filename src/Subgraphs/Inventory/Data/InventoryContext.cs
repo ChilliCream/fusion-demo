@@ -1,10 +1,6 @@
 namespace Demo.Inventory.Data;
 
-public class InventoryContext : DbContext
+public class InventoryContext(DbContextOptions options) : DbContext(options)
 {
-    public InventoryContext(DbContextOptions options) : base(options)
-    {
-    }
-
     public DbSet<InventoryItem> Inventory => Set<InventoryItem>();
 }
