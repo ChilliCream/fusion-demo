@@ -1,19 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddDbContextPool<InventoryContext>(o => o.UseSqlite("Data Source=inventory.db"));
+builder
+    .AddServiceDefaults(Env.InventoryApi, Env.Version)
+    .AddNpgsqlDbContext<InventoryContext>(Env.InventoryDb);
 
-builder.AddServiceDefaults("Inventory-Subgraph", Env.Version);
-
-builder.Services
-    .AddGraphQLServer()
-    .AddTypes()
-    .AddUploadType()
-    .AddGraphQLDefaults();
+builder
+    .AddGraphQL(Env.InventoryApi)
+    .AddSubgraphDefaults()
+    .AddInventoryTypes()
+    .InitializeOnStartup(InventoryContext.SeedDatabaseAsync);
 
 var app = builder.Build();
-
-await DatabaseHelper.SeedDatabaseAsync(app);
 
 app.MapGraphQL();
 

@@ -30,6 +30,7 @@ public class AccountContext(DbContextOptions options) : DbContext(options)
                     Birthdate = new DateTime(1912, 06, 23),
                     Username = "@alan"
                 });
+
             await context.SaveChangesAsync(cancellationToken);
         }
     }

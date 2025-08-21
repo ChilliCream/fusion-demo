@@ -1,15 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .AddNpgsqlDbContext<AccountContext>(Env.AccountApi);
-
-builder
-    .AddServiceDefaults(Env.AccountApi, Env.Version);
+    .AddServiceDefaults(Env.AccountApi, Env.Version)
+    .AddNpgsqlDbContext<AccountContext>(Env.AccountDb);
 
 builder
     .AddGraphQL(Env.AccountApi)
     .AddSubgraphDefaults()
-    .AddTypes()
+    .AddAccountTypes()
     .InitializeOnStartup(AccountContext.SeedDataAsync);
 
 var app = builder.Build();

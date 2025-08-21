@@ -1,11 +1,9 @@
 namespace Demo.Inventory.Types;
 
-[ExtendObjectType<InventoryItem>]
-public static class InventoryItemNode
+public static class InventoryItemDataLoader
 {
     [DataLoader]
-    internal static async Task<IReadOnlyDictionary<int, InventoryItem>>
-        GetInventoryItemByProductIdAsync(
+    internal static async Task<Dictionary<int, InventoryItem>> GetInventoryItemByProductIdAsync(
         IReadOnlyList<int> ids,
         InventoryContext context,
         CancellationToken cancellationToken)
@@ -14,8 +12,7 @@ public static class InventoryItemNode
             .ToDictionaryAsync(t => t.Id, cancellationToken);
 
     [DataLoader]
-    internal static async Task<IReadOnlyDictionary<int, InventoryItem>>
-        GetInventoryItemByIdAsync(
+    internal static async Task<Dictionary<int, InventoryItem>> GetInventoryItemByIdAsync(
         IReadOnlyList<int> ids,
         InventoryContext context,
         CancellationToken cancellationToken)

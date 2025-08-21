@@ -11,6 +11,7 @@ public static class Extensions
         builder.AddGlobalObjectIdentification();
         builder.AddMutationConventions();
         builder.ModifyCostOptions(x => x.EnforceCostLimits = false);
+        builder.ExportSchemaOnStartup();
         return builder;
     }
 }

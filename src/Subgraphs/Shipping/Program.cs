@@ -1,11 +1,14 @@
+using Demo.Shipping.Properties;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults("Shipping-Subgraph", Env.Version);
+builder.AddServiceDefaults(Env.ShippingApi, Env.Version);
 
-builder.Services
-    .AddGraphQLServer()
-    .AddTypes()
-    .AddGraphQLDefaults();
+builder
+    .AddGraphQL(Env.ShippingApi)
+    .AddSubgraphDefaults()
+    .AddShippingTypes()
+    .InitializeOnStartup();
 
 var app = builder.Build();
 

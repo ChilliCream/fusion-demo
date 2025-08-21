@@ -15,6 +15,15 @@ public class Product
 
     [Required]
     public int Weight { get; set; }
+    
+    [Required]
+    public double Length { get; set; }
+
+    [Required]
+    public double Width { get; set; }
+
+    [Required]
+    public double Height { get; set; }
 
     public string? PictureFileName { get; set; }
 }

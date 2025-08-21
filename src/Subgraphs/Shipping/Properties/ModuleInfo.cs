@@ -1,1 +1,1 @@
-[assembly: Module("Types")]
+[assembly: Module("ShippingTypes")]

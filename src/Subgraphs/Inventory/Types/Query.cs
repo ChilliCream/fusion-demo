@@ -1,7 +1,7 @@
 ﻿namespace Demo.Inventory.Types;
 
 [QueryType]
-public static class Query
+public static partial class Query
 {
     [Lookup, NodeResolver]
     public static async Task<InventoryItem?> GetInventoryItemByIdAsync(
@@ -11,7 +11,7 @@ public static class Query
         => await inventoryItemById.LoadAsync(id, cancellationToken);
 
     [Lookup, Internal]
-    public static async Task<Product?> GetProductByIdAsync(
+    public static Product? GetProductByIdAsync(
         [ID<Product>] int id,
         CancellationToken cancellationToken)
         => new(id);

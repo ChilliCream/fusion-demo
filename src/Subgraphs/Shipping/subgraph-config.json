@@ -1,9 +1,0 @@
-{
-  "subgraph": "shipping",
-  "http": { "baseAddress": "http://shipping/graphql" },
-  "extensions": {
-    "bcp": {
-      "apiId": "QXBpCmdlZGRiOWE1ZmY5YTk0YTAxYTQ4OWI1MWQyZDlmNDcwZQ=="
-    }
-  }
-}
