@@ -3,6 +3,7 @@
     <Project Path="src/AppHost/Demo.AppHost.csproj" />
     <Project Path="src/Gateway/Demo.Gateway.csproj" />
     <Project Path="src/ServiceDefaults/Demo.ServiceDefaults.csproj" />
+    <Project Path="src/SubgraphDefaults/Demo.SubgraphDefaults.csproj" />
   </Folder>
   <Folder Name="/src/Subgraphs/">
     <Project Path="src/Subgraphs/Accounts/Demo.Accounts.csproj" />

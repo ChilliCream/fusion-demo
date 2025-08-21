@@ -15,17 +15,6 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
-    public static IRequestExecutorBuilder AddGraphQLDefaults(this IRequestExecutorBuilder builder)
-    {
-        builder.AddInstrumentation();
-        builder.AddGlobalObjectIdentification();
-        builder.AddNitro(x => x.Metrics.Enabled = true);
-        builder.AddMutationConventions();
-        builder.ModifyCostOptions(x => x.EnforceCostLimits = false);
-
-        return builder;
-    }
-
     public static IHostApplicationBuilder AddServiceDefaults(
         this IHostApplicationBuilder builder,
         string name,
@@ -62,7 +51,6 @@ public static class Extensions
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
         });
-        builder.Logging.AddNitroExporter();
 
         builder.Services
             .AddOpenTelemetry()
@@ -70,14 +58,12 @@ public static class Extensions
             .WithMetrics(metrics =>
             {
                 metrics
-                    .AddNitroExporter()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
             })
             .WithTracing(tracing =>
             {
                 tracing.AddEntityFrameworkCoreInstrumentation();
-                tracing.AddNitroExporter();
                 tracing.AddAspNetCoreInstrumentation(o =>
                     {
                         o.RecordException = true;

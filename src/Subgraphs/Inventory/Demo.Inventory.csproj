@@ -1,38 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>latest</LangVersion>
-    <AssemblyName>Inventory</AssemblyName>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
-    <Using Include="Demo.Inventory" />
-  </ItemGroup>
-
+    
   <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
     <Using Include="Demo.Inventory" />
     <Using Include="Demo.Inventory.Data" />
     <Using Include="Demo.Inventory.Types" />
+    <Using Include="Demo.Accounts.Properties" />
     <Using Include="Microsoft.EntityFrameworkCore" />
     <Using Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.Fusion.SourceSchema" />
     <PackageReference Include="Microsoft.Extensions.Http"/>
+      
     <PackageReference Include="HotChocolate.AspNetCore" />
     <PackageReference Include="HotChocolate.AspNetCore.CommandLine" />
-    <PackageReference Include="HotChocolate.Diagnostics" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" />
+    <PackageReference Include="HotChocolate.Diagnostics" />
     <PackageReference Include="HotChocolate.Types.Analyzers">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
 
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" VersionOverride="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" VersionOverride="9.0.0">
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

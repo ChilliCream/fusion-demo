@@ -1,4 +1,5 @@
-﻿using HotChocolate.Fusion.SourceSchema.Types;
+﻿using GreenDonut.Data;
+using HotChocolate.Types.Pagination;
 
 namespace Demo.Accounts.Types;
 
@@ -21,6 +22,13 @@ public static class Query
         => await userByName.LoadAsync(username, cancellationToken);
 
     [UsePaging]
-    public static IQueryable<User> GetUsers(AccountContext context)
-        => context.Users.OrderBy(t => t.Name);
+    public static async Task<Connection<User>> GetUsers(
+        PagingArguments pagingArgs,
+        AccountContext context,
+        CancellationToken cancellationToken) 
+        => await context.Users
+            .OrderBy(t => t.Name)
+            .ThenBy(t => t.Id)
+            .ToPageAsync(pagingArgs, cancellationToken)
+            .ToConnectionAsync();
 }

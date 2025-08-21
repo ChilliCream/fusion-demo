@@ -3,7 +3,7 @@ namespace Demo.Accounts.Types;
 internal static class UserDataLoaders
 {
     [DataLoader]
-    public static async Task<IReadOnlyDictionary<string, User>> GetUserByNameAsync(
+    public static async Task<Dictionary<string, User>> GetUserByNameAsync(
         IReadOnlyList<string> names,
         AccountContext context,
         CancellationToken cancellationToken)
@@ -12,7 +12,7 @@ internal static class UserDataLoaders
             .ToDictionaryAsync(t => t.Username!, cancellationToken);
 
     [DataLoader]
-    public static async Task<IReadOnlyDictionary<int, User>> GetUserByIdAsync(
+    public static async Task<Dictionary<int, User>> GetUserByIdAsync(
         IReadOnlyList<int> ids,
         AccountContext context,
         CancellationToken cancellationToken)

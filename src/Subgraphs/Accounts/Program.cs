@@ -1,11 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddDbContextPool<AccountContext>(o => o.UseSqlite("Data Source=account.db"));
+builder
+    .AddNpgsqlDbContext<AccountContext>(Env.AccountApi);
 
-builder.AddServiceDefaults("Accounts-Subgraph", Env.Version);
+builder
+    .AddServiceDefaults(Env.AccountApi, Env.Version);
 
-builder.Services.AddGraphQLServer().AddTypes().AddGraphQLDefaults();
+builder
+    .AddGraphQL(Env.AccountApi)
+    .AddSubgraphDefaults()
+    .AddTypes();
 
 var app = builder.Build();
 

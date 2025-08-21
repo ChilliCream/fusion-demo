@@ -1,9 +1,0 @@
-{
-  "subgraph": "accounts",
-  "http": { "baseAddress": "http://accounts/graphql" },
-  "extensions": {
-    "bcp": {
-      "apiId": "QXBpCmdmOTYxY2IyNTJlOTc0YTc0OWEzNzg4MjhlY2QwMmRjMQ=="
-    }
-  }
-}
