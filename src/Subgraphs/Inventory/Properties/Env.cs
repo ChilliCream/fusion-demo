@@ -1,3 +1,5 @@
+namespace Demo.Inventory.Properties;
+
 public static class Env
 {
     public const string InventoryApi = "inventory-api";

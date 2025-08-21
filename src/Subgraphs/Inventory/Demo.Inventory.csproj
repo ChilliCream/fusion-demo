@@ -4,14 +4,12 @@
         <Using Include="Demo.Inventory"/>
         <Using Include="Demo.Inventory.Data"/>
         <Using Include="Demo.Inventory.Types"/>
-        <Using Include="Demo.Accounts.Properties"/>
+        <Using Include="Demo.Inventory.Properties"/>
         <Using Include="Microsoft.EntityFrameworkCore"/>
         <Using Include="System.ComponentModel.DataAnnotations"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Http"/>
-
         <PackageReference Include="HotChocolate.AspNetCore"/>
         <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
         <PackageReference Include="HotChocolate.Data.EntityFramework"/>

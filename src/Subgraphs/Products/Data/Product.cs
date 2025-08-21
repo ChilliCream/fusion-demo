@@ -2,8 +2,8 @@ namespace Demo.Products.Data;
 
 public class Product
 {
-    [Key]
-    [ID]
+    // [Key]
+    // [ID]
     public int Id { get; set; }
 
     [Required]

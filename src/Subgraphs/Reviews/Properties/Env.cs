@@ -1,3 +1,5 @@
+namespace Demo.Reviews.Properties;
+
 public static class Env
 {
     public const string ReviewsApi = "reviews-api";

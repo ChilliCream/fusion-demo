@@ -26,7 +26,6 @@
         <ProjectReference Include="..\Subgraphs\Reviews\Demo.Reviews.csproj"/>
         <ProjectReference Include="..\Subgraphs\Shipping\Demo.Shipping.csproj" />
         <ProjectReference Include="..\Subgraphs\Shipping\Shipping.csproj"/>
-
     </ItemGroup>
 
 </Project>
