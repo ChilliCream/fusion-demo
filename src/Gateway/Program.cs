@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.AddServiceDefaults("Demo", App.Version);
+builder.AddServiceDefaults(Env.GatewayApi, Env.Version);
 
 builder.Services
     .AddCors()

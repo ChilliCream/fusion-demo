@@ -31,4 +31,14 @@ var reviewsApi = builder
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api");
 
+builder
+    .AddProject<Projects.Demo_Gateway>("gateway-api")
+    .WithReference(accountsApi)
+    .WithReference(inventoryApi)
+    .WithReference(orderApi)
+    .WithReference(paymentsApi)
+    .WithReference(productsApi)
+    .WithReference(reviewsApi)
+    .WithReference(shippingApi);
+
 builder.Build().Run();

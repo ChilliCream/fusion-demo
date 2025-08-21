@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Gateway\Gateway.csproj"/>
+        <ProjectReference Include="..\Gateway\Demo.Gateway.csproj"/>
         <ProjectReference Include="..\Subgraphs\Accounts\Demo.Accounts.csproj"/>
         <ProjectReference Include="..\Subgraphs\Inventory\Demo.Inventory.csproj"/>
         <ProjectReference Include="..\Subgraphs\Order\Demo.Order.csproj"/>
@@ -25,7 +25,6 @@
         <ProjectReference Include="..\Subgraphs\Products\Demo.Products.csproj"/>
         <ProjectReference Include="..\Subgraphs\Reviews\Demo.Reviews.csproj"/>
         <ProjectReference Include="..\Subgraphs\Shipping\Demo.Shipping.csproj" />
-        <ProjectReference Include="..\Subgraphs\Shipping\Shipping.csproj"/>
     </ItemGroup>
 
 </Project>
