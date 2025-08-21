@@ -20,4 +20,7 @@ public class Review
 
     [Required]
     public User? Author { get; set; }
+    
+    [Required]
+    public DateTimeOffset CreateAt { get; set; }
 }

@@ -26,7 +26,7 @@ var productsApi = builder
 var reviewsApi = builder
     .AddProject<Projects.Demo_Reviews>("reviews-api")
     .WithReference(postgres.AddDatabase("reviews-db"))
-    .WithReference(redis, "reviews-redis");
+    .WithReference(redis);
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api");

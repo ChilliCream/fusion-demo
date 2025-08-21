@@ -3,7 +3,7 @@ using HotChocolate.Subscriptions;
 namespace Demo.Reviews.Types;
 
 [MutationType]
-public static class Mutation
+public static partial class Mutation
 {
     public static async Task<Review> CreateReview(
         CreateReviewInput input,

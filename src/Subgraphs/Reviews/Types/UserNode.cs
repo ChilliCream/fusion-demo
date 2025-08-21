@@ -1,21 +1,23 @@
+using GreenDonut.Data;
+using HotChocolate.Types.Pagination;
+
 namespace Demo.Reviews.Types;
 
-[ExtendObjectType<User>]
-internal static class UserNode
+[ObjectType<User>]
+internal static partial class UserNode
 {
-    [UsePaging]
-    public static async Task<IEnumerable<Review?>?> GetReviewsAsync(
-        [Parent] User user,
-        ReviewsByUserIdDataLoader reviewsById,
-        CancellationToken cancellationToken)
-        => await reviewsById.LoadAsync(user.Id, cancellationToken);
+    static partial void Configure(IObjectTypeDescriptor<User> descriptor)
+        => descriptor.Field(x => x.Id).ID();
 
-    [DataLoader]
-    internal static async Task<IReadOnlyDictionary<int, User>> GetUserByIdAsync(
-        IReadOnlyList<int> ids,
-        ReviewContext context,
+    [UsePaging(ConnectionName = "UserReviews")]
+    public static async Task<Connection<Review>> GetReviewsAsync(
+        [Parent(requires: nameof(User.Id))] User user,
+        PagingArguments arguments,
+        QueryContext<Review> query,
+        ReviewsByUserIdDataLoader reviewsByUserId,
         CancellationToken cancellationToken)
-        => await context.Users
-            .Where(t => ids.Contains(t.Id))
-            .ToDictionaryAsync(t => t.Id, cancellationToken);
+        => await reviewsByUserId
+            .With(arguments, query)
+            .LoadAsync(user.Id, cancellationToken)
+            .ToConnectionAsync();
 }

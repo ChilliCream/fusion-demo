@@ -1,7 +1,7 @@
 namespace Demo.Reviews.Types;
 
 [SubscriptionType]
-public static class Subscription
+public static partial class Subscription
 {
     [Subscribe]
     [Topic(nameof(Mutation.CreateReview))]

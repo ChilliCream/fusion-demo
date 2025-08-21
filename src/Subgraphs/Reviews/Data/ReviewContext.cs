@@ -37,14 +37,16 @@ public class ReviewContext(DbContextOptions options) : DbContext(options)
                     Body = "Love it!",
                     Stars = 5,
                     ProductId = 1,
-                    Author = ada
+                    Author = ada,
+                    CreateAt = DateTimeOffset.UtcNow
                 },
                 new Review
                 {
                     Body = "Too expensive.",
                     Stars = 1,
                     ProductId = 2,
-                    Author = alan
+                    Author = alan,
+                    CreateAt = DateTimeOffset.UtcNow
                 },
                 new Review
                 {
@@ -52,13 +54,15 @@ public class ReviewContext(DbContextOptions options) : DbContext(options)
                     Stars = 3,
                     ProductId = 3,
                     Author = ada,
+                    CreateAt = DateTimeOffset.UtcNow
                 },
                 new Review
                 {
                     Body = "Prefer something else.",
                     Stars = 3,
                     ProductId = 2,
-                    Author = alan
+                    Author = alan,
+                    CreateAt = DateTimeOffset.UtcNow
                 });
             
             await context.SaveChangesAsync(cancellationToken);

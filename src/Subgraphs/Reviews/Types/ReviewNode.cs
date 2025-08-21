@@ -1,41 +1,17 @@
 namespace Demo.Reviews.Types;
 
-[ExtendObjectType<Review>(IgnoreProperties = new[] { nameof(Review.AuthorId), nameof(Review.ProductId) })]
-internal static class ReviewNode
+[ObjectType<Review>]
+internal static partial class ReviewNode
 {
-    [Tag("internal")]
-    public static string ThisIsInternal() => "This is internal";
-
+    [BindMember(nameof(Review.ProductId))]
     public static Product GetProduct(
-        [Parent] Review review)
+        [Parent(requires: nameof(Review.ProductId))] Review review)
         => new(review.ProductId);
 
+    [BindMember(nameof(Review.AuthorId))]
     public static async Task<User?> GetAuthorAsync(
-        [Parent] Review review,
-        UserByIdDataLoader userDataLoader,
+        [Parent(requires: nameof(Review.AuthorId))] Review review,
+        IUserByIdDataLoader userById,
         CancellationToken cancellationToken)
-        => await userDataLoader.LoadAsync(review.AuthorId, cancellationToken);
-
-    [DataLoader]
-    internal static async Task<IReadOnlyDictionary<int, Review>> GetReviewByIdAsync(
-        IReadOnlyList<int> ids,
-        ReviewContext context,
-        CancellationToken cancellationToken)
-        => await context.Reviews
-            .Where(t => ids.Contains(t.Id))
-            .ToDictionaryAsync(t => t.Id, cancellationToken);
-
-    [DataLoader]
-    internal static async Task<ILookup<int, Review>> GetReviewsByUserIdAsync(
-        IReadOnlyList<int> ids,
-        ReviewContext context,
-        CancellationToken cancellationToken)
-    {
-        var reviews = await context.Users
-            .Where(t => ids.Contains(t.Id))
-            .SelectMany(t => t.Reviews)
-            .ToListAsync(cancellationToken);
-
-        return reviews.ToLookup(t => t.AuthorId);
-    }
+        => await userById.LoadAsync(review.AuthorId, cancellationToken);
 }
