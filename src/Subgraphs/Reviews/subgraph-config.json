@@ -1,9 +1,0 @@
-{
-  "subgraph": "reviews",
-  "http": { "baseAddress": "http://reviews/graphql" },
-  "extensions": {
-    "bcp": {
-      "apiId": "QXBpCmcxNTljMmI3OTdhMjg0NTdlYTU2N2JhNjVkMjViYzI1MQ=="
-    }
-  }
-}

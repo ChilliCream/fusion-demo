@@ -1,52 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+    
+    <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
+        <Using Include="Demo.Reviews"/>
+        <Using Include="Demo.Reviews.Data"/>
+        <Using Include="Demo.Reviews.Types"/>
+        <Using Include="Demo.Reviews.Properties"/>
+        <Using Include="Microsoft.EntityFrameworkCore"/>
+        <Using Include="System.ComponentModel.DataAnnotations"/>
+    </ItemGroup>
 
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>latest</LangVersion>
-    <AssemblyName>Reviews</AssemblyName>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Http"/>
 
-  <ItemGroup>
-    <Watch Include="schema.extensions.graphql" />
-  </ItemGroup>
+        <PackageReference Include="HotChocolate.AspNetCore"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework"/>
+        <PackageReference Include="HotChocolate.Diagnostics"/>
+        <PackageReference Include="HotChocolate.Types.Analyzers">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
 
-  <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
-    <Using Include="Demo.Reviews" />
-    <Using Include="Demo.Reviews.Data" />
-    <Using Include="Demo.Reviews.Types" />
-    <Using Include="Microsoft.EntityFrameworkCore" />
-    <Using Include="System.ComponentModel.DataAnnotations" />
-  </ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http"/>
-    <PackageReference Include="HotChocolate.AspNetCore" />
-    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" />
-    <PackageReference Include="HotChocolate.Data.EntityFramework" />
-    <PackageReference Include="HotChocolate.Diagnostics" />
-    <PackageReference Include="HotChocolate.Types.Analyzers">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <ItemGroup>
+        <ProjectReference Include="..\..\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\..\SubgraphDefaults\Demo.SubgraphDefaults.csproj"/>
+    </ItemGroup>
 
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" VersionOverride="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" VersionOverride="9.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-
-    <PackageReference Include="OpenTelemetry.Api" />
-    <PackageReference Include="OpenTelemetry.Exporter.Console" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Packages\ChilliCream.Nitro\src\ChilliCream.Nitro\ChilliCream.Nitro.csproj" />
-    <ProjectReference Include="..\..\ServiceDefaults\ServiceDefaults.csproj" />
-  </ItemGroup>
 </Project>

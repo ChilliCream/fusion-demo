@@ -5,7 +5,11 @@ builder.Services
 
 builder.AddServiceDefaults("Reviews-Subgraph", Env.Version);
 
-builder.Services.AddGraphQLServer().AddTypes().AddGraphQLDefaults().AddInMemorySubscriptions();
+builder
+    .AddGraphQL()
+    .AddGraphQLDefaults()
+    .AddTypes()
+    .AddInMemorySubscriptions();
 
 var app = builder.Build();
 

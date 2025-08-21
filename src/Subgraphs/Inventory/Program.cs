@@ -8,7 +8,7 @@ builder
     .AddGraphQL(Env.InventoryApi)
     .AddSubgraphDefaults()
     .AddInventoryTypes()
-    .InitializeOnStartup(InventoryContext.SeedDatabaseAsync);
+    .InitializeOnStartup(InventoryContext.SeedDataAsync);
 
 var app = builder.Build();
 

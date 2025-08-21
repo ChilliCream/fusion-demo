@@ -6,7 +6,7 @@ public class InventoryContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<InventoryItem> Inventory => Set<InventoryItem>();
     
-    public static async Task SeedDatabaseAsync(
+    public static async Task SeedDataAsync(
         IRequestExecutor executor, 
         CancellationToken cancellationToken = default)
     {
