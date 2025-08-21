@@ -1,17 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsAspireSharedProject>true</IsAspireSharedProject>
-    <AssemblyName>Demo.SubgraphDefaults</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="HotChocolate.Diagnostics"/>
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Packages\ChilliCream.Nitro\src\ChilliCream.Nitro\ChilliCream.Nitro.csproj" />
-  </ItemGroup>
+    
 </Project>
