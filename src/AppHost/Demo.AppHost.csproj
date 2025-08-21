@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.4.1"/>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>4e45635f-434c-4f98-9036-658b614ed504</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Load\Load.csproj"/>
+    <ProjectReference Include="..\Gateway\Gateway.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Accounts\Demo.Accounts.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Inventory\Demo.Inventory.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Order\Demo.Order.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Payments\Demo.Payments.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Products\Demo.Products.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Reviews\Demo.Reviews.csproj"/>
+    <ProjectReference Include="..\Subgraphs\Shipping\Shipping.csproj"/>
+
+  </ItemGroup>
+
+</Project>

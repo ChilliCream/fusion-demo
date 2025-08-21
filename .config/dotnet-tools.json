@@ -3,9 +3,16 @@
   "isRoot": true,
   "tools": {
     "hotchocolate.fusion.commandline": {
-      "version": "16.0.0-p.6.8",
+      "version": "16.0.0-p.7.15",
       "commands": [
         "fusion"
+      ],
+      "rollForward": false
+    },
+    "aspire.cli": {
+      "version": "9.4.1",
+      "commands": [
+        "aspire"
       ],
       "rollForward": false
     }

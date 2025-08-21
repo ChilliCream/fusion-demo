@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>latestMajor</LangVersion>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);AD0001;</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseArtifactsOutput>false</UseArtifactsOutput>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+</Project>

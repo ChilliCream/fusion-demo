@@ -1,0 +1,9 @@
+{
+  "subgraph": "Order",
+  "http": { "baseAddress": "http://orders/graphql" },
+  "extensions": {
+    "bcp": {
+      "apiId": "QXBpCmc4ZjdhZTUxYjE5YTY0ZjFiYjcwNTc3NjJkMDkzOTg2Nw=="
+    }
+  }
+}

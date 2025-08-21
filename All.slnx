@@ -1,7 +1,0 @@
-<Solution>
-  <Folder Name="/Subgraphs/">
-    <Project Path="Subgraphs/Catalog.API/Catalog.API.csproj" />
-    <Project Path="Subgraphs/Reviews.API/Reviews.API.csproj" />
-  </Folder>
-  <Project Path="Gateway/Gateway.csproj" />
-</Solution>

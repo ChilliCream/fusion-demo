@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AppHost/Demo.AppHost.csproj" />
+    <Project Path="src/Gateway/Demo.Gateway.csproj" />
+    <Project Path="src/ServiceDefaults/Demo.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/Subgraphs/">
+    <Project Path="src/Subgraphs/Accounts/Demo.Accounts.csproj" />
+    <Project Path="src/Subgraphs/Inventory/Demo.Inventory.csproj" />
+    <Project Path="src/Subgraphs/Order/Demo.Order.csproj" />
+    <Project Path="src/Subgraphs/Payments/Demo.Payments.csproj" />
+    <Project Path="src/Subgraphs/Products/Demo.Products.csproj" />
+    <Project Path="src/Subgraphs/Reviews/Demo.Reviews.csproj" />
+    <Project Path="src/Subgraphs/Shipping/Demo.Shipping.csproj" />
+  </Folder>
+</Solution>

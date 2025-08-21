@@ -1,0 +1,9 @@
+{
+  "subgraph": "products",
+  "http": { "baseAddress": "http://products/graphql" },
+  "extensions": {
+    "bcp": {
+      "apiId": "QXBpCmdiYWY0ZDI4MWYyYzM0OWQxODAwNzI3MTAzOGI1ODc5YQ=="
+    }
+  }
+}

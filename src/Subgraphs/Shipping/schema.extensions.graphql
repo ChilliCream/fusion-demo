@@ -1,0 +1,5 @@
+extend type Product {
+  deliveryEstimate(
+    zip: String!
+  ): DeliveryEstimate!
+}
