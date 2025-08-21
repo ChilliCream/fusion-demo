@@ -1,8 +1,7 @@
-using Demo.Shipping.Properties;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults(Env.ShippingApi, Env.Version);
+builder
+    .AddServiceDefaults(Env.ShippingApi, Env.Version);
 
 builder
     .AddGraphQL(Env.ShippingApi)

@@ -3,7 +3,7 @@ namespace Demo.Reviews.Data;
 [Index(nameof(ProductId))]
 public class Review
 {
-    [Key]
+    // [Key]
     public int Id { get; set; }
 
     [Required]

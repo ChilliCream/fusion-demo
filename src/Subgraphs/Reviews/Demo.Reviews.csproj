@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    
+
     <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
         <Using Include="Demo.Reviews"/>
         <Using Include="Demo.Reviews.Data"/>
@@ -15,6 +15,7 @@
         <PackageReference Include="HotChocolate.AspNetCore"/>
         <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
         <PackageReference Include="HotChocolate.Data.EntityFramework"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis"/>
         <PackageReference Include="HotChocolate.Diagnostics"/>
         <PackageReference Include="HotChocolate.Types.Analyzers">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,6 +23,8 @@
         </PackageReference>
 
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Aspire.StackExchange.Redis"/>
+
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>

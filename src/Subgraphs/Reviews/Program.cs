@@ -1,15 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddDbContextPool<ReviewContext>(o => o.UseSqlite("Data Source=review.db"));
-
-builder.AddServiceDefaults("Reviews-Subgraph", Env.Version);
+builder
+    .AddServiceDefaults(Env.ReviewsApi, Env.Version)
+    .AddNpgsqlDbContext<ReviewContext>(Env.ReviewsDb);
 
 builder
     .AddGraphQL()
-    .AddGraphQLDefaults()
-    .AddTypes()
-    .AddInMemorySubscriptions();
+    .AddSubgraphDefaults()
+    .AddReviewTypes()
+    .A()
+    .;
 
 var app = builder.Build();
 

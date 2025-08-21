@@ -4,10 +4,12 @@
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
     <PackageVersion Include="HotChocolate" Version="16.0.0-p.7.15" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.7.15" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.7.15" />
+    <PackageVersion Include="HotChocolate.Subscriptions.Redis" Version="16.0.0-p.7.15" />
+    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.7.15" />
     <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.7.15">
@@ -23,6 +25,8 @@
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.1" />
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.4.1" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="9.4.1" />
+    <PackageVersion Include="Aspire.StackExchange.Redis" Version="9.4.1" />
     
     <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.7.15" />
     
