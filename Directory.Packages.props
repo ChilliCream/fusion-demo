@@ -12,6 +12,7 @@
     <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.7.18" />
     <PackageVersion Include="HotChocolate.Subscriptions.Redis" Version="16.0.0-p.7.18" />
     <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.7.18" />
+    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.7.18" />
     <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.7.18" />
     <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.7.18" />
     <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.7.18">

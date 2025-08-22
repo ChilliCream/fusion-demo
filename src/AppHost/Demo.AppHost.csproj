@@ -14,8 +14,7 @@
         <PackageReference Include="Aspire.Hosting.AppHost"/>
         <PackageReference Include="Aspire.Hosting.PostgreSQL"/>
         <PackageReference Include="Aspire.Hosting.Redis"/>
-        <PackageReference Include="HotChocolate.Fusion.Composition" />
-        <PackageReference Include="HotChocolate.Fusion.Packaging" />
+        <PackageReference Include="HotChocolate.Fusion.Aspire" />
     </ItemGroup>
 
     <ItemGroup>
