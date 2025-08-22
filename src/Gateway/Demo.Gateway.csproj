@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
     </ItemGroup>
 
 </Project>

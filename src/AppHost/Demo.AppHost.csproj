@@ -18,13 +18,13 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Gateway\Demo.Gateway.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Accounts\Demo.Accounts.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Inventory\Demo.Inventory.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Order\Demo.Order.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Payments\Demo.Payments.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Products\Demo.Products.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Reviews\Demo.Reviews.csproj"/>
-        <ProjectReference Include="..\Subgraphs\Shipping\Demo.Shipping.csproj" />
+        <ProjectReference Include="..\SourceSchemas\Accounts\Demo.Accounts.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Inventory\Demo.Inventory.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Order\Demo.Order.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Payments\Demo.Payments.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Products\Demo.Products.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Reviews\Demo.Reviews.csproj"/>
+        <ProjectReference Include="..\SourceSchemas\Shipping\Demo.Shipping.csproj" />
     </ItemGroup>
 
 </Project>
