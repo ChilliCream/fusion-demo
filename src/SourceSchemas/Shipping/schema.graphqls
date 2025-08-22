@@ -11,12 +11,14 @@ type Query {
   productById(id: ID!): Product! @lookup @internal
 }
 
-input ProductDimensionInput {
+input ProductDimensionInput @inaccessible {
   weight: Int!
   length: Float!
   width: Float!
   height: Float!
 }
+
+directive @inaccessible on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 
 directive @internal on OBJECT | FIELD_DEFINITION
 

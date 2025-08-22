@@ -45,6 +45,7 @@ var reviewsApi = builder
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api");
+    // .WithGraphQLSchemaEndpoint();
 
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
