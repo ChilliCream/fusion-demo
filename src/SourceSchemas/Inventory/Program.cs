@@ -5,7 +5,7 @@ builder
     .AddNpgsqlDbContext<InventoryContext>(Env.InventoryDb);
 
 builder
-    .AddGraphQL(Env.InventoryApi)
+    .AddGraphQL()
     .AddDefaultSettings()
     .AddInventoryTypes()
     .InitializeOnStartup(InventoryContext.SeedDataAsync);

@@ -21,13 +21,13 @@ public class AccountContext(DbContextOptions options) : DbContext(options)
                 new User
                 {
                     Name = "Ada Lovelace",
-                    Birthdate = new DateTime(1815, 12, 10),
+                    Birthdate = new DateTime(1815, 12, 10, 0, 0, 0, DateTimeKind.Utc),
                     Username = "@ada"
                 },
                 new User
                 {
                     Name = "Alan Turing",
-                    Birthdate = new DateTime(1912, 06, 23),
+                    Birthdate = new DateTime(1912, 06, 23, 0, 0, 0, DateTimeKind.Utc),
                     Username = "@alan"
                 });
 
