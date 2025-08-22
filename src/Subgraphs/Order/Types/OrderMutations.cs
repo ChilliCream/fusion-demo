@@ -1,7 +1,7 @@
 namespace Demo.Order.Types;
 
 [MutationType]
-public static class Mutation
+public static partial class OrderMutations
 {
     public static async Task<Data.Order> CreateOrderAsync(
         [ID<User>] int userId,
@@ -28,9 +28,4 @@ public static class Mutation
 
         return order;
     }
-
-    public record OrderItemInput(
-        [property: ID<Product>] int ProductId,
-        int Quantity,
-        double Price);
 }

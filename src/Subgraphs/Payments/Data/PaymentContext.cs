@@ -1,13 +1,21 @@
+using HotChocolate.Execution;
+
 namespace Demo.Payments.Data;
 
-public static class DatabaseHelper
+public class PaymentContext(DbContextOptions options) : DbContext(options)
 {
-    public static async Task SeedDatabaseAsync(WebApplication app)
+    public DbSet<Payment> Payments => Set<Payment>();
+    
+    public static async Task SeedDataAsync(
+        IRequestExecutor executor, 
+        CancellationToken cancellationToken = default)
     {
-        await using var scope = app.Services.CreateAsyncScope();
-        var context = scope.ServiceProvider.GetRequiredService<PaymentContext>();
+        var services = executor.Schema.Services.GetRootServiceProvider();
 
-        if (await context.Database.EnsureCreatedAsync())
+        await using var scope = services.CreateAsyncScope();
+        await using var context = scope.ServiceProvider.GetRequiredService<PaymentContext>();
+
+        if (await context.Database.EnsureCreatedAsync(cancellationToken))
         {
             await context.Payments.AddRangeAsync(
                 new Payment
@@ -38,7 +46,8 @@ public static class DatabaseHelper
                     Status = PaymentStatus.Declined,
                     CreatedAt = DateTimeOffset.UtcNow,
                 });
-            await context.SaveChangesAsync();
+
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

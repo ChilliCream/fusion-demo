@@ -1,7 +1,7 @@
 namespace Demo.Payments.Types;
 
 [MutationType]
-public static class Mutation
+public static partial class PaymentMutations
 {
     public static async Task<Payment> CreatePaymentAsync(
         [ID<Order>] int orderId,
@@ -16,5 +16,3 @@ public static class Mutation
         return payment;
     }
 }
-
-public record Order([property: ID] int Id);

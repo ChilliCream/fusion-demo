@@ -1,19 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddDbContextPool<PaymentContext>(o => o.UseSqlite("Data Source=payment.db"));
+builder
+    .AddServiceDefaults(Env.PaymentApi, Env.Version)
+    .AddNpgsqlDbContext<PaymentContext>(Env.PaymentDb);
 
-builder.AddServiceDefaults("Payments-Subgraph", Env.Version);
-
-builder.Services
-    .AddGraphQLServer()
-    .AddTypes()
-    .AddUploadType()
-    .AddGraphQLDefaults();
+builder
+    .AddGraphQL(Env.PaymentApi)
+    .AddSubgraphDefaults()
+    .AddPaymentTypes()
+    .InitializeOnStartup(PaymentContext.SeedDataAsync);
 
 var app = builder.Build();
-
-await DatabaseHelper.SeedDatabaseAsync(app);
 
 app.MapGraphQL();
 

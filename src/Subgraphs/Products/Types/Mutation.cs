@@ -10,7 +10,7 @@ public static  class Mutation
         CancellationToken cancellationToken)
     {
         var product = await context.Products.FindAsync(
-            new object?[] { productId }, 
+            [productId], 
             cancellationToken: cancellationToken);
 
         if (product is null)

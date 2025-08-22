@@ -13,4 +13,8 @@ public class OrderItem
 
     [Required]
     public double Price { get; set; }
+    
+    public int OrderId { get; set; }
+    
+    public Order? Order { get; set; }
 }

@@ -1,19 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddDbContextPool<OrderContext>(o => o.UseSqlite("Data Source=order.db"));
+builder
+    .AddServiceDefaults(Env.OrderApi, Env.Version)
+    .AddNpgsqlDbContext<OrderContext>(Env.OrderDb);
 
-builder.AddServiceDefaults("Order-Subgraph", Env.Version);
-
-builder.Services
-    .AddGraphQLServer()
-    .AddTypes()
-    .AddUploadType()
-    .AddGraphQLDefaults();
+builder
+    .AddGraphQL(Env.OrderApi)
+    .AddSubgraphDefaults()
+    .AddOrderTypes()
+    .InitializeOnStartup(OrderContext.SeedDataAsync);
 
 var app = builder.Build();
-
-await DatabaseHelper.SeedDatabaseAsync(app);
 
 app.MapGraphQL();
 
