@@ -1,0 +1,8 @@
+{
+  "name": "order-api",
+  "transports": {
+    "http": {
+      "url": "http://localhost:5106/graphql"
+    }
+  }
+}

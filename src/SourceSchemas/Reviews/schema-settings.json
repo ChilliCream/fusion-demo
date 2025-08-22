@@ -1,0 +1,8 @@
+{
+  "name": "_Default",
+  "transports": {
+    "http": {
+      "url": "http://localhost:5112/graphql"
+    }
+  }
+}

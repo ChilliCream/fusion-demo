@@ -14,7 +14,7 @@ builder.Services
     .AddHttpClient("Fusion")
     .AddHeaderPropagation();
 
-builder.Services
+builder
     .AddGraphQLGateway()
     .AddFileSystemConfiguration("./gateway.far")
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);

@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .AddServiceDefaults(Env.ProductApi, Env.Version)
-    .AddNpgsqlDbContext<ProductContext>(Env.ProductDb);
+    .AddServiceDefaults(Env.ProductsApi, Env.Version)
+    .AddNpgsqlDbContext<ProductContext>(Env.ProductsDb);
 
 builder
-    .AddGraphQL(Env.ProductApi)
+    .AddGraphQL(Env.ProductsApi)
     .AddDefaultSettings()
     .AddUploadType()
     .AddProductTypes()

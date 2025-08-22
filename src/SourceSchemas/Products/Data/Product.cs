@@ -3,7 +3,6 @@ namespace Demo.Products.Data;
 public class Product
 {
     // [Key]
-    // [ID]
     public int Id { get; set; }
 
     [Required]

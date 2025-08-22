@@ -3,7 +3,7 @@ using HotChocolate.Types.Pagination;
 
 namespace Demo.Reviews.Types;
 
-public sealed record Product([ID<Product>] int Id)
+public sealed record Product([property: ID<Product>] int Id)
 {
     [UsePaging(ConnectionName = "ProductReviews")]
     public async Task<Connection<Review>> GetReviewsAsync(

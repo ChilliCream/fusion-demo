@@ -1,0 +1,32 @@
+schema {
+  query: Query
+}
+
+type Product {
+  deliveryEstimate(zip: String! dimension: ProductDimensionInput! @require(field: "{\n  weight\n  length: dimension.length\n  width: dimension.width\n  height: dimension.height\n}")): Int!
+  id: ID!
+}
+
+type Query {
+  productById(id: ID!): Product! @lookup @internal
+}
+
+input ProductDimensionInput {
+  weight: Int!
+  length: Float!
+  width: Float!
+  height: Float!
+}
+
+directive @internal on OBJECT | FIELD_DEFINITION
+
+"""
+The @lookup directive is used within a source schema to specify output fields
+that can be used by the distributed GraphQL executor to resolve an entity by
+a stable key.
+"""
+directive @lookup on FIELD_DEFINITION
+
+directive @require("The field selection map syntax." field: FieldSelectionMap!) on ARGUMENT_DEFINITION
+
+scalar FieldSelectionMap

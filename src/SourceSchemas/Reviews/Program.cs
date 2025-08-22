@@ -8,6 +8,7 @@ builder
     .AddGraphQL()
     .AddDefaultSettings()
     .AddReviewTypes()
+    .AddRedisSubscriptions()
     .InitializeOnStartup(ReviewContext.SeedDataAsync);
 
 var app = builder.Build();

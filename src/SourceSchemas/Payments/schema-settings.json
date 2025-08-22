@@ -1,0 +1,8 @@
+{
+  "name": "payments-api",
+  "transports": {
+    "http": {
+      "url": "http://localhost:5108/graphql"
+    }
+  }
+}

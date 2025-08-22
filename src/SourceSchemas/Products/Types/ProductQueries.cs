@@ -6,7 +6,7 @@ namespace Demo.Products.Types;
 [QueryType]
 public static partial class ProductQueries
 {
-    [NodeResolver]
+    [NodeResolver, Lookup]
     public static async Task<Product?> GetProductByIdAsync(
         int id,
         ProductByIdDataLoader productById,

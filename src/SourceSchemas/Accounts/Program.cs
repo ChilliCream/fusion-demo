@@ -5,7 +5,7 @@ builder
     .AddNpgsqlDbContext<AccountContext>(Env.AccountsDb);
 
 builder
-    .AddGraphQL()
+    .AddGraphQL(Env.AccountsApi)
     .AddDefaultSettings()
     .AddAccountTypes()
     .InitializeOnStartup(AccountContext.SeedDataAsync);

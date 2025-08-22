@@ -13,9 +13,9 @@ public static partial class ProductNode
     }
 
     public static ProductDimension GetDimension(
-        [Parent(requires: "{ length width height }")] 
+        [Parent(requires: "{ Length Width Height }")] 
         Product product)
-        => new ProductDimension(product.Length, product.Width, product.Height);
+        => new(product.Length, product.Width, product.Height);
 
     public static Uri? GetPictureUrl(
         [Parent] Product product, 

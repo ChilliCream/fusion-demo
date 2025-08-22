@@ -5,7 +5,7 @@ builder
 
 builder
     .AddGraphQL(Env.ShippingApi)
-    .AddDefaultSettings()
+    .AddDefaultSettings(enableGlobalObjects: false)
     .AddShippingTypes()
     .InitializeOnStartup();
 

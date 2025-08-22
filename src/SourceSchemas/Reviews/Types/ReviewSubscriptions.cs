@@ -1,10 +1,10 @@
 namespace Demo.Reviews.Types;
 
 [SubscriptionType]
-public static partial class Subscription
+public static partial class ReviewSubscriptions
 {
     [Subscribe]
-    [Topic(nameof(Mutation.CreateReview))]
+    [Topic(nameof(ReviewMutations.CreateReview))]
     public static async Task<Review?> OnCreateReview(
         [EventMessage] int reviewId,
         ReviewByIdDataLoader reviewById,

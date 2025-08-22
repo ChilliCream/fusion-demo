@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .AddServiceDefaults(Env.PaymentApi, Env.Version)
-    .AddNpgsqlDbContext<PaymentContext>(Env.PaymentDb);
+    .AddServiceDefaults(Env.PaymentsApi, Env.Version)
+    .AddNpgsqlDbContext<PaymentContext>(Env.PaymentsDb);
 
 builder
-    .AddGraphQL(Env.PaymentApi)
+    .AddGraphQL(Env.PaymentsApi)
     .AddDefaultSettings()
     .AddPaymentTypes()
     .InitializeOnStartup(PaymentContext.SeedDataAsync);
