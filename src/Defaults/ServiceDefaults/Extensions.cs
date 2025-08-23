@@ -61,8 +61,10 @@ public static class Extensions
             })
             .WithTracing(tracing =>
             {
-                tracing.AddEntityFrameworkCoreInstrumentation();
-                tracing.AddAspNetCoreInstrumentation(o =>
+                tracing
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddAspNetCoreInstrumentation(
+                    o =>
                     {
                         o.RecordException = true;
 
@@ -94,7 +96,8 @@ public static class Extensions
                     })
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddSource("HotChocolate.Diagnostics");
             });
 
         builder.AddOpenTelemetryExporters();

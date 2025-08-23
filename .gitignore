@@ -401,3 +401,7 @@ FodyWeavers.xsd
 .DS_Store
 .mono
 .idea
+
+schema.graphqls
+schema.graphql
+gateway.far
