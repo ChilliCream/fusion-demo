@@ -9,5 +9,5 @@ public class User
     [MaxLength(128)]
     public string? Name { get; set; }
 
-    public IList<Review> Reviews { get; set; } = new List<Review>();
+    public IList<Review> Reviews { get; set; } = [];
 }

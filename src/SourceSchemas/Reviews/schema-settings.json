@@ -1,5 +1,5 @@
 {
-  "name": "_Default",
+  "name": "reviews-api",
   "transports": {
     "http": {
       "url": "http://localhost:5112/graphql"

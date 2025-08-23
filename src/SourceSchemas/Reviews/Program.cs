@@ -5,15 +5,13 @@ builder.AddRedisClient(Env.ReviewsRedis);
 builder.AddNpgsqlDbContext<ReviewContext>(Env.ReviewsDb);
 
 builder
-    .AddGraphQL()
+    .AddGraphQL(Env.ReviewsApi)
     .AddDefaultSettings()
     .AddReviewTypes()
     .AddRedisSubscriptions()
     .InitializeOnStartup(ReviewContext.SeedDataAsync);
 
 var app = builder.Build();
-
-app.UseWebSockets();
 
 app.MapGraphQL();
 
