@@ -44,9 +44,10 @@ var reviewsApi = builder
     .WaitFor(redis);
 
 var shippingApi = builder
-    .AddProject<Projects.Demo_Shipping>("shipping-api");
-    // .WithGraphQLSchemaEndpoint();
+    .AddProject<Projects.Demo_Shipping>("shipping-api")
+    .WithGraphQLSchemaEndpoint();
 
+/*
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
     .WithGraphQLSchemaComposition()
@@ -57,5 +58,6 @@ builder
     .WithReference(productsApi)
     .WithReference(reviewsApi)
     .WithReference(shippingApi);
+    */
 
 builder.Build().Run();

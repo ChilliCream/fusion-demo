@@ -1,3 +1,6 @@
+using HotChocolate;
+using HotChocolate.Fusion.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults(Env.GatewayApi, Env.Version);
@@ -17,7 +20,12 @@ builder.Services
 builder
     .AddGraphQLGateway()
     .AddFileSystemConfiguration("./gateway.far")
-    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
+    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
+    .AddDiagnosticEventListener(sp =>
+        new DevLog(
+            sp.GetRequiredService<IRootServiceProviderAccessor>()
+                .ServiceProvider
+                .GetRequiredService<ILoggerFactory>()));
 
 var app = builder.Build();
 

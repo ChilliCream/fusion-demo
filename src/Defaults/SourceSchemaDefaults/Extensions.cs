@@ -20,7 +20,6 @@ public static class Extensions
         builder.AddQueryContext();
         builder.ModifyCostOptions(x => x.EnforceCostLimits = false);
         builder.ExportSchemaOnStartup();
-        builder.AddInstrumentation();
         return builder;
     }
 }

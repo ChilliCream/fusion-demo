@@ -1,6 +1,6 @@
 namespace Demo.Shipping.Types;
 
-[Inaccessible]
+// [Inaccessible]
 public sealed class ProductDimensionInput
 {
     public int Weight { get; init; }
