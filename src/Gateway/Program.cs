@@ -22,7 +22,7 @@ builder
     .AddFileSystemConfiguration("./gateway.far")
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .AddDiagnosticEventListener(sp =>
-        new DevLog(
+        new DebugDiagnosticListener(
             sp.GetRequiredService<IRootServiceProviderAccessor>()
                 .ServiceProvider
                 .GetRequiredService<ILoggerFactory>()));
