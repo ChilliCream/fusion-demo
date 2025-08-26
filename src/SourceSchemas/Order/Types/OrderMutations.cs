@@ -12,14 +12,17 @@ public static partial class OrderMutations
     {
         var order = new Data.Order
         {
-            UserId = userId, Weight = weight, Items = new List<OrderItem>()
+            UserId = userId,
+            Weight = weight
         };
 
         foreach (var item in items)
         {
             order.Items.Add(new OrderItem
             {
-                ProductId = item.ProductId, Quantity = item.Quantity, Price = item.Price
+                ProductId = item.ProductId,
+                Quantity = item.Quantity,
+                Price = item.Price
             });
         }
 

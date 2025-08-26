@@ -4,7 +4,7 @@ using HotChocolate.Types.Pagination;
 namespace Demo.Accounts.Types;
 
 [QueryType]
-public static partial class Query
+public static partial class UserQueries
 {
     [Lookup, NodeResolver]
     public static async Task<User?> GetUserById(
