@@ -4,6 +4,6 @@ namespace Demo.Shipping.Types;
 public static partial class Query
 {
     [Lookup, Internal]
-    public static Product GetProductById([ID<Product>] int id)
+    public static Product? GetProductById([ID<Product>] int id)
         => new(id);
 }

@@ -7,13 +7,9 @@ public static class Extensions
 {
     public static IRequestExecutorBuilder AddDefaultSettings(
         this IRequestExecutorBuilder builder,
-        bool enableGlobalObjects = true)
+        bool registerNodeInterface = true)
     {
-        if (enableGlobalObjects)
-        {
-            builder.AddGlobalObjectIdentification();
-        }
-
+        builder.AddGlobalObjectIdentification(registerNodeInterface);
         builder.AddInstrumentation();
         builder.AddMutationConventions();
         builder.AddPagingArguments();
