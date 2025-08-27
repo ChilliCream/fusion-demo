@@ -1,4 +1,5 @@
 using HotChocolate;
+using HotChocolate.AspNetCore;
 using HotChocolate.Fusion.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,6 @@ var app = builder.Build();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseHeaderPropagation();
-app.MapGraphQL();
+app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
 
 app.Run();
