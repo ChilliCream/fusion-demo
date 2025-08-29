@@ -196,8 +196,8 @@ internal sealed class DebugDiagnosticListener
         OperationPlanContext context,
         ExecutionNode node,
         string schemaName,
-        IReadOnlyCollection<IError> errors)
-        => _backlog.Writer.TryWrite(new ErrorEntry(EventIds.SourceSchemaResultError, [.. errors]));
+        IReadOnlyList<IError> errors)
+        => _backlog.Writer.TryWrite(new ErrorEntry(EventIds.SourceSchemaResultError, [.. errors]));  
 
     public override void SubscriptionTransportError(
         OperationPlanContext context,
