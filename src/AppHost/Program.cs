@@ -8,13 +8,13 @@ var redis = builder.AddRedis("redis");
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
     .WithReference(postgres.AddDatabase("accounts-db"))
-    .WithGraphQLSchemaFile()
+    .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var inventoryApi = builder
     .AddProject<Projects.Demo_Inventory>("inventory-api")
     .WithReference(postgres.AddDatabase("inventory-db"))
-    .WithGraphQLSchemaFile()
+    .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var orderApi = builder
@@ -49,7 +49,11 @@ var shippingApi = builder
 
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
-    .WithGraphQLSchemaComposition()
+    .WithGraphQLSchemaComposition(
+        settings: new GraphQLCompositionSettings
+        {
+            EnableGlobalObjectIdentification = true
+        })
     .WithReference(accountsApi)
     .WithReference(inventoryApi)
     .WithReference(orderApi)
