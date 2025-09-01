@@ -11,8 +11,7 @@ public static partial class Query
         => await inventoryItemById.LoadAsync(id, cancellationToken);
 
     [Lookup, Internal]
-    public static Product? GetProductByIdAsync(
-        [ID<Product>] int id,
-        CancellationToken cancellationToken)
+    public static Product? GetProductById(
+        [ID<Product>] int id)
         => new(id);
 }

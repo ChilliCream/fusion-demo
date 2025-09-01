@@ -4,6 +4,8 @@ builder
     .AddServiceDefaults(Env.PaymentsApi, Env.Version)
     .AddNpgsqlDbContext<PaymentContext>(Env.PaymentsDb);
 
+builder.Services.AddCors();
+
 builder
     .AddGraphQL(Env.PaymentsApi)
     .AddDefaultSettings()
@@ -12,6 +14,7 @@ builder
 
 var app = builder.Build();
 
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.MapGraphQL();
 
 app.RunWithGraphQLCommands(args);

@@ -7,6 +7,7 @@
     <Project Path="src/Defaults/ServiceDefaults/Demo.ServiceDefaults.csproj" />
     <Project Path="src/Defaults/SourceSchemaDefaults/Demo.SourceSchemaDefaults.csproj" />
   </Folder>
+  <Folder Name="/src/Gateway/" />
   <Folder Name="/src/SourceSchemas/">
     <Project Path="src/SourceSchemas/Accounts/Demo.Accounts.csproj" />
     <Project Path="src/SourceSchemas/Inventory/Demo.Inventory.csproj" />
