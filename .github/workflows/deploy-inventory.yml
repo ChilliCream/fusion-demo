@@ -5,8 +5,7 @@ on:
     paths:
       - 'src/SourceSchemas/Inventory/**'
       - 'src/Defaults/**'
-      - '.github/workflows/deploy-inventory.yml'
-      - '.github/workflows/deploy-source-schema.yml`
+      - '.github/workflows/**`
   workflow_dispatch: {}
 
 jobs:

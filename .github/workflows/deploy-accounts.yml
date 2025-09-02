@@ -5,8 +5,7 @@ on:
     paths:
       - 'src/SourceSchemas/Accounts/**'
       - 'src/Defaults/**'
-      - '.github/workflows/deploy-accounts.yml'
-      - '.github/workflows/deploy-source-schema.yml`
+      - '.github/workflows/**`
   workflow_dispatch: {}
 
 jobs:
