@@ -95,7 +95,7 @@ jobs:
           registryPassword: ${{ secrets.ACR_PASSWORD }}
 
       - name: Publish Gateway Schema
-        uses: ChilliCream/nitro-fusion-publish-action@v1.1
+        uses: ChilliCream/nitro-fusion-publish-action@v1.2
         with:
           tag: ${{ steps.meta.outputs.tag }}
           stage: ${{ secrets.NITRO_STAGE }}
