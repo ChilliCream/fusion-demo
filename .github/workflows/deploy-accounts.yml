@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy:
-    uses: .github/workflows/deploy-source-schema.yml@main
+    uses: ./.github/workflows/deploy-source-schema.yml
     with:
       app_name: ccc-eu-fusion-demo-accounts-api
       project_path: src/SourceSchemas/Accounts
