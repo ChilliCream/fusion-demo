@@ -14,6 +14,6 @@ jobs:
     with:
       app_name: ccc-eu-fusion-demo-inventory-api
       project_path: src/SourceSchemas/Inventory
-      container_port: 8081
+      container_port: 8080
       schema_file: src/SourceSchemas/Inventory/schema.graphqls
     secrets: inherit

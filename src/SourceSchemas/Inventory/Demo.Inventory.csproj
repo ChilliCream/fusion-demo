@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <ContainerPort>8081</ContainerPort>
+        <ContainerPort>8080</ContainerPort>
         <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
         <PublishProfile>DefaultContainer</PublishProfile>
     </PropertyGroup>
