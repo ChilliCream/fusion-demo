@@ -95,7 +95,8 @@ jobs:
           registryPassword: ${{ secrets.ACR_PASSWORD }}
 
       - name: Export Source Schema
-        run: dotnet run --project ${{ inputs.project_path }} -- schema export
+        working-directory: ${{ inputs.project_path }}
+        run: dotnet run -- schema export
 
       - name: Publish Gateway Schema
         uses: ChilliCream/nitro-fusion-publish-action@v1.2
