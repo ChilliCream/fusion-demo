@@ -20,7 +20,7 @@ public static class Extensions
         builder.AddQueryContext();
         builder.ModifyCostOptions(x => x.EnforceCostLimits = false);
 
-        if (Production.Equals(environmentName, StringComparison.OrdinalIgnoreCase))
+        if (!Production.Equals(environmentName, StringComparison.OrdinalIgnoreCase))
         {
             builder.ExportSchemaOnStartup();
         }
