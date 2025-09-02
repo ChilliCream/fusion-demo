@@ -1,0 +1,106 @@
+name: deploy-source-schema
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: Name of the Container App + repo path in ACR
+        required: true
+        type: string
+      project_path:
+        description: Path to the .csproj folder
+        required: true
+        type: string
+      container_port:
+        description: App port exposed in the container
+        required: false
+        type: number
+        default: 8080
+      schema_file:
+        description: Source Schema File
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS: { required: true }
+      AZURE_SUBSCRIPTION_ID: { required: true }
+      AZURE_RESOURCE_GROUP: { required: true }
+      CONTAINERAPPS_ENVIRONMENT: { required: true }
+      ACR_LOGIN_SERVER: { required: true }
+      ACR_USERNAME: { required: true }
+      ACR_PASSWORD: { required: true }
+      NITRO_API_KEY: { required: true }
+      NITRO_API_ID: { required: true }
+      NITRO_STAGE: { required: true }
+
+jobs:
+  build-publish-deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ inputs.app_name }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR login (for dotnet publish push)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Compute image tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+
+      # Build .NET app and publish directly to an OCI image, then push to ACR.
+      - name: dotnet publish -> container (push to ACR)
+        working-directory: ${{ inputs.project_path }}
+        run: |
+          dotnet restore
+          dotnet publish -c Release \
+            -p:PublishProfile=DefaultContainer \
+            -p:ContainerRepository=${{ inputs.app_name }} \
+            -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
+            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+            -p:ContainerPort=${{ inputs.container_port }} \
+            -p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:9.0
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: ${{ inputs.app_name }}
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          imageToDeploy: ${{ steps.meta.outputs.image }}
+          environment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}
+          targetPort: ${{ inputs.container_port }}
+          ingress: external
+          registryUrl: ${{ secrets.ACR_LOGIN_SERVER }}
+          registryUsername: ${{ secrets.ACR_USERNAME }}
+          registryPassword: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Publish Gateway Schema
+        uses: ChilliCream/nitro-fusion-publish-action@v1.1
+        with:
+          tag: ${{ steps.meta.outputs.tag }}
+          stage: ${{ secrets.NITRO_STAGE }}
+          api-id: ${{ secrets.NITRO_API_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          source-schema-file: ${{ inputs.schema_file }}
+          nitro-version: '16.0.0-p.7.52'
+          working-directory: './'
