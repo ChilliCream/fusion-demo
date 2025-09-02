@@ -2,7 +2,23 @@
   "name": "inventory-api",
   "transports": {
     "http": {
-      "url": "http://localhost:5104/graphql"
+      "url": "{{API_URL}}"
+    }
+  },
+  "extensions": {
+    "nitro": {
+      "apiId": "QXBpCmcwMTk5MGE4ZGMxYjA3OWZhYjM1Y2M2ZTE3NDY1Yzg1Yw=="
+    }
+  },
+  "environments": {
+    "aspire": {
+      "API_URL": "http://localhost:5104/graphql"
+    },
+    "dev": {
+      "API_URL": "https://ccc-eu-fusion-demo.internal.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
+    },
+    "prod": {
+      "API_URL": "https://api.example.com"
     }
   }
 }
