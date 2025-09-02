@@ -102,7 +102,7 @@ jobs:
         uses: ChilliCream/nitro-fusion-publish-action@v1.3.0
         with:
           tag: ${{ steps.meta.outputs.tag }}
-          stage: ${{ secrets.NITRO_STAGE }}
+          stage: dev
           api-id: ${{ secrets.NITRO_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           source-schema-file: ${{ inputs.schema_file }}
