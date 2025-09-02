@@ -52,7 +52,8 @@ builder
     .WithGraphQLSchemaComposition(
         settings: new GraphQLCompositionSettings
         {
-            EnableGlobalObjectIdentification = true
+            EnableGlobalObjectIdentification = true,
+            EnvironmentName = "aspire"
         })
     .WithReference(accountsApi)
     .WithReference(inventoryApi)
