@@ -9,10 +9,10 @@ on:
 
 jobs:
   deploy:
-    uses: ./.github/workflows/deploy-source-schema.yml
+    uses: .github/workflows/deploy-source-schema.yml
     with:
       app_name: ccc-eu-fusion-demo-accounts-api
-      project_path: ./src/SourceSchemas/Accounts
+      project_path: src/SourceSchemas/Accounts
       container_port: 8080
-      schema_file: ./src/SourceSchemas/Accounts/schema.graphqls
+      schema_file: src/SourceSchemas/Accounts/schema.graphqls
     secrets: inherit

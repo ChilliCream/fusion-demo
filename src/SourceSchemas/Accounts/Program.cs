@@ -10,7 +10,7 @@ builder
     .AddGraphQL(Env.AccountsApi)
     .AddDefaultSettings()
     .AddAccountTypes()
-    .InitializeOnStartup(AccountContext.SeedDataAsync);
+    .InitializeOnStartup(AccountContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 
