@@ -7,7 +7,7 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.AccountsApi)
+    .AddGraphQL(Env.AccountsApi, disableDefaultSecurity: true)
     .AddDefaultSettings()
     .AddAccountTypes()
     .InitializeOnStartup(AccountContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
