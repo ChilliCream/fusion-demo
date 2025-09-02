@@ -15,7 +15,7 @@
       "API_URL": "http://localhost:5104/graphql"
     },
     "dev": {
-      "API_URL": "https://ccc-eu-fusion-demo.internal.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
+      "API_URL": "https://ccc-eu-fusion-demo-inventory-api.internal.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
     },
     "prod": {
       "API_URL": "https://api.example.com"
