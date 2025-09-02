@@ -4,6 +4,7 @@ on:
     branches: [ main ]
     paths:
       - 'src/SourceSchemas/Accounts/**'
+      - 'src/Defaults/**'
       - '.github/workflows/deploy-accounts.yml'
   workflow_dispatch: {}
 
