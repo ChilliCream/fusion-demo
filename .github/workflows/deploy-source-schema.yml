@@ -87,7 +87,7 @@ jobs:
           containerAppName: ${{ inputs.app_name }}
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           imageToDeploy: ${{ steps.meta.outputs.image }}
-          environment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}
+          containerAppEnvironment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}
           targetPort: ${{ inputs.container_port }}
           ingress: external
           registryUrl: ${{ secrets.ACR_LOGIN_SERVER }}
