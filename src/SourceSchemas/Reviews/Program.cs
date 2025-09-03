@@ -1,17 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults(Env.ReviewsApi, Env.Version);
-builder.AddRedisClient(Env.ReviewsRedis);
 builder.AddNpgsqlDbContext<ReviewContext>(Env.ReviewsDb);
 
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ReviewsApi)
+    .AddGraphQL(Env.ReviewsApi, disableDefaultSecurity: true)
     .AddDefaultSettings()
     .AddReviewTypes()
-    .AddRedisSubscriptions()
-    .InitializeOnStartup(ReviewContext.SeedDataAsync);
+    .AddPostgresSubscriptions()
+    .InitializeOnStartup(ReviewContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

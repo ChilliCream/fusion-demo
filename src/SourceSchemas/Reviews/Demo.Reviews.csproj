@@ -13,7 +13,7 @@
         <PackageReference Include="HotChocolate.AspNetCore"/>
         <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
         <PackageReference Include="HotChocolate.Data.EntityFramework"/>
-        <PackageReference Include="HotChocolate.Subscriptions.Redis"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Postgres"/>
         <PackageReference Include="HotChocolate.Diagnostics"/>
         <PackageReference Include="HotChocolate.Types.Analyzers">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

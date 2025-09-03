@@ -1,15 +1,14 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .AddServiceDefaults(Env.ShippingApi, Env.Version);
+builder.AddServiceDefaults(Env.ShippingApi, Env.Version);
 
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ShippingApi)
+    .AddGraphQL(Env.ShippingApi, disableDefaultSecurity: true)
     .AddDefaultSettings(registerNodeInterface: false)
     .AddShippingTypes()
-    .InitializeOnStartup();
+    .InitializeOnStartup(skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

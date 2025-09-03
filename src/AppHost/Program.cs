@@ -3,7 +3,6 @@ var builder = DistributedApplication.CreateBuilder(args);
 builder.AddGraphQLOrchestrator();
 
 var postgres = builder.AddPostgres("postgres");
-var redis = builder.AddRedis("redis");
 
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
@@ -26,7 +25,7 @@ var orderApi = builder
 var paymentsApi = builder
     .AddProject<Projects.Demo_Payments>("payments-api")
     .WithReference(postgres.AddDatabase("payments-db"))
-    .WithGraphQLSchemaEndpoint(path: "/graphql?SDL")
+    .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var productsApi = builder
@@ -38,10 +37,8 @@ var productsApi = builder
 var reviewsApi = builder
     .AddProject<Projects.Demo_Reviews>("reviews-api")
     .WithReference(postgres.AddDatabase("reviews-db"))
-    .WithReference(redis)
     .WithGraphQLSchemaEndpoint()
-    .WaitFor(postgres)
-    .WaitFor(redis);
+    .WaitFor(postgres);
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
