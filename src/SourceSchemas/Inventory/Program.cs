@@ -8,6 +8,7 @@ builder.Services.AddCors();
 
 builder
     .AddGraphQL(Env.InventoryApi)
+    .AddNitro()
     .AddDefaultSettings()
     .AddInventoryTypes()
     .InitializeOnStartup(InventoryContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
