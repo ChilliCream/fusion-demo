@@ -8,6 +8,7 @@ builder.Services.AddCors();
 
 builder
     .AddGraphQL(Env.OrderApi)
+    .AddNitro()
     .AddDefaultSettings()
     .AddOrderTypes()
     .InitializeOnStartup(OrderContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
