@@ -62,7 +62,9 @@ public static class Extensions
             .WithTracing(tracing =>
             {
                 tracing
+#if INCLUDE_EF_TELEMETRY
                     .AddEntityFrameworkCoreInstrumentation()
+#endif
                     .AddAspNetCoreInstrumentation(
                     o =>
                     {

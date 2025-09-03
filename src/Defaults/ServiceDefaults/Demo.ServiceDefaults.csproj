@@ -5,6 +5,10 @@
         <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <DefineConstants Condition="'$(PublishAot)' != 'true'">$(DefineConstants);INCLUDE_EF_TELEMETRY</DefineConstants> 
+    </PropertyGroup>
+
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
 
@@ -15,7 +19,8 @@
         <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Http"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Condition="'$(PublishAot)' != 'true'" />
+
     </ItemGroup>
 
 </Project>
