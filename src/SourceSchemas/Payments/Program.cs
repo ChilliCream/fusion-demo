@@ -8,6 +8,7 @@ builder.Services.AddCors();
 
 builder
     .AddGraphQL(Env.PaymentsApi)
+    .AddNitro()
     .AddDefaultSettings()
     .AddPaymentTypes()
     .InitializeOnStartup(PaymentContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
