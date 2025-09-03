@@ -1,0 +1,71 @@
+name: deploy-gateway
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/Gateway/**'
+      - 'src/Defaults/**'
+      - '.github/workflows/deploy-gateway.yml'
+  workflow_dispatch: {}
+
+jobs:
+  build-publish-deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-gateway
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR login (for dotnet publish push)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Compute image tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu-fusion-demo-gateway-api:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+
+      # Build .NET app and publish directly to an OCI image, then push to ACR.
+      - name: dotnet publish -> container (push to ACR)
+        working-directory: src/Gateway
+        run: |
+          dotnet restore
+          dotnet publish -c Release \
+            -p:ContainerRepository=ccc-eu-fusion-demo-gateway-api \
+            -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
+            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+            -p:PublishAot=true \
+            -p:RuntimeIdentifier=linux-x64
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: ccc-eu-fusion-demo-gateway-api
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          imageToDeploy: ${{ steps.meta.outputs.image }}
+          containerAppEnvironment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}
+          targetPort: 8080
+          ingress: external
+          registryUrl: ${{ secrets.ACR_LOGIN_SERVER }}
+          registryUsername: ${{ secrets.ACR_USERNAME }}
+          registryPassword: ${{ secrets.ACR_PASSWORD }}

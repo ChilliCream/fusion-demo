@@ -65,7 +65,9 @@ jobs:
         run: |
           TS=$(date -u +'%Y%m%dT%H%M%SZ')
           SHORTSHA=${GITHUB_SHA::7}
+          VERSION=${{ inputs.app_name }}-${SHORTSHA}
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+          echo "version=${Version}" >> $GITHUB_OUTPUT
           echo "image=${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
       # Build .NET app and publish directly to an OCI image, then push to ACR.
@@ -101,8 +103,8 @@ jobs:
       - name: Publish Gateway Schema
         uses: ChilliCream/nitro-fusion-publish-action@v1.3.0
         with:
-          tag: ${{ steps.meta.outputs.tag }}
-          stage: dev
+          tag: ${{ steps.meta.outputs.version }}
+          stage: ${{ secrets.NITRO_STAGE }}
           api-id: ${{ secrets.NITRO_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           source-schema-file: ${{ inputs.schema_file }}
