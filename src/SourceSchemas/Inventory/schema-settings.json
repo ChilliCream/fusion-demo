@@ -2,6 +2,7 @@
   "name": "inventory-api",
   "transports": {
     "http": {
+      "clientName": "fusion",
       "url": "{{API_URL}}"
     }
   },
