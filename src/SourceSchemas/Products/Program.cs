@@ -7,11 +7,11 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ProductsApi)
+    .AddGraphQL(Env.ProductsApi, disableDefaultSecurity: true)
     .AddDefaultSettings()
     .AddUploadType()
     .AddProductTypes()
-    .InitializeOnStartup(ProductContext.SeedDataAsync);
+    .InitializeOnStartup(ProductContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 
