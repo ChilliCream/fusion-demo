@@ -53,7 +53,8 @@ jobs:
           dotnet publish -c Release \
             -p:ContainerRepository=ccc-eu-fusion-demo-gateway-api \
             -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
-            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }}
+            -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+            -p:PublishAot=true
 
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
