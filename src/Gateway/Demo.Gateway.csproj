@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="HotChocolate.Fusion.AspNetCore"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
+        <PackageReference Include="ChilliCream.Nitro.Fusion" />
     </ItemGroup>
 
     <ItemGroup>

@@ -20,14 +20,9 @@ builder.Services
 
 builder
     .AddGraphQLGateway()
-    .AddFileSystemConfiguration("./gateway.far")
-    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
-    .AddDiagnosticEventListener(sp =>
-        new DebugDiagnosticListener(
-            sp.GetRequiredService<IRootServiceProviderAccessor>()
-                .ServiceProvider
-                .GetRequiredService<ILoggerFactory>()));
-
+    .AddNitro(static c => c.ApiId = "QXBpCmcwMTk5MGE4ZTFkZmM3NTcxODZlZmM1OWY5OGE0YTkwZA==")
+    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
+    
 var app = builder.Build();
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
