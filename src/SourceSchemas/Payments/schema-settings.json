@@ -8,7 +8,7 @@
   },
   "extensions": {
     "nitro": {
-      "apiId": "QXBpCmcwMTk5MGNhNWJjYjE3MjM2ODNmODZhOTQzNzM0M2QwMw=="
+      "apiId": "QXBpCmcwMTk5MGUyZTQ2MWI3OWE0YWIzNGIxNzFmNGE5Njg2YQ=="
     }
   },
   "environments": {
@@ -16,7 +16,7 @@
       "API_URL": "http://localhost:5108/graphql"
     },
     "dev": {
-      "API_URL": "https://ccc-eu-fusion-demo-order-api.internal.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
+      "API_URL": "https://ccc-eu-fusion-demo-payments-api.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
     },
     "prod": {
       "API_URL": "https://api.example.com"
