@@ -8,6 +8,7 @@ builder.Services.AddCors();
 
 builder
     .AddGraphQL(Env.ProductsApi)
+    .AddNitro()
     .AddDefaultSettings()
     .AddUploadType()
     .AddProductTypes()
