@@ -1,6 +1,4 @@
-using HotChocolate;
 using HotChocolate.AspNetCore;
-using HotChocolate.Fusion.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
