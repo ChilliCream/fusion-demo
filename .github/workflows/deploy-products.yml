@@ -1,4 +1,4 @@
-name: Payments API Release
+name: Products API Release
 on:
   push:
     branches: [ main ]
