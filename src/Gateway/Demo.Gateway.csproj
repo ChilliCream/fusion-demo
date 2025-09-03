@@ -15,6 +15,7 @@
         <PackageReference Include="HotChocolate.Fusion.AspNetCore"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
         <PackageReference Include="ChilliCream.Nitro.Fusion" />
+        <PackageReference Include="ChilliCream.Nitro.App" />
     </ItemGroup>
 
     <ItemGroup>
