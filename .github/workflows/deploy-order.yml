@@ -1,4 +1,4 @@
-name: Accounts Release
+name: Order API Release
 on:
   push:
     branches: [ main ]
