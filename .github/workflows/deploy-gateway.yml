@@ -1,4 +1,4 @@
-name: deploy-gateway
+name: Gateway API Release
 
 on:
   push:
