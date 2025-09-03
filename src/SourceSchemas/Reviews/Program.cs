@@ -7,6 +7,7 @@ builder.Services.AddCors();
 
 builder
     .AddGraphQL(Env.ReviewsApi)
+    .AddNitro()
     .AddDefaultSettings()
     .AddReviewTypes()
     .AddPostgresSubscriptions()
