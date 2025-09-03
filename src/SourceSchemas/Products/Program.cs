@@ -7,7 +7,7 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ProductsApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.ProductsApi)
     .AddDefaultSettings()
     .AddUploadType()
     .AddProductTypes()

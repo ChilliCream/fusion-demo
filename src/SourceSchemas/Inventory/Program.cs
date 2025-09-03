@@ -7,7 +7,7 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.InventoryApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.InventoryApi)
     .AddDefaultSettings()
     .AddInventoryTypes()
     .InitializeOnStartup(InventoryContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());

@@ -7,7 +7,7 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.OrderApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.OrderApi)
     .AddDefaultSettings()
     .AddOrderTypes()
     .InitializeOnStartup(OrderContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());

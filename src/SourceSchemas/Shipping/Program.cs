@@ -5,7 +5,7 @@ builder.AddServiceDefaults(Env.ShippingApi, Env.Version);
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ShippingApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.ShippingApi)
     .AddDefaultSettings(registerNodeInterface: false)
     .AddShippingTypes()
     .InitializeOnStartup(skipIf: args.IsGraphQLCommand());

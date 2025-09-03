@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using OpenTelemetry.Log;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -57,7 +58,8 @@ public static class Extensions
             {
                 metrics
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddNitroExporter();
             })
             .WithTracing(tracing =>
             {
@@ -66,40 +68,42 @@ public static class Extensions
                     .AddEntityFrameworkCoreInstrumentation()
 #endif
                     .AddAspNetCoreInstrumentation(
-                    o =>
-                    {
-                        o.RecordException = true;
-
-                        o.EnrichWithHttpRequest = (activity, request) =>
+                        o =>
                         {
-                            var path = request.PathBase.HasValue || request.Path.HasValue
-                                ? (request.PathBase + request.Path).ToString()
-                                : "/";
+                            o.RecordException = true;
 
-                            // we override the display name to include the path otherwise
-                            // all legacy request will be just set to {method}. This is correct
-                            // otel behaviour but not useful at all
-                            activity.DisplayName += $" {path}";
-
-                            // elastic only treats a request as a "request" transaction
-                            // when http.url is set
-                            activity.SetTag("http.url", GetUri(request));
-                        };
-                        o.EnrichWithHttpResponse = (activity, _) =>
-                        {
-                            var rawDisplayName =
-                                activity.GetCustomProperty("graphqlDisplayName");
-                            if (rawDisplayName is string graphqlDisplayName &&
-                                !string.IsNullOrEmpty(graphqlDisplayName))
+                            o.EnrichWithHttpRequest = (activity, request) =>
                             {
-                                activity.DisplayName = graphqlDisplayName;
-                            }
-                        };
-                    })
-                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                    //.AddGrpcClientInstrumentation()
+                                var path = request.PathBase.HasValue || request.Path.HasValue
+                                    ? (request.PathBase + request.Path).ToString()
+                                    : "/";
+
+                                // we override the display name to include the path otherwise
+                                // all legacy request will be just set to {method}. This is correct
+                                // otel behaviour but not useful at all
+                                activity.DisplayName += $" {path}";
+
+                                // elastic only treats a request as a "request" transaction
+                                // when http.url is set
+                                activity.SetTag("http.url", GetUri(request));
+                            };
+                            o.EnrichWithHttpResponse = (activity, _) =>
+                            {
+                                var rawDisplayName =
+                                    activity.GetCustomProperty("graphqlDisplayName");
+                                if (rawDisplayName is string graphqlDisplayName &&
+                                    !string.IsNullOrEmpty(graphqlDisplayName))
+                                {
+                                    activity.DisplayName = graphqlDisplayName;
+                                }
+                            };
+                        })
                     .AddHttpClientInstrumentation()
-                    .AddSource("HotChocolate.Diagnostics");
+                    .AddNitroExporter();
+            })
+            .WithLogging(logging =>
+            {
+                logging.AddNitroExporter();
             });
 
         builder.AddOpenTelemetryExporters();

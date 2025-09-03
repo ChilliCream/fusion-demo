@@ -6,7 +6,7 @@ builder.AddNpgsqlDbContext<ReviewContext>(Env.ReviewsDb);
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.ReviewsApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.ReviewsApi)
     .AddDefaultSettings()
     .AddReviewTypes()
     .AddPostgresSubscriptions()

@@ -13,7 +13,7 @@ builder.Services
     });
 
 builder.Services
-    .AddHttpClient("Fusion")
+    .AddHttpClient("fusion")
     .AddHeaderPropagation();
 
 builder

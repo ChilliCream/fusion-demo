@@ -21,6 +21,8 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Condition="'$(PublishAot)' != 'true'" />
 
+        <PackageReference Include="ChilliCream.Nitro.Telemetry" />
+
     </ItemGroup>
 
 </Project>

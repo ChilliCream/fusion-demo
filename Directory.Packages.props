@@ -21,7 +21,9 @@
     </PackageVersion>
   </ItemGroup>
   <ItemGroup Label="Nitro">
+    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.12" />
     <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.12" />
+    <PackageVersion Include="ChilliCream.Nitro.Telemetry" Version="16.0.0-preview.12" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.2" />
@@ -36,15 +38,12 @@
     <PackageVersion Include="Azure.Identity" Version="1.13.2" />
   </ItemGroup>
   <ItemGroup Label="OpenTelemetry">
-    <PackageVersion Include="OpenTelemetry.Api" Version="1.11.2" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.11.2" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.11.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Process" Version="1.11.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Quartz" Version="1.0.0-beta.3" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.11.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Api" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
   </ItemGroup>
 </Project>

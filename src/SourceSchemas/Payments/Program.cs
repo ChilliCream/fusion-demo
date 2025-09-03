@@ -7,7 +7,7 @@ builder
 builder.Services.AddCors();
 
 builder
-    .AddGraphQL(Env.PaymentsApi, disableDefaultSecurity: true)
+    .AddGraphQL(Env.PaymentsApi)
     .AddDefaultSettings()
     .AddPaymentTypes()
     .InitializeOnStartup(PaymentContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
