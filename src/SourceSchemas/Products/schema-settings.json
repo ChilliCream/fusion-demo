@@ -2,7 +2,24 @@
   "name": "products-api",
   "transports": {
     "http": {
-      "url": "http://localhost:5110/graphql"
+      "clientName": "fusion",
+      "url": "{{API_URL}}"
+    }
+  },
+  "extensions": {
+    "nitro": {
+      "apiId": "QXBpCmcwMTk5MGUzNDVlMWU3MjMyYjc2MjYxYzFiNjRkMGQzYg=="
+    }
+  },
+  "environments": {
+    "aspire": {
+      "API_URL": "http://localhost:5110/graphql"
+    },
+    "dev": {
+      "API_URL": "https://ccc-eu-fusion-demo-products-api.calmbeach-1836b252.westeurope.azurecontainerapps.io/graphql"
+    },
+    "prod": {
+      "API_URL": "https://api.example.com"
     }
   }
 }
