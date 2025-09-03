@@ -67,7 +67,7 @@ jobs:
           SHORTSHA=${GITHUB_SHA::7}
           VERSION=${{ inputs.app_name }}-${SHORTSHA}
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
-          echo "version=${Version}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "image=${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
       # Build .NET app and publish directly to an OCI image, then push to ACR.
