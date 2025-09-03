@@ -1,0 +1,19 @@
+name: Payments API Release
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/SourceSchemas/Payments/**'
+      - 'src/Defaults/**'
+      - '.github/workflows/deploy-payments.yml'
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-source-schema.yml
+    with:
+      app_name: ccc-eu-fusion-demo-payments-api
+      project_path: src/SourceSchemas/Payments
+      container_port: 8080
+      schema_file: src/SourceSchemas/Payments/schema.graphqls
+    secrets: inherit

@@ -1,11 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ContainerPort>8080</ContainerPort>
-        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
-        <PublishProfile>DefaultContainer</PublishProfile>
-    </PropertyGroup>
 
     <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
         <Using Include="Demo.Order"/>

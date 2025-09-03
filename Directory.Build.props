@@ -1,13 +1,21 @@
 <Project>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);AD0001;</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseArtifactsOutput>false</UseArtifactsOutput>
-    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);AD0001;</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <UseArtifactsOutput>false</UseArtifactsOutput>
+        <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ContainerPort>8080</ContainerPort>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
+        <PublishProfile>DefaultContainer</PublishProfile>
+    </PropertyGroup>
+
 </Project>
