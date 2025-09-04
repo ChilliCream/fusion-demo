@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <IsAotCompatible>true</IsAotCompatible>
-        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
         <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:9.0-noble</ContainerBaseImage>
     </PropertyGroup>
 

@@ -18,7 +18,7 @@ builder.Services
 
 builder
     .AddGraphQLGateway()
-    .AddNitro(static c => c.ApiId = "QXBpCmcwMTk5MGE4ZTFkZmM3NTcxODZlZmM1OWY5OGE0YTkwZA==")
+    .AddNitro()
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
     
 var app = builder.Build();
