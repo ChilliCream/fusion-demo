@@ -6,6 +6,7 @@ on:
       - 'src/SourceSchemas/Accounts/**'
       - 'src/Defaults/**'
       - '.github/workflows/deploy-accounts.yml'
+      - 'Directory.Packages.props'
   workflow_dispatch: {}
 
 jobs:

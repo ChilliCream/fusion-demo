@@ -6,6 +6,7 @@ on:
       - 'src/SourceSchemas/Inventory/**'
       - 'src/Defaults/**'
       - '.github/workflows/deploy-inventory.yml'
+      - 'Directory.Packages.props'
   workflow_dispatch: {}
 
 jobs:
