@@ -108,5 +108,5 @@ jobs:
           api-id: ${{ secrets.NITRO_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           source-schema-file: ${{ inputs.schema_file }}
-          nitro-version: '16.0.0-p.7.66'
+          nitro-version: '16.0.0-p.7.68'
           working-directory: './'
