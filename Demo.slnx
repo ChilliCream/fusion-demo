@@ -1,19 +1,10 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/AppHost/Demo.AppHost.csproj" />
-    <Project Path="src/Gateway/Demo.Gateway.csproj" />
-  </Folder>
   <Folder Name="/src/Defaults/">
     <Project Path="src/Defaults/ServiceDefaults/Demo.ServiceDefaults.csproj" />
     <Project Path="src/Defaults/SourceSchemaDefaults/Demo.SourceSchemaDefaults.csproj" />
   </Folder>
   <Folder Name="/src/Gateway/" />
   <Folder Name="/src/SourceSchemas/">
-    <Project Path="src/SourceSchemas/Accounts/Demo.Accounts.csproj" />
-    <Project Path="src/SourceSchemas/Inventory/Demo.Inventory.csproj" />
-    <Project Path="src/SourceSchemas/Order/Demo.Order.csproj" />
-    <Project Path="src/SourceSchemas/Payments/Demo.Payments.csproj" />
-    <Project Path="src/SourceSchemas/Products/Demo.Products.csproj" />
     <Project Path="src/SourceSchemas/Reviews/Demo.Reviews.csproj" />
     <Project Path="src/SourceSchemas/Shipping/Demo.Shipping.csproj" />
   </Folder>

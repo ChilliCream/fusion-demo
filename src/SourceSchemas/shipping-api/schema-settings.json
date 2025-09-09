@@ -1,0 +1,9 @@
+{
+  "name": "shipping-api",
+  "transports": {
+    "http": {
+      "clientName": "fusion",
+      "url": "http://localhost:5114/graphql"
+    }
+  }
+}

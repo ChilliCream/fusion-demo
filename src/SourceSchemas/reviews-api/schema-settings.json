@@ -1,0 +1,9 @@
+{
+  "name": "reviews-api",
+  "transports": {
+    "http": {
+      "clientName": "fusion",
+      "url": "http://localhost:5112/graphql"
+    }
+  }
+}
