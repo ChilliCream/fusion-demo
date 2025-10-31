@@ -1,4 +1,6 @@
+using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.Fusion.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,13 @@ builder.Services
     .AddHttpClient("fusion")
     .AddHeaderPropagation();
 
+builder.Services.AddLogging();
+
 builder
     .AddGraphQLGateway()
-    .AddNitro()
+    .AddFileSystemConfiguration("./gateway.far")
+    // .AddNitro()
+    // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
     
 var app = builder.Build();

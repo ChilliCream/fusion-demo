@@ -7,7 +7,7 @@ public static partial class ReviewSubscriptions
     [Topic(nameof(ReviewMutations.CreateReview))]
     public static async Task<Review?> OnCreateReview(
         [EventMessage] int reviewId,
-        ReviewByIdDataLoader reviewById,
+        IReviewByIdDataLoader reviewById,
         CancellationToken cancellationToken)
         => await reviewById.LoadAsync(reviewId, cancellationToken);
 }

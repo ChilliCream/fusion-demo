@@ -8,8 +8,7 @@ builder
     .AddGraphQL(Env.ShippingApi)
     .AddNitro()
     .AddDefaultSettings(registerNodeInterface: false)
-    .AddShippingTypes()
-    .InitializeOnStartup(skipIf: args.IsGraphQLCommand());
+    .AddShippingTypes();
 
 var app = builder.Build();
 

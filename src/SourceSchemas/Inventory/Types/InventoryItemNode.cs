@@ -1,7 +1,7 @@
 namespace Demo.Inventory.Types;
 
 [ObjectType<InventoryItem>]
-public static partial class InventoryItemType
+public static partial class InventoryItemNode
 {
     [BindMember(nameof(InventoryItem.ProductId))]
     public static Product GetProduct([Parent] InventoryItem item)

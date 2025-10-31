@@ -6,7 +6,7 @@ public static partial class PaymentQueries
     [Lookup, NodeResolver]
     public static async Task<Payment?> GetPaymentByIdAsync(
         int id,
-        PaymentByIdDataLoader productById,
+        IPaymentByIdDataLoader productById,
         CancellationToken cancellationToken)
         => await productById.LoadAsync(id, cancellationToken);
 

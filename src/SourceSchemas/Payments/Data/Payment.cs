@@ -2,7 +2,7 @@ namespace Demo.Payments.Data;
 
 public class Payment
 {
-    // [Key]
+    [Key]
     public int Id { get; set; }
 
     public int OrderId { get; set; }

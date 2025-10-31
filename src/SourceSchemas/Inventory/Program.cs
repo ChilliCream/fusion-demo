@@ -11,7 +11,7 @@ builder
     .AddNitro()
     .AddDefaultSettings()
     .AddInventoryTypes()
-    .InitializeOnStartup(InventoryContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddWarmupTask(InventoryContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

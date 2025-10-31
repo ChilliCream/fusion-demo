@@ -1,4 +1,4 @@
-namespace Demo.Accounts.Types;
+namespace Demo.Accounts.Data;
 
 internal static class UserDataLoaders
 {

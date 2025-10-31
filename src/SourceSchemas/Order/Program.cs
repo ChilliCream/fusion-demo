@@ -11,7 +11,7 @@ builder
     .AddNitro()
     .AddDefaultSettings()
     .AddOrderTypes()
-    .InitializeOnStartup(OrderContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddWarmupTask(OrderContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

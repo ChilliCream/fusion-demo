@@ -1,5 +1,6 @@
 namespace Demo.Shipping.Types;
 
+// The composition should remove it as its only used as a requirement, right?
 // [Inaccessible]
 public sealed class ProductDimensionInput
 {

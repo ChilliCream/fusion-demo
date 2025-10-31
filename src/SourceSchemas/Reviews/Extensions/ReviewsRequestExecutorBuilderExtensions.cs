@@ -7,7 +7,7 @@ public static class ReviewsRequestExecutorBuilderExtensions
 {
     public static IRequestExecutorBuilder AddPostgresSubscriptions(
         this IRequestExecutorBuilder builder)
-        => builder.AddPostgresSubscriptions((sp, options) => options.ConnectionFactory = ctx => CreateConnection(sp));
+        => builder.AddPostgresSubscriptions((sp, options) => options.ConnectionFactory = _ => CreateConnection(sp));
 
     private static ValueTask<NpgsqlConnection> CreateConnection(IServiceProvider services)
     {

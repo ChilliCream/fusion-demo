@@ -1,5 +1,6 @@
 namespace Demo.Shipping.Types;
 
+[EntityKey("id")]
 public sealed record Product([property: ID<Product>] int Id)
 {
     public int GetDeliveryEstimate(

@@ -6,7 +6,7 @@ public static partial class Query
     [Lookup, NodeResolver]
     public static async Task<InventoryItem?> GetInventoryItemByIdAsync(
         int id,
-        InventoryItemByIdDataLoader inventoryItemById,
+        IInventoryItemByIdDataLoader inventoryItemById,
         CancellationToken cancellationToken)
         => await inventoryItemById.LoadAsync(id, cancellationToken);
 

@@ -12,7 +12,7 @@ builder
     .AddDefaultSettings()
     .AddUploadType()
     .AddProductTypes()
-    .InitializeOnStartup(ProductContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddWarmupTask(ProductContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

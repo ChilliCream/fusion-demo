@@ -6,7 +6,7 @@ public static partial class ReviewQueries
     [Lookup, NodeResolver]
     public static async Task<Review?> GetReviewByIdAsync(
         int id,
-        ReviewByIdDataLoader reviewById,
+        IReviewByIdDataLoader reviewById,
         CancellationToken cancellationToken)
         => await reviewById.LoadAsync(id, cancellationToken);
 }

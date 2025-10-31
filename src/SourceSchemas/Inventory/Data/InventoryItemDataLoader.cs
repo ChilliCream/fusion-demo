@@ -1,4 +1,4 @@
-namespace Demo.Inventory.Types;
+namespace Demo.Inventory.Data;
 
 public static class InventoryItemDataLoader
 {

@@ -9,14 +9,14 @@ public static partial class UserQueries
     [Lookup, NodeResolver]
     public static async Task<User?> GetUserById(
         int id,
-        UserByIdDataLoader userById,
+        IUserByIdDataLoader userById,
         CancellationToken cancellationToken)
         => await userById.LoadAsync(id, cancellationToken);
 
     [Lookup]
     public static async Task<User?> GetUserByUsername(
         string username,
-        UserByNameDataLoader userByName,
+        IUserByNameDataLoader userByName,
         CancellationToken cancellationToken)
         => await userByName.LoadAsync(username, cancellationToken);
 

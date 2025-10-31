@@ -11,7 +11,7 @@ builder
     .AddNitro()
     .AddDefaultSettings()
     .AddPaymentTypes()
-    .InitializeOnStartup(PaymentContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddWarmupTask(PaymentContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

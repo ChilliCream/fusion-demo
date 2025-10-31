@@ -3,9 +3,7 @@ namespace Demo.Accounts.Data;
 [Index(nameof(Username), IsUnique = true)]
 public class User
 {
-    // [CompositeKey]
-    // [KeyDirective]
-    // [Key]
+    [Key]
     public int Id { get; set; }
 
     [Required]

@@ -2,6 +2,7 @@ namespace Demo.Inventory.Data;
 
 public class InventoryItem
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]

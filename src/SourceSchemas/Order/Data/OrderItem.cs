@@ -2,7 +2,7 @@ namespace Demo.Order.Data;
 
 public class OrderItem
 {
-    // [Key]
+    [Key]
     public int Id { get; set; }
 
     [Required]

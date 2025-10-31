@@ -6,7 +6,7 @@ public static partial class OrderQueries
     [Lookup, NodeResolver]
     public static async Task<Data.Order?> GetOrderByIdAsync(
         int id,
-        OrderByIdDataLoader productById,
+        IOrderByIdDataLoader productById,
         CancellationToken cancellationToken)
         => await productById.LoadAsync(id, cancellationToken);
 

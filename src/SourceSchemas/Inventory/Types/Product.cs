@@ -2,22 +2,24 @@ namespace Demo.Inventory.Types;
 
 public sealed class Product(int id, InventoryItem? item = null)
 {
+    private InventoryItem? _item = item;
+
     [ID<Product>]
     public int Id { get; } = id;
 
     public async Task<InventoryItem?> GetItemAsync(
-        InventoryItemByProductIdDataLoader inventoryItemByProductId,
+        IInventoryItemByProductIdDataLoader inventoryItemByProductId,
         CancellationToken cancellationToken)
     {
-        item ??= await inventoryItemByProductId.LoadAsync(Id, cancellationToken);
-        return item;  
+        _item ??= await inventoryItemByProductId.LoadAsync(Id, cancellationToken);
+        return _item;  
     }
 
     public async Task<int> GetQuantityAsync(
-        InventoryItemByProductIdDataLoader inventoryItemByProductId,
+        IInventoryItemByProductIdDataLoader inventoryItemByProductId,
         CancellationToken cancellationToken)
     {
-        item ??= await inventoryItemByProductId.LoadAsync(Id, cancellationToken);
-        return item?.Quantity ?? 0;
+        _item ??= await inventoryItemByProductId.LoadAsync(Id, cancellationToken);
+        return _item?.Quantity ?? 0;
     }
 }

@@ -9,7 +9,7 @@ public static partial class ProductQueries
     [NodeResolver, Lookup]
     public static async Task<Product?> GetProductByIdAsync(
         int id,
-        ProductByIdDataLoader productById,
+        IProductByIdDataLoader productById,
         CancellationToken cancellationToken)
         => await productById.LoadAsync(id, cancellationToken);
 

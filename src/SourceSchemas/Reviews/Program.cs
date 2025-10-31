@@ -11,7 +11,7 @@ builder
     .AddDefaultSettings()
     .AddReviewTypes()
     .AddPostgresSubscriptions()
-    .InitializeOnStartup(ReviewContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddWarmupTask(ReviewContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 
 var app = builder.Build();
 

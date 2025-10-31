@@ -3,14 +3,11 @@ namespace Demo.Products.Types;
 [ObjectType<Product>]
 public static partial class ProductNode
 {
-    static partial void Configure(IObjectTypeDescriptor<Product> descriptor)
-    {
-        descriptor
+    static partial void Configure(IObjectTypeDescriptor<Product> descriptor) 
+        => descriptor
             .Ignore(t => t.Length)
             .Ignore(t => t.Height)
             .Ignore(t => t.Width);
-        
-    }
 
     public static ProductDimension GetDimension(
         [Parent(requires: "{ Length Width Height }")] 
