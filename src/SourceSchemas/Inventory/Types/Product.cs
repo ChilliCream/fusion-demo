@@ -7,6 +7,7 @@ public sealed class Product(int id, InventoryItem? item = null)
     [ID<Product>]
     public int Id { get; } = id;
 
+    [Tag("team-inventor")]
     public async Task<InventoryItem?> GetItemAsync(
         IInventoryItemByProductIdDataLoader inventoryItemByProductId,
         CancellationToken cancellationToken)
@@ -15,6 +16,7 @@ public sealed class Product(int id, InventoryItem? item = null)
         return _item;  
     }
 
+    [Tag("team-inventor")]
     public async Task<int> GetQuantityAsync(
         IInventoryItemByProductIdDataLoader inventoryItemByProductId,
         CancellationToken cancellationToken)

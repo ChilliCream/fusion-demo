@@ -14,6 +14,7 @@ public static partial class ProductNode
         Product product)
         => new(product.Length, product.Width, product.Height);
 
+    [Tag("team-products")]
     public static Uri? GetPictureUrl(
         [Parent] Product product, 
         IHttpContextAccessor httpContextAccessor)

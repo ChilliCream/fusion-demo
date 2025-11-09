@@ -3,6 +3,7 @@
 [QueryType]
 public static partial class Query
 {
+    [Tag("team-inventor")]
     [Lookup, NodeResolver]
     public static async Task<InventoryItem?> GetInventoryItemByIdAsync(
         int id,

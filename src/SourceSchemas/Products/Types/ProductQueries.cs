@@ -6,6 +6,7 @@ namespace Demo.Products.Types;
 [QueryType]
 public static partial class ProductQueries
 {
+    [Tag("team-products")]
     [NodeResolver, Lookup]
     public static async Task<Product?> GetProductByIdAsync(
         int id,
@@ -13,6 +14,7 @@ public static partial class ProductQueries
         CancellationToken cancellationToken)
         => await productById.LoadAsync(id, cancellationToken);
 
+    [Tag("team-products")]
     [UsePaging]
     public static async Task<Connection<Product>> GetProducts(
         PagingArguments arguments,
