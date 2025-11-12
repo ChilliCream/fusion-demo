@@ -22,8 +22,8 @@ builder.Services.AddLogging();
 
 builder
     .AddGraphQLGateway()
-    .AddFileSystemConfiguration("./gateway.far")
-    // .AddNitro()
+    // .AddFileSystemConfiguration("./gateway.far")
+    .AddNitro()
     // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
     
