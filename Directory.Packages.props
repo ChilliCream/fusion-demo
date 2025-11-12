@@ -3,19 +3,19 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
-    <PackageVersion Include="HotChocolate" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.8.20">
+    <PackageVersion Include="HotChocolate" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.7.68" />
+    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.7.68">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
