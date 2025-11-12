@@ -2,12 +2,12 @@ name: Gateway API Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/Gateway/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-gateway.yml'
-      - 'Directory.Packages.props'
+      - "src/Gateway/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-gateway.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
           TS=$(date -u +'%Y%m%dT%H%M%SZ')
           SHORTSHA=${GITHUB_SHA::7}
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
-          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu-fusion-demo-gateway-api:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-gateway:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
       # Build .NET app and publish directly to an OCI image, then push to ACR.
       - name: dotnet publish -> container (push to ACR)
@@ -52,7 +52,7 @@ jobs:
         run: |
           dotnet restore
           dotnet publish -c Release \
-            -p:ContainerRepository=ccc-eu-fusion-demo-gateway-api \
+            -p:ContainerRepository=ccc-eu1-demo-ca-gateway \
             -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
             -p:PublishAot=true \
@@ -61,7 +61,7 @@ jobs:
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
-          containerAppName: ccc-eu-fusion-demo-gateway-api
+          containerAppName: ccc-eu1-demo-ca-gateway
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           imageToDeploy: ${{ steps.meta.outputs.image }}
           containerAppEnvironment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}

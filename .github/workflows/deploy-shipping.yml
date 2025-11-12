@@ -1,19 +1,19 @@
 name: Shipping API Release
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/SourceSchemas/Shipping/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-shipping.yml'
-      - 'Directory.Packages.props'
+      - "src/SourceSchemas/Shipping/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-shipping.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-source-schema.yml
     with:
-      app_name: ccc-eu-fusion-demo-shipping-api
+      app_name: ccc-eu1-demo-ca-shipping
       project_path: src/SourceSchemas/Shipping
       container_port: 8080
       schema_file: src/SourceSchemas/Shipping/schema.graphqls

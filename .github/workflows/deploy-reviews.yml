@@ -1,19 +1,19 @@
 name: Reviews API Release
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/SourceSchemas/Reviews/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-reviews.yml'
-      - 'Directory.Packages.props'
+      - "src/SourceSchemas/Reviews/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-reviews.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-source-schema.yml
     with:
-      app_name: ccc-eu-fusion-demo-reviews-api
+      app_name: ccc-eu1-demo-ca-reviews
       project_path: src/SourceSchemas/Reviews
       container_port: 8080
       schema_file: src/SourceSchemas/Reviews/schema.graphqls

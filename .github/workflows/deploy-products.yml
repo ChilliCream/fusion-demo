@@ -1,19 +1,19 @@
 name: Products API Release
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/SourceSchemas/Products/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-products.yml'
-      - 'Directory.Packages.props'
+      - "src/SourceSchemas/Products/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-products.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-source-schema.yml
     with:
-      app_name: ccc-eu-fusion-demo-products-api
+      app_name: ccc-eu1-demo-ca-products
       project_path: src/SourceSchemas/Products
       container_port: 8080
       schema_file: src/SourceSchemas/Products/schema.graphqls

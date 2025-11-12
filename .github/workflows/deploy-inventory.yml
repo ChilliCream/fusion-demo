@@ -1,19 +1,19 @@
 name: Inventory API Release
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/SourceSchemas/Inventory/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-inventory.yml'
-      - 'Directory.Packages.props'
+      - "src/SourceSchemas/Inventory/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-inventory.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-source-schema.yml
     with:
-      app_name: ccc-eu-fusion-demo-inventory-api
+      app_name: ccc-eu1-demo-ca-inventory
       project_path: src/SourceSchemas/Inventory
       container_port: 8080
       schema_file: src/SourceSchemas/Inventory/schema.graphqls

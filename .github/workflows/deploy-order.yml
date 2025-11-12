@@ -1,19 +1,19 @@
 name: Order API Release
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'src/SourceSchemas/Order/**'
-      - 'src/Defaults/**'
-      - '.github/workflows/deploy-order.yml'
-      - 'Directory.Packages.props'
+      - "src/SourceSchemas/Order/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-order.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-source-schema.yml
     with:
-      app_name: ccc-eu-fusion-demo-order-api
+      app_name: ccc-eu1-demo-ca-order
       project_path: src/SourceSchemas/Order
       container_port: 8080
       schema_file: src/SourceSchemas/Order/schema.graphqls
