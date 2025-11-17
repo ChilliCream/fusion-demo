@@ -3,38 +3,38 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
-    <PackageVersion Include="HotChocolate" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.8.20" />
-    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.8.20">
+    <PackageVersion Include="HotChocolate" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.9.13" />
+    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.9.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
   </ItemGroup>
   <ItemGroup Label="Nitro">
-    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.12" />
-    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.12" />
-    <PackageVersion Include="ChilliCream.Nitro.Telemetry" Version="16.0.0-preview.12" />
-    <PackageVersion Include="ChilliCream.Nitro.App" Version="29.0.0-insider.48" />
+    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.14" />
+    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.14" />
+    <PackageVersion Include="ChilliCream.Nitro.Telemetry" Version="16.0.0-preview.14" />
+    <PackageVersion Include="ChilliCream.Nitro.App" Version="29.0.0-insider.69" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="9.5.1" />
-    <PackageVersion Include="Aspire.StackExchange.Redis" Version="9.5.1" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="9.5.2" />
+    <PackageVersion Include="Aspire.StackExchange.Redis" Version="9.5.2" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.1" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.2" />
     <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.8" />
     <PackageVersion Include="Azure.Identity" Version="1.13.2" />
   </ItemGroup>
