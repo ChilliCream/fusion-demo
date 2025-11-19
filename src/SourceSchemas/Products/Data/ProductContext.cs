@@ -170,16 +170,6 @@ public class ProductContext(DbContextOptions options) : DbContext(options)
                 },
                 new Product
                 {
-                    Name = "Console Table",
-                    Price = 249.99,
-                    Weight = 25,
-                    Length = 120,
-                    Width = 35,
-                    Height = 80,
-                    PictureFileName = "console-table.jpg"
-                },
-                new Product
-                {
                     Name = "Bench",
                     Price = 179.50,
                     Weight = 22,
