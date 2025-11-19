@@ -3,6 +3,7 @@ import type { ProductsPageQuery } from "./__generated__/ProductsPageQuery.graphq
 import type { ProductsList_products$key } from "./__generated__/ProductsList_products.graphql";
 import ProductCard from "./ProductCard";
 import { Box, Button, CircularProgress } from "@mui/material";
+import { useCallback } from "react";
 
 const ProductsListFragment = graphql`
   fragment ProductsList_products on Query
@@ -24,6 +25,29 @@ interface ProductsListProps {
   queryRef: ProductsList_products$key;
 }
 
+const gridStyles = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "1fr",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(2, 1fr)",
+    lg: "repeat(3, 1fr)",
+  },
+  gap: { xs: 2, sm: 3, md: 4 },
+  width: "100%",
+  maxWidth: { xs: "100%", sm: "700px", md: "900px", lg: "1300px" },
+  px: { xs: 2, sm: 3, md: 4 },
+} as const;
+
+const loadMoreContainerStyles = {
+  display: "flex",
+  justifyContent: "center",
+  mt: 6,
+} as const;
+
+const buttonStyles = { minWidth: 200 } as const;
+const progressStyles = { mr: 1 } as const;
+
 export default function ProductsList({ queryRef }: ProductsListProps) {
   const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<
     ProductsPageQuery,
@@ -32,41 +56,29 @@ export default function ProductsList({ queryRef }: ProductsListProps) {
 
   const products = data.products?.edges || [];
 
+  const handleLoadMore = useCallback(() => {
+    loadNext(12);
+  }, [loadNext]);
+
   return (
     <>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 400px)",
-          gap: 4,
-          "@media (max-width: 1300px)": {
-            gridTemplateColumns: "repeat(2, 400px)",
-          },
-          "@media (max-width: 900px)": {
-            gridTemplateColumns: "repeat(2, minmax(300px, 400px))",
-          },
-          "@media (max-width: 768px)": {
-            gridTemplateColumns: "1fr",
-            maxWidth: "400px",
-          },
-        }}
-      >
+      <Box sx={gridStyles}>
         {products.map((edge) => (
           <ProductCard key={edge.node.id} product={edge.node} />
         ))}
       </Box>
       {hasNext && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
+        <Box sx={loadMoreContainerStyles}>
           <Button
             variant="contained"
             size="large"
-            onClick={() => loadNext(12)}
+            onClick={handleLoadMore}
             disabled={isLoadingNext}
-            sx={{ minWidth: 200 }}
+            sx={buttonStyles}
           >
             {isLoadingNext ? (
               <>
-                <CircularProgress size={24} sx={{ mr: 1 }} color="inherit" />
+                <CircularProgress size={24} sx={progressStyles} color="inherit" />
                 Loading...
               </>
             ) : (
