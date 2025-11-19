@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26edc3433fad8287d8dd88e01fbe05da>>
+ * @generated SignedSource<<8d00bd623832f451ad22accb47b36cfe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type ProductsListPaginationQuery = {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": 12,
+    "defaultValue": null,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -192,16 +192,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "771795cbc733e4141fe0ed7c93d61b85",
+    "cacheID": "ff138a369ac1e25a4da49e29a177b7b3",
     "id": null,
     "metadata": {},
     "name": "ProductsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ProductsListPaginationQuery(\n  $count: Int = 12\n  $cursor: String\n) {\n  ...ProductsList_products_1G22uz\n}\n\nfragment ProductCard_product on Product {\n  id\n  name\n  price\n  pictureUrl\n}\n\nfragment ProductsList_products_1G22uz on Query {\n  products(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ProductsListPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...ProductsList_products_1G22uz\n}\n\nfragment ProductCard_product on Product {\n  id\n  name\n  price\n  pictureUrl\n}\n\nfragment ProductsList_products_1G22uz on Query {\n  products(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9fee165ad6a8eca35a26589db85a9d24";
+(node as any).hash = "7780f29bc8b21396776bf2055132cd0c";
 
 export default node;

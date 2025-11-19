@@ -12,7 +12,7 @@ const ProductsPageQueryNode = graphql`
 
 function ProductsPageContent() {
   const data = useLazyLoadQuery<ProductsPageQuery>(ProductsPageQueryNode, {
-    count: 12,
+    count: 6,
   });
 
   return (
@@ -31,8 +31,20 @@ function ProductsPageContent() {
         variant="h2"
         component="h1"
         align="center"
-        gutterBottom
-        sx={{ mb: 6, fontWeight: "bold" }}
+        sx={{
+          mb: 6,
+          fontWeight: 900,
+          fontSize: { xs: "2.5rem", sm: "3rem", md: "3.5rem" },
+          color: "primary.main",
+          textTransform: "uppercase",
+          letterSpacing: "0.1em",
+          background: "linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          textShadow: "0 2px 4px rgba(25, 118, 210, 0.1)",
+          position: "relative",
+        }}
       >
         Products
       </Typography>

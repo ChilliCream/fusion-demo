@@ -7,10 +7,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 const ProductsListFragment = graphql`
   fragment ProductsList_products on Query
   @refetchable(queryName: "ProductsListPaginationQuery")
-  @argumentDefinitions(
-    count: { type: "Int", defaultValue: 12 }
-    cursor: { type: "String" }
-  ) {
+  @argumentDefinitions(count: { type: "Int" }, cursor: { type: "String" }) {
     products(first: $count, after: $cursor)
       @connection(key: "ProductsList_products") {
       edges {
@@ -28,11 +25,10 @@ interface ProductsListProps {
 }
 
 export default function ProductsList({ queryRef }: ProductsListProps) {
-  const { data, loadNext, hasNext, isLoadingNext } =
-    usePaginationFragment<ProductsPageQuery, ProductsList_products$key>(
-      ProductsListFragment,
-      queryRef
-    );
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<
+    ProductsPageQuery,
+    ProductsList_products$key
+  >(ProductsListFragment, queryRef);
 
   const products = data.products?.edges || [];
 

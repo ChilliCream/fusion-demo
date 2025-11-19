@@ -43,23 +43,31 @@ export default function ProductCard({ product }: ProductCardProps) {
         },
       }}
     >
-      <CardMedia
-        component={data.pictureUrl ? "img" : "div"}
-        image={data.pictureUrl || undefined}
-        alt={data.name}
-        sx={{
-          height: 350,
-          backgroundColor: "#f5f5f5",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          objectFit: "cover",
-        }}
-      >
-        {!data.pictureUrl && (
+      {data.pictureUrl ? (
+        <CardMedia
+          component="img"
+          image={data.pictureUrl}
+          alt={data.name}
+          sx={{
+            height: 350,
+            backgroundColor: "#f5f5f5",
+            objectFit: "cover",
+          }}
+        />
+      ) : (
+        <CardMedia
+          component="div"
+          sx={{
+            height: 350,
+            backgroundColor: "#f5f5f5",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Typography color="text.secondary">No Image</Typography>
-        )}
-      </CardMedia>
+        </CardMedia>
+      )}
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
         <Typography
           gutterBottom
