@@ -405,3 +405,4 @@ FodyWeavers.xsd
 schema.graphqls
 schema.graphql
 gateway.far
+!src/frontend/src/schema.graphql
