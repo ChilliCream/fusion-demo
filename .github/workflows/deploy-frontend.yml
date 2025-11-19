@@ -43,7 +43,7 @@ jobs:
         working-directory: src/frontend
         run: |
           docker build \
-            --build-arg VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_URL }} \
+            --build-arg VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }} \
             -t ${{ steps.meta.outputs.image }} \
             .
           docker push ${{ steps.meta.outputs.image }}

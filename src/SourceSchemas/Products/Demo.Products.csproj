@@ -28,4 +28,10 @@
         <ProjectReference Include="..\..\Defaults\SourceSchemaDefaults\Demo.SourceSchemaDefaults.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="images\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>
