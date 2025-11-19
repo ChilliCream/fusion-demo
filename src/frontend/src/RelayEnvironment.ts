@@ -6,7 +6,7 @@ import {
   type FetchFunction,
 } from "relay-runtime";
 
-const HTTP_ENDPOINT = "http://localhost:5116/graphql/"; //"https://demo.chillicream-graphql.com/graphql";
+const HTTP_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || "http://localhost:5116/graphql/";
 
 const fetchFn: FetchFunction = async (request, variables) => {
   const resp = await fetch(HTTP_ENDPOINT, {
