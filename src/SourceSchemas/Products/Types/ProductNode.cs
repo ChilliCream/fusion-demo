@@ -24,4 +24,7 @@ public static partial class ProductNode
             ? new Uri($"{context!.Request.Scheme}://{context.Request.Host}/images/{product.PictureFileName}")
             : null;
     }
+
+    public static string GetLongDescription([Parent] Product product) 
+        => product.Name + " - This is a great product!";
 }
