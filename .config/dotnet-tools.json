@@ -2,14 +2,18 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "hotchocolate.fusion.commandline": {
-      "version": "16.0.0-p.9.16",
-      "commands": ["fusion"],
-      "rollForward": false
-    },
     "aspire.cli": {
       "version": "9.4.2",
-      "commands": ["aspire"],
+      "commands": [
+        "aspire"
+      ],
+      "rollForward": false
+    },
+    "chillicream.nitro.commandline": {
+      "version": "16.0.0-p.9.20",
+      "commands": [
+        "nitro"
+      ],
       "rollForward": false
     }
   }
