@@ -5,10 +5,11 @@ schema {
 }
 
 type Query {
-  inventoryItemById(id: ID!): InventoryItem
+  inventoryItemById(id: ID!): InventoryItem @fusion__tag(name: "team-inventor")
+  node(id: ID!): Node
   orderById(id: ID!): Order
   paymentById(id: ID!): Payment
-  productById(id: ID!): Product
+  productById(id: ID!): Product @fusion__tag(name: "team-products")
   products(
     "Returns the elements in the list that come after the specified cursor."
     after: String
@@ -18,7 +19,7 @@ type Query {
     first: Int
     "Returns the last _n_ elements from the list."
     last: Int
-  ): ProductsConnection
+  ): ProductsConnection @fusion__tag(name: "team-products")
   reviewById(id: ID!): Review
   userById(id: ID!): User
   userByUsername(username: String!): User
@@ -32,12 +33,18 @@ type Query {
     "Returns the last _n_ elements from the list."
     last: Int
   ): UsersConnection
+  viewer: Viewer!
 }
 
 type Mutation {
+  addProductToCart(input: AddProductToCartInput!): AddProductToCartPayload!
+  checkout: CheckoutPayload!
   createOrder(input: CreateOrderInput!): CreateOrderPayload!
   createPayment(input: CreatePaymentInput!): CreatePaymentPayload!
   createReview(input: CreateReviewInput!): CreateReviewPayload!
+  removeProductFromCart(
+    input: RemoveProductFromCartInput!
+  ): RemoveProductFromCartPayload!
   restockProduct(input: RestockProductInput!): RestockProductPayload!
   uploadProductPicture(
     input: UploadProductPictureInput!
@@ -46,6 +53,53 @@ type Mutation {
 
 type Subscription {
   onCreateReview: Review
+}
+
+type AddProductToCartPayload {
+  cart: Cart
+}
+
+type Cart {
+  createdAt: DateTime!
+  id: ID!
+  items(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the last _n_ elements from the list."
+    last: Int
+  ): CartItemsConnection
+}
+
+type CartItem {
+  addedAt: DateTime!
+  id: ID!
+  product: Product!
+}
+
+"A connection to a list of items."
+type CartItemsConnection {
+  "A list of edges."
+  edges: [CartItemsEdge!]
+  "A flattened list of the nodes."
+  nodes: [CartItem!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type CartItemsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: CartItem!
+}
+
+type CheckoutPayload {
+  cart: Cart
 }
 
 type CreateOrderPayload {
@@ -107,13 +161,12 @@ type Product implements Node {
   deliveryEstimate(zip: String!): Int!
   dimension: ProductDimension!
   id: ID!
-  item: InventoryItem
-  longDescription: String!
+  item: InventoryItem @fusion__tag(name: "team-inventor")
   name: String!
   pictureFileName: String
-  pictureUrl: URL
+  pictureUrl: URL @fusion__tag(name: "team-products")
   price: Float!
-  quantity: Int!
+  quantity: Int! @fusion__tag(name: "team-inventor")
   reviews(
     "Returns the elements in the list that come after the specified cursor."
     after: String
@@ -167,6 +220,10 @@ type ProductsEdge {
   cursor: String!
   "The item at the end of the edge."
   node: Product!
+}
+
+type RemoveProductFromCartPayload {
+  cart: Cart
 }
 
 type RestockProductPayload {
@@ -245,6 +302,10 @@ type UsersEdge {
   node: User!
 }
 
+type Viewer {
+  cart: Cart
+}
+
 interface Error {
   message: String!
 }
@@ -255,6 +316,10 @@ interface Node {
 }
 
 union UploadProductPictureError = UnknownProductError
+
+input AddProductToCartInput {
+  productId: ID!
+}
 
 input CreateOrderInput {
   items: OrderItemInput!
@@ -286,6 +351,10 @@ input ProductDimensionInput {
   width: Float!
 }
 
+input RemoveProductFromCartInput {
+  productId: ID!
+}
+
 input RestockProductInput {
   id: ID!
   quantity: Int!
@@ -313,3 +382,7 @@ scalar Decimal
 scalar Upload
 
 scalar URL
+
+directive @fusion__tag(
+  name: String!
+) repeatable on SCHEMA | SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION

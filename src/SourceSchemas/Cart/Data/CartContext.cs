@@ -19,5 +19,17 @@ public class CartContext(DbContextOptions options) : DbContext(options)
 
         // Ensure database is created
         await context.Database.EnsureCreatedAsync(cancellationToken);
+
+        // Create initial cart if none exists
+        if (!await context.Carts.AnyAsync(cancellationToken))
+        {
+            var cart = new Cart
+            {
+                CreatedAt = DateTime.UtcNow
+            };
+
+            context.Carts.Add(cart);
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -1,5 +1,6 @@
-import { graphql, useFragment } from "react-relay";
+import { graphql, useFragment, useMutation } from "react-relay";
 import type { ProductCard_product$key } from "./__generated__/ProductCard_product.graphql";
+import type { ProductCardAddToCartMutation } from "./__generated__/ProductCardAddToCartMutation.graphql";
 import {
   Card,
   CardMedia,
@@ -7,9 +8,11 @@ import {
   CardActions,
   Typography,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { memo } from "react";
+import CheckIcon from "@mui/icons-material/Check";
+import { memo, useState } from "react";
 
 const ProductCardFragment = graphql`
   fragment ProductCard_product on Product {
@@ -17,6 +20,16 @@ const ProductCardFragment = graphql`
     name
     price
     pictureUrl
+  }
+`;
+
+const AddToCartMutation = graphql`
+  mutation ProductCardAddToCartMutation($input: AddProductToCartInput!) {
+    addProductToCart(input: $input) {
+      cart {
+        ...CartPopover_cart
+      }
+    }
   }
 `;
 
@@ -64,9 +77,29 @@ const actionsStyles = { p: 2, pt: 0 } as const;
 
 function ProductCard({ product }: ProductCardProps) {
   const data = useFragment(ProductCardFragment, product);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+  const [commitAddToCart] = useMutation<ProductCardAddToCartMutation>(
+    AddToCartMutation
+  );
 
   const handleAddToCart = () => {
-    alert("Added to cart: " + data.name);
+    setIsAdding(true);
+    commitAddToCart({
+      variables: {
+        input: {
+          productId: data.id,
+        },
+      },
+      onCompleted: () => {
+        setIsAdding(false);
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 2000);
+      },
+      onError: () => {
+        setIsAdding(false);
+      },
+    });
   };
 
   return (
@@ -95,11 +128,21 @@ function ProductCard({ product }: ProductCardProps) {
         <Button
           variant="contained"
           fullWidth
-          startIcon={<ShoppingCartIcon />}
+          startIcon={
+            isAdding ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : isAdded ? (
+              <CheckIcon />
+            ) : (
+              <ShoppingCartIcon />
+            )
+          }
           onClick={handleAddToCart}
+          disabled={isAdding || isAdded}
           size="large"
+          color={isAdded ? "success" : "primary"}
         >
-          Add to Cart
+          {isAdded ? "Added!" : "Add to Cart"}
         </Button>
       </CardActions>
     </Card>

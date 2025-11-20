@@ -2,7 +2,7 @@ import { Suspense, Component, type ReactNode } from "react";
 import { graphql, useLazyLoadQuery } from "react-relay";
 import type { ProductsPageQuery } from "./__generated__/ProductsPageQuery.graphql";
 import ProductsList from "./ProductsList";
-import { Typography, Box, CircularProgress, Alert } from "@mui/material";
+import { Box, CircularProgress, Alert } from "@mui/material";
 
 const ProductsPageQueryNode = graphql`
   query ProductsPageQuery($count: Int!, $cursor: String) {
@@ -60,22 +60,7 @@ const containerStyles = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  py: { xs: 2, sm: 4 },
-} as const;
-
-const headingStyles = {
-  mb: 6,
-  fontWeight: 900,
-  fontSize: { xs: "2.5rem", sm: "3rem", md: "3.5rem" },
-  color: "primary.main",
-  textTransform: "uppercase",
-  letterSpacing: "0.1em",
-  background: "linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  backgroundClip: "text",
-  textShadow: "0 2px 4px rgba(25, 118, 210, 0.1)",
-  position: "relative",
+  pb: { xs: 2, sm: 4 },
 } as const;
 
 const loadingContainerStyles = {
@@ -88,9 +73,6 @@ const loadingContainerStyles = {
 export default function ProductsPage() {
   return (
     <Box sx={containerStyles}>
-      <Typography variant="h2" component="h1" align="center" sx={headingStyles}>
-        Products
-      </Typography>
       <ProductsErrorBoundary>
         <Suspense
           fallback={

@@ -9,6 +9,4 @@ public class Cart
 
     [Required]
     public DateTime CreatedAt { get; set; }
-
-    public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
 }

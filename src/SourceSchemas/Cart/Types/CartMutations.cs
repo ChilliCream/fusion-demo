@@ -6,13 +6,12 @@ namespace Demo.Cart.Types;
 [MutationType]
 public static partial class CartMutations
 {
-    public static async Task<Data.Cart> AddToCartAsync(
+    public static async Task<Data.Cart> AddProductToCartAsync(
         [ID<Product>] int productId,
         CartContext context,
         CancellationToken cancellationToken)
     {
         var cart = await context.Carts
-            .Include(c => c.Items)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)
@@ -32,19 +31,18 @@ public static partial class CartMutations
             AddedAt = DateTime.UtcNow
         };
 
-        cart.Items.Add(cartItem);
+        context.CartItems.Add(cartItem);
         await context.SaveChangesAsync(cancellationToken);
 
         return cart;
     }
 
-    public static async Task<Data.Cart?> RemoveFromCartAsync(
+    public static async Task<Data.Cart?> RemoveProductFromCartAsync(
         [ID<Product>] int productId,
         CartContext context,
         CancellationToken cancellationToken)
     {
         var cart = await context.Carts
-            .Include(c => c.Items)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)
@@ -52,10 +50,11 @@ public static partial class CartMutations
             return null;
         }
 
-        var itemToRemove = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+        var itemToRemove = await context.CartItems
+            .FirstOrDefaultAsync(i => i.CartId == cart.Id && i.ProductId == productId, cancellationToken);
+
         if (itemToRemove is not null)
         {
-            cart.Items.Remove(itemToRemove);
             context.CartItems.Remove(itemToRemove);
             await context.SaveChangesAsync(cancellationToken);
         }
@@ -68,7 +67,6 @@ public static partial class CartMutations
         CancellationToken cancellationToken)
     {
         var cart = await context.Carts
-            .Include(c => c.Items)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)
@@ -76,8 +74,11 @@ public static partial class CartMutations
             return null;
         }
 
-        context.CartItems.RemoveRange(cart.Items);
-        cart.Items.Clear();
+        var cartItems = await context.CartItems
+            .Where(i => i.CartId == cart.Id)
+            .ToListAsync(cancellationToken);
+
+        context.CartItems.RemoveRange(cartItems);
         await context.SaveChangesAsync(cancellationToken);
 
         return cart;

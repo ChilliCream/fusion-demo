@@ -8,6 +8,10 @@ public static partial class CartItemNode
         descriptor.Ignore(x => x.CartId);
     }
     
+    [ID]
+    public static int GetId([Parent] Data.CartItem cartItem)
+        => cartItem.Id;
+    
     public static DateTime GetAddedAt([Parent] Data.CartItem cartItem)
         => cartItem.AddedAt;
 
