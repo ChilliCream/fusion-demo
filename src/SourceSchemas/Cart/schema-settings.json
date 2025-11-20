@@ -1,0 +1,25 @@
+{
+  "name": "cart-api",
+  "transports": {
+    "http": {
+      "clientName": "fusion",
+      "url": "{{API_URL}}"
+    }
+  },
+  "extensions": {
+    "nitro": {
+      "apiId": "TODO"
+    }
+  },
+  "environments": {
+    "aspire": {
+      "API_URL": "http://localhost:5006/graphql"
+    },
+    "dev": {
+      "API_URL": "https://ccc-eu1-demo-ca-cart.victorioushill-e248fd38.westeurope.azurecontainerapps.io/graphql"
+    },
+    "prod": {
+      "API_URL": "https://api.example.com"
+    }
+  }
+}

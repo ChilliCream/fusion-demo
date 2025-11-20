@@ -44,6 +44,12 @@ var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
     .WithGraphQLSchemaEndpoint();
 
+var cartApi = builder
+    .AddProject<Projects.Demo_Cart>("cart-api")
+    .WithReference(postgres.AddDatabase("cart-db"))
+    .WithGraphQLSchemaEndpoint()
+    .WaitFor(postgres);
+
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
     .WithGraphQLSchemaComposition(
@@ -58,6 +64,7 @@ builder
     .WithReference(paymentsApi)
     .WithReference(productsApi)
     .WithReference(reviewsApi)
-    .WithReference(shippingApi);
+    .WithReference(shippingApi)
+    .WithReference(cartApi);
 
 builder.Build().Run();

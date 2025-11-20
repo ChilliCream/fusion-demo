@@ -1,0 +1,20 @@
+name: Cart API Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/SourceSchemas/Cart/**"
+      - "src/Defaults/**"
+      - ".github/workflows/deploy-cart.yml"
+      - "Directory.Packages.props"
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-source-schema.yml
+    with:
+      app_name: ccc-eu1-demo-ca-cart
+      project_path: src/SourceSchemas/Cart
+      container_port: 8080
+      schema_file: src/SourceSchemas/Cart/schema.graphqls
+    secrets: inherit

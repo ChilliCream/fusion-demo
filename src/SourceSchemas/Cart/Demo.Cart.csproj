@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        <IsAspireSharedProject>true</IsAspireSharedProject>
+        <ContainerDefaultUser>app</ContainerDefaultUser>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="HotChocolate.AspNetCore"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework"/>
+        <PackageReference Include="HotChocolate.Diagnostics"/>
+        <PackageReference Include="HotChocolate.Types.Analyzers"/>
+        <PackageReference Include="ChilliCream.Nitro"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Defaults\SourceSchemaDefaults\Demo.SourceSchemaDefaults.csproj"/>
+        <ProjectReference Include="..\..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
+    </ItemGroup>
+
+</Project>
