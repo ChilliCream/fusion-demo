@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a74652c4f2f930b4abaffa12b96605fe>>
+ * @generated SignedSource<<0234129800b79ff82992295c0399cf37>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type CartPopoverQuery$data = {
   readonly viewer: {
     readonly cart: {
       readonly " $fragmentSpreads": FragmentRefs<"CartPopover_cart">;
-    } | null | undefined;
+    };
   };
 };
 export type CartPopoverQuery = {
@@ -113,6 +113,13 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "amount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "addedAt",
                         "storageKey": null
                       },
@@ -164,12 +171,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7e2cbe67b507db3d3c65b8051dfe7610",
+    "cacheID": "6774733867ad44897cb7dbe89a913971",
     "id": null,
     "metadata": {},
     "name": "CartPopoverQuery",
     "operationKind": "query",
-    "text": "query CartPopoverQuery {\n  viewer {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "query CartPopoverQuery {\n  viewer {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();

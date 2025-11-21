@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<82de8324dccbca9e641e0fd32d1971ec>>
+ * @generated SignedSource<<772e257d47f701e04039564db6a569fd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CartItem_item$data = {
   readonly addedAt: any;
+  readonly amount: number;
   readonly id: string;
   readonly product: {
     readonly id: string;
@@ -41,6 +42,13 @@ return {
   "name": "CartItem_item",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "amount",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -87,6 +95,6 @@ return {
 };
 })();
 
-(node as any).hash = "632e85ef7602a64f710a2b357ae07c4d";
+(node as any).hash = "3704c83d74ef91a1be6f57e604b8f39d";
 
 export default node;

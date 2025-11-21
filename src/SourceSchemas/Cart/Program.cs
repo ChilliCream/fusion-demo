@@ -12,8 +12,7 @@ builder.Services.AddCors();
 builder
     .AddGraphQL(Env.CartApi)
     .AddNitro()
-    .AddDefaultSettings()
-    .AddGlobalObjectIdentification(o => o.RegisterNodeInterface = false)
+    .AddDefaultSettings(registerNodeInterface: false)
     .AddCartTypes()
     .AddWarmupTask(CartContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
 

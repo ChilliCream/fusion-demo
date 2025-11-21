@@ -89,6 +89,7 @@ function ProductCard({ product }: ProductCardProps) {
       variables: {
         input: {
           productId: data.id,
+          amount: 1,
         },
       },
       onCompleted: () => {

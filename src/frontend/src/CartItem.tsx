@@ -1,19 +1,33 @@
 import { graphql, useFragment, useMutation } from "react-relay";
 import type { CartItem_item$key } from "./__generated__/CartItem_item.graphql";
 import type { CartItemRemoveMutation } from "./__generated__/CartItemRemoveMutation.graphql";
+import type { CartItemAddMutation } from "./__generated__/CartItemAddMutation.graphql";
 import { Box, Typography, IconButton, CircularProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
 
 const CartItemFragment = graphql`
   fragment CartItem_item on CartItem {
     id
+    amount
     addedAt
     product {
       id
       name
       price
       pictureUrl
+    }
+  }
+`;
+
+const AddToCartMutation = graphql`
+  mutation CartItemAddMutation($input: AddProductToCartInput!) {
+    addProductToCart(input: $input) {
+      cart {
+        ...CartPopover_cart
+      }
     }
   }
 `;
@@ -85,26 +99,78 @@ const deleteButtonStyles = {
   alignSelf: "center",
 } as const;
 
+const quantityControlsStyles = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+  mt: 1,
+} as const;
+
+const quantityTextStyles = {
+  minWidth: "30px",
+  textAlign: "center",
+  fontWeight: 600,
+} as const;
+
 export default function CartItem({ item }: CartItemProps) {
   const data = useFragment(CartItemFragment, item);
-  const [isRemoving, setIsRemoving] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const [commitAdd] = useMutation<CartItemAddMutation>(AddToCartMutation);
   const [commitRemove] = useMutation<CartItemRemoveMutation>(
     RemoveFromCartMutation
   );
 
-  const handleRemove = () => {
-    setIsRemoving(true);
+  const handleIncrease = () => {
+    setIsUpdating(true);
+    commitAdd({
+      variables: {
+        input: {
+          productId: data.product.id,
+          amount: 1,
+        },
+      },
+      onCompleted: () => {
+        setIsUpdating(false);
+      },
+      onError: () => {
+        setIsUpdating(false);
+      },
+    });
+  };
+
+  const handleDecrease = () => {
+    setIsUpdating(true);
     commitRemove({
       variables: {
         input: {
           productId: data.product.id,
+          amount: 1,
         },
       },
       onCompleted: () => {
-        setIsRemoving(false);
+        setIsUpdating(false);
       },
       onError: () => {
-        setIsRemoving(false);
+        setIsUpdating(false);
+      },
+    });
+  };
+
+  const handleDelete = () => {
+    setIsUpdating(true);
+    commitRemove({
+      variables: {
+        input: {
+          productId: data.product.id,
+          amount: data.amount,
+        },
+      },
+      onCompleted: () => {
+        setIsUpdating(false);
+      },
+      onError: () => {
+        setIsUpdating(false);
       },
     });
   };
@@ -130,14 +196,33 @@ export default function CartItem({ item }: CartItemProps) {
         <Typography sx={priceStyles}>
           ${data.product.price.toFixed(2)}
         </Typography>
+        <Box sx={quantityControlsStyles}>
+          <IconButton
+            onClick={handleDecrease}
+            disabled={isUpdating}
+            size="small"
+            color="primary"
+          >
+            <RemoveIcon fontSize="small" />
+          </IconButton>
+          <Typography sx={quantityTextStyles}>{data.amount}</Typography>
+          <IconButton
+            onClick={handleIncrease}
+            disabled={isUpdating}
+            size="small"
+            color="primary"
+          >
+            <AddIcon fontSize="small" />
+          </IconButton>
+        </Box>
       </Box>
       <IconButton
-        onClick={handleRemove}
-        disabled={isRemoving}
+        onClick={handleDelete}
+        disabled={isUpdating}
         sx={deleteButtonStyles}
         size="medium"
       >
-        {isRemoving ? (
+        {isUpdating ? (
           <CircularProgress size={24} />
         ) : (
           <DeleteIcon fontSize="medium" />

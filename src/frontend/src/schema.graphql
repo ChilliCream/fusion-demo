@@ -57,6 +57,7 @@ type Subscription {
 
 type AddProductToCartPayload {
   cart: Cart
+  errors: [AddProductToCartError!]
 }
 
 type Cart {
@@ -76,6 +77,7 @@ type Cart {
 
 type CartItem {
   addedAt: DateTime!
+  amount: Int!
   id: ID!
   product: Product!
 }
@@ -180,6 +182,10 @@ type Product implements Node {
   weight: Int!
 }
 
+type ProductAmountCannotBeLowerThanOneError implements Error {
+  message: String!
+}
+
 type ProductDimension {
   height: Float!
   length: Float!
@@ -224,6 +230,7 @@ type ProductsEdge {
 
 type RemoveProductFromCartPayload {
   cart: Cart
+  errors: [RemoveProductFromCartError!]
 }
 
 type RestockProductPayload {
@@ -303,7 +310,7 @@ type UsersEdge {
 }
 
 type Viewer {
-  cart: Cart
+  cart: Cart!
 }
 
 interface Error {
@@ -315,9 +322,14 @@ interface Node {
   id: ID!
 }
 
+union AddProductToCartError = ProductAmountCannotBeLowerThanOneError
+
+union RemoveProductFromCartError = ProductAmountCannotBeLowerThanOneError
+
 union UploadProductPictureError = UnknownProductError
 
 input AddProductToCartInput {
+  amount: Int!
   productId: ID!
 }
 
@@ -352,6 +364,7 @@ input ProductDimensionInput {
 }
 
 input RemoveProductFromCartInput {
+  amount: Int!
   productId: ID!
 }
 

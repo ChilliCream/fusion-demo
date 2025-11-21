@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f4fec4308723571c6eab5035161cf32>>
+ * @generated SignedSource<<ca9ece55ac834ba2521b2fea648ed914>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,21 +10,41 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CartPopoverCheckoutMutation$variables = Record<PropertyKey, never>;
-export type CartPopoverCheckoutMutation$data = {
-  readonly checkout: {
+export type AddProductToCartInput = {
+  amount: number;
+  productId: string;
+};
+export type CartItemAddMutation$variables = {
+  input: AddProductToCartInput;
+};
+export type CartItemAddMutation$data = {
+  readonly addProductToCart: {
     readonly cart: {
       readonly " $fragmentSpreads": FragmentRefs<"CartPopover_cart">;
     } | null | undefined;
   };
 };
-export type CartPopoverCheckoutMutation = {
-  response: CartPopoverCheckoutMutation$data;
-  variables: CartPopoverCheckoutMutation$variables;
+export type CartItemAddMutation = {
+  response: CartItemAddMutation$data;
+  variables: CartItemAddMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -33,17 +53,17 @@ var v0 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CartPopoverCheckoutMutation",
+    "name": "CartItemAddMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "CheckoutPayload",
+        "args": (v1/*: any*/),
+        "concreteType": "AddProductToCartPayload",
         "kind": "LinkedField",
-        "name": "checkout",
+        "name": "addProductToCart",
         "plural": false,
         "selections": [
           {
@@ -71,16 +91,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "CartPopoverCheckoutMutation",
+    "name": "CartItemAddMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "CheckoutPayload",
+        "args": (v1/*: any*/),
+        "concreteType": "AddProductToCartPayload",
         "kind": "LinkedField",
-        "name": "checkout",
+        "name": "addProductToCart",
         "plural": false,
         "selections": [
           {
@@ -91,7 +111,7 @@ return {
             "name": "cart",
             "plural": false,
             "selections": [
-              (v0/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -108,7 +128,7 @@ return {
                     "name": "nodes",
                     "plural": true,
                     "selections": [
-                      (v0/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -131,7 +151,7 @@ return {
                         "name": "product",
                         "plural": false,
                         "selections": [
-                          (v0/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -171,16 +191,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a147848aea5dc23fcca143d6eea427df",
+    "cacheID": "2ed353e8b1a087fea2a3b7604f5bbd07",
     "id": null,
     "metadata": {},
-    "name": "CartPopoverCheckoutMutation",
+    "name": "CartItemAddMutation",
     "operationKind": "mutation",
-    "text": "mutation CartPopoverCheckoutMutation {\n  checkout {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "mutation CartItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "efa425f4616f940b569b7598965b533b";
+(node as any).hash = "9a88931fbdfe1e5068a64b1300a0c225";
 
 export default node;

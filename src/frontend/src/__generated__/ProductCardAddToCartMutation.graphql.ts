@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b9bb35e82945e80ef1e10e3d7c1a311>>
+ * @generated SignedSource<<b64b4c81966b7e20b5258a4094ff82e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AddProductToCartInput = {
+  amount: number;
   productId: string;
 };
 export type ProductCardAddToCartMutation$variables = {
@@ -132,6 +133,13 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "amount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "addedAt",
                         "storageKey": null
                       },
@@ -183,12 +191,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "74e678bced62d0a90d27e427e298557b",
+    "cacheID": "ac7261bb9e6e3dd66eb6659f65671630",
     "id": null,
     "metadata": {},
     "name": "ProductCardAddToCartMutation",
     "operationKind": "mutation",
-    "text": "mutation ProductCardAddToCartMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "mutation ProductCardAddToCartMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();

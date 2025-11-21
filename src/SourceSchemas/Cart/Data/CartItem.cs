@@ -15,5 +15,8 @@ public class CartItem
     public int ProductId { get; set; }
 
     [Required]
+    public int Amount { get; set; }
+
+    [Required]
     public DateTime AddedAt { get; set; }
 }

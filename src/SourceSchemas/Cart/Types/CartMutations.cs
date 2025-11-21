@@ -1,4 +1,5 @@
 using Demo.Cart.Data;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Cart.Types;
@@ -6,13 +7,19 @@ namespace Demo.Cart.Types;
 [MutationType]
 public static partial class CartMutations
 {
+    [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart> AddProductToCartAsync(
         [ID<Product>] int productId,
+        int amount,
         CartContext context,
         CancellationToken cancellationToken)
     {
-        var cart = await context.Carts
-            .FirstOrDefaultAsync(cancellationToken);
+        if (amount < 1)
+        {
+            throw new ProductAmountCannotBeLowerThanOneException(productId, amount);
+        }
+
+        var cart = await context.Carts.FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)
         {
@@ -24,24 +31,43 @@ public static partial class CartMutations
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        var cartItem = new CartItem
-        {
-            CartId = cart.Id,
-            ProductId = productId,
-            AddedAt = DateTime.UtcNow
-        };
+        var existingCartItem = await context.CartItems.FirstOrDefaultAsync(
+            item => item.CartId == cart.Id 
+                && item.ProductId == productId, cancellationToken);
 
-        context.CartItems.Add(cartItem);
+        if (existingCartItem is not null)
+        {
+            existingCartItem.Amount += amount;
+        }
+        else
+        {
+            var cartItem = new CartItem
+            {
+                CartId = cart.Id,
+                ProductId = productId,
+                Amount = amount,
+                AddedAt = DateTime.UtcNow
+            };
+            context.CartItems.Add(cartItem);
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         return cart;
     }
 
+    [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart?> RemoveProductFromCartAsync(
         [ID<Product>] int productId,
+        int amount,
         CartContext context,
         CancellationToken cancellationToken)
     {
+        if (amount < 1)
+        {
+            throw new ProductAmountCannotBeLowerThanOneException(productId, amount);
+        }
+
         var cart = await context.Carts
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -50,12 +76,19 @@ public static partial class CartMutations
             return null;
         }
 
-        var itemToRemove = await context.CartItems
-            .FirstOrDefaultAsync(i => i.CartId == cart.Id && i.ProductId == productId, cancellationToken);
+        var cartItem = await context.CartItems.FirstOrDefaultAsync(
+            item => item.CartId == cart.Id 
+                && item.ProductId == productId, cancellationToken);
 
-        if (itemToRemove is not null)
+        if (cartItem is not null)
         {
-            context.CartItems.Remove(itemToRemove);
+            cartItem.Amount -= amount;
+
+            if (cartItem.Amount <= 0)
+            {
+                context.CartItems.Remove(cartItem);
+            }
+
             await context.SaveChangesAsync(cancellationToken);
         }
 
@@ -66,8 +99,7 @@ public static partial class CartMutations
         CartContext context,
         CancellationToken cancellationToken)
     {
-        var cart = await context.Carts
-            .FirstOrDefaultAsync(cancellationToken);
+        var cart = await context.Carts.FirstOrDefaultAsync(cancellationToken);
 
         if (cart is null)
         {
