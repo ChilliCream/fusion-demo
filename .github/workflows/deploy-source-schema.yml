@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       app_name:
-        description: Name of the Container App + repo path in ACR
+        description: Name of the App Service + repo path in ACR
         required: true
         type: string
       project_path:
@@ -24,7 +24,7 @@ on:
       AZURE_CREDENTIALS: { required: true }
       AZURE_SUBSCRIPTION_ID: { required: true }
       AZURE_RESOURCE_GROUP: { required: true }
-      CONTAINERAPPS_ENVIRONMENT: { required: true }
+      APP_SERVICE_PLAN: { required: true }
       ACR_LOGIN_SERVER: { required: true }
       ACR_USERNAME: { required: true }
       ACR_PASSWORD: { required: true }
@@ -83,18 +83,43 @@ jobs:
             -p:ContainerPort=${{ inputs.container_port }} \
             -p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:9.0
 
-      - name: Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          containerAppName: ${{ inputs.app_name }}
-          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          imageToDeploy: ${{ steps.meta.outputs.image }}
-          containerAppEnvironment: ${{ secrets.CONTAINERAPPS_ENVIRONMENT }}
-          targetPort: ${{ inputs.container_port }}
-          ingress: external
-          registryUrl: ${{ secrets.ACR_LOGIN_SERVER }}
-          registryUsername: ${{ secrets.ACR_USERNAME }}
-          registryPassword: ${{ secrets.ACR_PASSWORD }}
+      - name: Create or Update App Service
+        run: |
+          # Create the web app if it doesn't exist
+          if ! az webapp show --name ${{ inputs.app_name }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} &> /dev/null; then
+            echo "Creating new App Service: ${{ inputs.app_name }}"
+            az webapp create \
+              --name ${{ inputs.app_name }} \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --plan ${{ secrets.APP_SERVICE_PLAN }} \
+              --deployment-container-image-name ${{ steps.meta.outputs.image }}
+          fi
+
+          # Configure container settings
+          az webapp config container set \
+            --name ${{ inputs.app_name }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --container-image-name ${{ steps.meta.outputs.image }} \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+          # Configure the exposed port
+          az webapp config appsettings set \
+            --name ${{ inputs.app_name }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings WEBSITES_PORT=${{ inputs.container_port }}
+
+          # Enable continuous deployment from ACR
+          az webapp deployment container config \
+            --name ${{ inputs.app_name }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --enable-cd true
+
+          # Restart the app to apply changes
+          az webapp restart \
+            --name ${{ inputs.app_name }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Export Source Schema
         working-directory: ${{ inputs.project_path }}
