@@ -11,7 +11,7 @@ import { useState } from "react";
 const CartItemFragment = graphql`
   fragment CartItem_item on CartItem {
     id
-    amount
+    quantity
     addedAt
     product {
       id
@@ -127,7 +127,7 @@ export default function CartItem({ item }: CartItemProps) {
       variables: {
         input: {
           productId: data.product.id,
-          amount: 1,
+          quantity: 1,
         },
       },
       onCompleted: () => {
@@ -145,7 +145,7 @@ export default function CartItem({ item }: CartItemProps) {
       variables: {
         input: {
           productId: data.product.id,
-          amount: 1,
+          quantity: 1,
         },
       },
       onCompleted: () => {
@@ -163,7 +163,7 @@ export default function CartItem({ item }: CartItemProps) {
       variables: {
         input: {
           productId: data.product.id,
-          amount: data.amount,
+          quantity: data.quantity,
         },
       },
       onCompleted: () => {
@@ -205,7 +205,7 @@ export default function CartItem({ item }: CartItemProps) {
           >
             <RemoveIcon fontSize="small" />
           </IconButton>
-          <Typography sx={quantityTextStyles}>{data.amount}</Typography>
+          <Typography sx={quantityTextStyles}>{data.quantity}</Typography>
           <IconButton
             onClick={handleIncrease}
             disabled={isUpdating}

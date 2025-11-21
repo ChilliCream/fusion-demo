@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a888028d6f8e6225fdf973140ba6c045>>
+ * @generated SignedSource<<c7fabcd6a028ccbcd7de7c09e1e888c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RemoveProductFromCartInput = {
-  amount: number;
   productId: string;
+  quantity: number;
 };
 export type CartItemRemoveMutation$variables = {
   input: RemoveProductFromCartInput;
@@ -133,7 +133,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "amount",
+                        "name": "quantity",
                         "storageKey": null
                       },
                       {
@@ -191,12 +191,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0f57fb67658a8b5e1de1b2ee34d03733",
+    "cacheID": "9191e499eb797098c8e2bdcfeabbfd43",
     "id": null,
     "metadata": {},
     "name": "CartItemRemoveMutation",
     "operationKind": "mutation",
-    "text": "mutation CartItemRemoveMutation(\n  $input: RemoveProductFromCartInput!\n) {\n  removeProductFromCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "mutation CartItemRemoveMutation(\n  $input: RemoveProductFromCartInput!\n) {\n  removeProductFromCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  quantity\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();

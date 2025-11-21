@@ -17,12 +17,36 @@ public static partial class ProductQueries
     [Tag("team-products")]
     [UsePaging]
     public static async Task<Connection<Product>> GetProducts(
+        string? searchText,
+        double? minPrice,
+        double? maxPrice,
         PagingArguments arguments,
         ProductContext context,
         CancellationToken cancellationToken)
-        => await context.Products
-            .OrderBy(t => t.Name)
-            .ThenBy(t => t.Id)
-            .ToPageAsync(arguments, cancellationToken)
-            .ToConnectionAsync();
+    {
+        IQueryable<Product> query = context.Products;
+
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(t => t.Name!.Contains(searchText));
+        }
+
+        if (minPrice.HasValue)
+        {
+            var p = minPrice.Value;
+            query = query.Where(t => t.Price >= p);
+        }
+
+        if (maxPrice.HasValue)
+        {
+            var p = maxPrice.Value;
+            query = query.Where(t => t.Price <= p);
+        }
+
+        return await query
+                .OrderBy(t => t.Name)
+                .ThenBy(t => t.Id)
+                .ToPageAsync(arguments, cancellationToken)
+                .ToConnectionAsync();
+    }
 }

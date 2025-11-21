@@ -19,6 +19,9 @@ type Query {
     first: Int
     "Returns the last _n_ elements from the list."
     last: Int
+    maxPrice: Float
+    minPrice: Float
+    searchText: String
   ): ProductsConnection @fusion__tag(name: "team-products")
   reviewById(id: ID!): Review
   userById(id: ID!): User
@@ -77,9 +80,9 @@ type Cart {
 
 type CartItem {
   addedAt: DateTime!
-  amount: Int!
   id: ID!
   product: Product!
+  quantity: Int!
 }
 
 "A connection to a list of items."
@@ -329,12 +332,12 @@ union RemoveProductFromCartError = ProductAmountCannotBeLowerThanOneError
 union UploadProductPictureError = UnknownProductError
 
 input AddProductToCartInput {
-  amount: Int!
   productId: ID!
+  quantity: Int!
 }
 
 input CreateOrderInput {
-  items: OrderItemInput!
+  items: [OrderItemInput!]!
   userId: ID!
   weight: Int!
 }
@@ -364,8 +367,8 @@ input ProductDimensionInput {
 }
 
 input RemoveProductFromCartInput {
-  amount: Int!
   productId: ID!
+  quantity: Int!
 }
 
 input RestockProductInput {

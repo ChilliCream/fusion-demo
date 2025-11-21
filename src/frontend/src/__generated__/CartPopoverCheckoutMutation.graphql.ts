@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f4fec4308723571c6eab5035161cf32>>
+ * @generated SignedSource<<d2694fc668ce08119fae0bdfcb3aadb5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -113,7 +113,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "amount",
+                        "name": "quantity",
                         "storageKey": null
                       },
                       {
@@ -171,12 +171,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a147848aea5dc23fcca143d6eea427df",
+    "cacheID": "e59cee04dee8805d13938df466b51cd8",
     "id": null,
     "metadata": {},
     "name": "CartPopoverCheckoutMutation",
     "operationKind": "mutation",
-    "text": "mutation CartPopoverCheckoutMutation {\n  checkout {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "mutation CartPopoverCheckoutMutation {\n  checkout {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  quantity\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();

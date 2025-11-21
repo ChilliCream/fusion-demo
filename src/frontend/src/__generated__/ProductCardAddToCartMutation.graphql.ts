@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b64b4c81966b7e20b5258a4094ff82e6>>
+ * @generated SignedSource<<4a4691fa7b7dc693e3b52c27c39ae6c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AddProductToCartInput = {
-  amount: number;
   productId: string;
+  quantity: number;
 };
 export type ProductCardAddToCartMutation$variables = {
   input: AddProductToCartInput;
@@ -133,7 +133,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "amount",
+                        "name": "quantity",
                         "storageKey": null
                       },
                       {
@@ -191,12 +191,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ac7261bb9e6e3dd66eb6659f65671630",
+    "cacheID": "674801bf51465a69233d21d9f8f4f19a",
     "id": null,
     "metadata": {},
     "name": "ProductCardAddToCartMutation",
     "operationKind": "mutation",
-    "text": "mutation ProductCardAddToCartMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  amount\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
+    "text": "mutation ProductCardAddToCartMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      ...CartPopover_cart\n      id\n    }\n  }\n}\n\nfragment CartItem_item on CartItem {\n  id\n  quantity\n  addedAt\n  product {\n    id\n    name\n    price\n    pictureUrl\n  }\n}\n\nfragment CartPopover_cart on Cart {\n  id\n  items {\n    nodes {\n      id\n      ...CartItem_item\n    }\n  }\n}\n"
   }
 };
 })();
