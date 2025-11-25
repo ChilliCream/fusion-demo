@@ -6,9 +6,16 @@ import {
   Typography,
   IconButton,
   Box,
+  Button,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LoginIcon from "@mui/icons-material/Login";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CartPopover from "./CartPopover";
+import LoginDialog from "./LoginDialog";
+import { useAuth } from "./AuthContext";
 
 const headingStyles = {
   fontWeight: 900,
@@ -21,8 +28,12 @@ const headingStyles = {
 } as const;
 
 function App() {
+  const { isAuthenticated, user, logout } = useAuth();
   const [cartAnchorEl, setCartAnchorEl] = useState<HTMLElement | null>(null);
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const cartOpen = Boolean(cartAnchorEl);
+  const userMenuOpen = Boolean(userMenuAnchorEl);
 
   const handleCartClick = (event: React.MouseEvent<HTMLElement>) => {
     setCartAnchorEl(event.currentTarget);
@@ -32,10 +43,59 @@ function App() {
     setCartAnchorEl(null);
   };
 
+  const handleLoginClick = () => {
+    setLoginDialogOpen(true);
+  };
+
+  const handleLoginClose = () => {
+    setLoginDialogOpen(false);
+  };
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleUserMenuClose();
+  };
+
   return (
     <>
       <AppBar position="fixed">
         <Toolbar>
+          {isAuthenticated ? (
+            <>
+              <IconButton
+                onClick={handleUserMenuClick}
+                color="inherit"
+                size="large"
+              >
+                <AccountCircleIcon fontSize="large" />
+              </IconButton>
+              <Menu
+                anchorEl={userMenuAnchorEl}
+                open={userMenuOpen}
+                onClose={handleUserMenuClose}
+              >
+                <MenuItem disabled>{user?.username}</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
+              startIcon={<LoginIcon />}
+              color="inherit"
+              onClick={handleLoginClick}
+              sx={{ mr: 2 }}
+            >
+              Login
+            </Button>
+          )}
           <Typography variant="h4" component="h1" sx={headingStyles}>
             Products
           </Typography>
@@ -53,6 +113,7 @@ function App() {
         open={cartOpen}
         onClose={handleCartClose}
       />
+      <LoginDialog open={loginDialogOpen} onClose={handleLoginClose} />
       <Box sx={{ pt: { xs: 10, sm: 12 } }}>
         <ProductsPage />
       </Box>

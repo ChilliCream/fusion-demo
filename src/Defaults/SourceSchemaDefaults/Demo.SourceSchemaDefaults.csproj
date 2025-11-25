@@ -7,6 +7,8 @@
     <ItemGroup>
         <PackageReference Include="HotChocolate.Diagnostics"/>
         <PackageReference Include="HotChocolate.Data.EntityFramework"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
     </ItemGroup>
 
 </Project>

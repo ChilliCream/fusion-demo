@@ -9,10 +9,18 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CheckIcon from "@mui/icons-material/Check";
+import LoginIcon from "@mui/icons-material/Login";
 import { memo, useState } from "react";
+import { useAuth } from "./AuthContext";
+import LoginDialog from "./LoginDialog";
 
 const ProductCardFragment = graphql`
   fragment ProductCard_product on Product {
@@ -77,13 +85,21 @@ const actionsStyles = { p: 2, pt: 0 } as const;
 
 function ProductCard({ product }: ProductCardProps) {
   const data = useFragment(ProductCardFragment, product);
+  const { isAuthenticated } = useAuth();
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [signInPromptOpen, setSignInPromptOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [commitAddToCart] = useMutation<ProductCardAddToCartMutation>(
     AddToCartMutation
   );
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      setSignInPromptOpen(true);
+      return;
+    }
+
     setIsAdding(true);
     commitAddToCart({
       variables: {
@@ -103,50 +119,87 @@ function ProductCard({ product }: ProductCardProps) {
     });
   };
 
+  const handleSignInPromptClose = () => {
+    setSignInPromptOpen(false);
+  };
+
+  const handleSignInClick = () => {
+    setSignInPromptOpen(false);
+    setLoginDialogOpen(true);
+  };
+
+  const handleLoginDialogClose = () => {
+    setLoginDialogOpen(false);
+  };
+
   return (
-    <Card sx={cardStyles}>
-      {data.pictureUrl ? (
-        <CardMedia
-          component="img"
-          image={data.pictureUrl}
-          alt={data.name}
-          sx={mediaStyles}
-        />
-      ) : (
-        <CardMedia component="div" sx={mediaPlaceholderStyles}>
-          <Typography color="text.secondary">No Image</Typography>
-        </CardMedia>
-      )}
-      <CardContent sx={contentStyles}>
-        <Typography gutterBottom variant="h5" component="h2" sx={nameStyles}>
-          {data.name}
-        </Typography>
-        <Typography variant="h6" color="primary" fontWeight="bold">
-          ${data.price.toFixed(2)}
-        </Typography>
-      </CardContent>
-      <CardActions sx={actionsStyles}>
-        <Button
-          variant="contained"
-          fullWidth
-          startIcon={
-            isAdding ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : isAdded ? (
-              <CheckIcon />
-            ) : (
-              <ShoppingCartIcon />
-            )
-          }
-          onClick={handleAddToCart}
-          disabled={isAdding || isAdded}
-          size="large"
-          color={isAdded ? "success" : "primary"}
-        >
-          {isAdded ? "Added!" : "Add to Cart"}
-        </Button>
-      </CardActions>
-    </Card>
+    <>
+      <Card sx={cardStyles}>
+        {data.pictureUrl ? (
+          <CardMedia
+            component="img"
+            image={data.pictureUrl}
+            alt={data.name}
+            sx={mediaStyles}
+          />
+        ) : (
+          <CardMedia component="div" sx={mediaPlaceholderStyles}>
+            <Typography color="text.secondary">No Image</Typography>
+          </CardMedia>
+        )}
+        <CardContent sx={contentStyles}>
+          <Typography gutterBottom variant="h5" component="h2" sx={nameStyles}>
+            {data.name}
+          </Typography>
+          <Typography variant="h6" color="primary" fontWeight="bold">
+            ${data.price.toFixed(2)}
+          </Typography>
+        </CardContent>
+        <CardActions sx={actionsStyles}>
+          <Button
+            variant="contained"
+            fullWidth
+            startIcon={
+              isAdding ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : isAdded ? (
+                <CheckIcon />
+              ) : (
+                <ShoppingCartIcon />
+              )
+            }
+            onClick={handleAddToCart}
+            disabled={isAdding || isAdded}
+            size="large"
+            color={isAdded ? "success" : "primary"}
+          >
+            {isAdded ? "Added!" : "Add to Cart"}
+          </Button>
+        </CardActions>
+      </Card>
+
+      <Dialog open={signInPromptOpen} onClose={handleSignInPromptClose}>
+        <DialogTitle>Sign In Required</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You need to sign in to add items to your cart. Please sign in to continue shopping.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSignInPromptClose}>Cancel</Button>
+          <Button
+            onClick={handleSignInClick}
+            variant="contained"
+            startIcon={<LoginIcon />}
+            autoFocus
+          >
+            Sign In
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <LoginDialog open={loginDialogOpen} onClose={handleLoginDialogClose} />
+    </>
   );
 }
 

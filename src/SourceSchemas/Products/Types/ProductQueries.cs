@@ -28,7 +28,7 @@ public static partial class ProductQueries
 
         if (!string.IsNullOrWhiteSpace(searchText))
         {
-            query = query.Where(t => t.Name!.Contains(searchText));
+            query = query.Where(t => EF.Functions.ILike(t.Name!, $"%{searchText}%"));
         }
 
         if (minPrice.HasValue)

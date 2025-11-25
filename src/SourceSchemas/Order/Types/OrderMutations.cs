@@ -1,6 +1,7 @@
 namespace Demo.Order.Types;
 
 [MutationType]
+
 public static partial class OrderMutations
 {
     public static async Task<Data.Order> CreateOrderAsync(
