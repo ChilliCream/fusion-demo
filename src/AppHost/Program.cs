@@ -11,47 +11,47 @@ var keycloak = builder
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
     .WithReference(postgres.AddDatabase("accounts-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "accounts")
     .WaitFor(postgres);
 
 var inventoryApi = builder
     .AddProject<Projects.Demo_Inventory>("inventory-api")
     .WithReference(postgres.AddDatabase("inventory-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "inventory")
     .WaitFor(postgres);
 
 var orderApi = builder
     .AddProject<Projects.Demo_Order>("order-api")
     .WithReference(postgres.AddDatabase("order-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "order")
     .WaitFor(postgres);
 
 var paymentsApi = builder
     .AddProject<Projects.Demo_Payments>("payments-api")
     .WithReference(postgres.AddDatabase("payments-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "payments")
     .WaitFor(postgres);
 
 var productsApi = builder
     .AddProject<Projects.Demo_Products>("products-api")
     .WithReference(postgres.AddDatabase("products-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "products")
     .WaitFor(postgres);
 
 var reviewsApi = builder
     .AddProject<Projects.Demo_Reviews>("reviews-api")
     .WithReference(postgres.AddDatabase("reviews-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "reviews")
     .WaitFor(postgres);
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLSchemaEndpoint(endpointName: "shipping");
 
 var cartApi = builder
     .AddProject<Projects.Demo_Cart>("cart-api")
     .WithReference(postgres.AddDatabase("cart-db"))
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLSchemaEndpoint(endpointName: "cart")
     .WaitFor(postgres);
 
 builder
