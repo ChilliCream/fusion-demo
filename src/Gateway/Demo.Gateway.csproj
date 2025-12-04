@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <IsAotCompatible>true</IsAotCompatible>
-        <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:9.0-noble</ContainerBaseImage>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:10.0-noble</ContainerBaseImage>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
