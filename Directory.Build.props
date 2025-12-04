@@ -8,13 +8,13 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <UseArtifactsOutput>false</UseArtifactsOutput>
         <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <PropertyGroup>
         <ContainerPort>8080</ContainerPort>
-        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:10.0</ContainerBaseImage>
         <PublishProfile>DefaultContainer</PublishProfile>
     </PropertyGroup>
 

@@ -43,10 +43,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET 9 SDK
+      - name: Set up .NET 10 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
 
       - name: Azure login
         uses: azure/login@v2
@@ -81,7 +81,7 @@ jobs:
             -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
             -p:ContainerPort=${{ inputs.container_port }} \
-            -p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:9.0
+            -p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:10.0
 
       - name: Create or Update App Service
         run: |
