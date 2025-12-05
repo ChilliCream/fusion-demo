@@ -1,0 +1,18 @@
+{
+  "$schema": "../settings-schema.json",
+  "title": "Get Product By Id",
+  "icons": [
+    {
+      "source": "https://chillicream.com/favicon-32x32.png",
+      "sizes": ["32x32"],
+      "mimeType": "image/png",
+      "theme": "dark"
+    }
+  ],
+  "annotations": {
+    "openWorldHint": false
+  },
+  "openAiComponent": {
+    "prefersBorder": true
+  }
+}

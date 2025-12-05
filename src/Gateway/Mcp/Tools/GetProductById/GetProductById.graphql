@@ -1,0 +1,7 @@
+"Get a product by its ID with its name."
+query GetProductById($id: ID!) {
+  productById(id: $id) {
+    id
+    name
+  }
+}

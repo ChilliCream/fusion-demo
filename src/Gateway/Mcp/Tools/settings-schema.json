@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Model Context Protocol tool settings for Hot Chocolate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "The optional human-readable title for the tool.",
+      "type": "string"
+    },
+    "icons": {
+      "description": "The optional icons for the tool.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "description": "The URI pointing to the icon resource. This can be an HTTP/HTTPS URL pointing to an image file or a data URI with base64-encoded image data.",
+            "type": "string",
+            "format": "uri",
+            "pattern": "^(data|https?):"
+          },
+          "mimeType": {
+            "description": "The optional MIME type of the icon. This can be used to override the server's MIME type if it's missing or generic. Common values include \"image/png\", \"image/jpeg\", \"image/svg+xml\", and \"image/webp\".",
+            "type": "string",
+            "pattern": "^[^/]+\/[^/]+$"
+          },
+          "sizes": {
+            "description": "The optional size specifications for the icon. This can specify one or more sizes at which the icon file can be used. Examples include \"48x48\", or \"any\" for scalable formats like SVG.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(\\d+x\\d+|any)$"
+            }
+          },
+          "theme": {
+            "description": "The optional theme for this icon. Can be \"light\", \"dark\", or a custom theme identifier. Used to specify which UI theme the icon is designed for.",
+            "examples": ["light", "dark"],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "source"
+        ]
+      }
+    },
+    "annotations": {
+      "type": "object",
+      "properties": {
+        "destructiveHint": {
+          "description": "A hint indicating whether this operation may cause destructive side effects.",
+          "type": "boolean"
+        },
+        "idempotentHint": {
+          "description": "A hint indicating whether this operation is idempotent (safe to retry).",
+          "type": "boolean"
+        },
+        "openWorldHint": {
+          "description": "A hint indicating whether this operation assumes an open-world model.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "openAiComponent": {
+      "description": "The optional OpenAI component configuration for this tool.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Human-readable summary surfaced to the model when the component loads, reducing redundant assistant narration.",
+          "type": "string"
+        },
+        "domain": {
+          "description": "Optional dedicated subdomain for hosted components.",
+          "type": "string",
+          "default": "https://web-sandbox.oaiusercontent.com"
+        },
+        "prefersBorder": {
+          "description": "Hint that the component should render inside a bordered card when supported.",
+          "type": "boolean"
+        },
+        "toolInvokingStatusText": {
+          "description": "Short status text while the tool runs (≤ 64 chars).",
+          "type": "string",
+          "maxLength": 64
+        },
+        "toolInvokedStatusText": {
+          "description": "Short status text after the tool completes (≤ 64 chars).",
+          "type": "string",
+          "maxLength": 64
+        },
+        "allowToolCalls": {
+          "description": "Allow component→tool calls through the client bridge.",
+          "type": "boolean"
+        },
+        "csp": {
+          "description": "Define connect_domains and resource_domains arrays for the component's CSP snapshot.",
+          "type": "object",
+          "properties": {
+            "connectDomains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resourceDomains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

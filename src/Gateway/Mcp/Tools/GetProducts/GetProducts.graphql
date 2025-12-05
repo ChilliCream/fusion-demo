@@ -1,0 +1,9 @@
+"Get a list of products with their IDs and names."
+query GetProducts {
+  products {
+    nodes {
+      id
+      name
+    }
+  }
+}

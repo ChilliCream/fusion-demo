@@ -8,6 +8,7 @@
     <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.10.9" />
     <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.10.9" />
     <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.10.9" />
+    <PackageVersion Include="HotChocolate.Fusion.Adapters.Mcp" Version="16.0.0-p.10.9" />
     <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.10.9" />
     <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.10.9" />
     <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.10.9" />

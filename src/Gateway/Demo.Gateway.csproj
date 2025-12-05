@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="HotChocolate.Fusion.Adapters.Mcp" />
         <PackageReference Include="HotChocolate.Fusion.AspNetCore"/>
         <PackageReference Include="HotChocolate.AspNetCore.Authorization"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
