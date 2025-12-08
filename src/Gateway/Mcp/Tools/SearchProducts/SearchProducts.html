@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 0;
+            background: transparent;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        :root {
+            --text: #374151;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --primary: #10a37f;
+            --primary-hover: #0d8a6b;
+            --success: #10a37f;
+            --surface: #ffffff;
+            --surface-hover: #f9fafb;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #ececec;
+                --text-secondary: #9b9b9b;
+                --border: #2f2f2f;
+                --primary: #10a37f;
+                --primary-hover: #0d8a6b;
+                --success: #10a37f;
+                --surface: #212121;
+                --surface-hover: #2a2a2a;
+            }
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .product-card:hover {
+            border-color: var(--primary);
+        }
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        .product-content {
+            padding: 12px;
+        }
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+        .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .stock-indicator {
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 8px 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        button:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        button.loading {
+            pointer-events: none;
+        }
+        button.success {
+            background: var(--success);
+        }
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="products" class="products-grid"></div>
+    <script>
+        (function() {
+            let products = [];
+
+            function getProductsFromGlobals(globals) {
+                if (!globals) {
+                    return [];
+                }
+
+                // Check widget.props.data structure (GraphQL)
+                const widgetPropsData = globals.widget?.props?.data;
+
+                if (widgetPropsData?.products?.nodes) {
+                    return widgetPropsData.products.nodes;
+                }
+
+                // Check toolOutput structure
+                const toolOutput = globals.toolOutput;
+
+                if (toolOutput?.data?.products?.nodes) {
+                    return toolOutput.data.products.nodes;
+                }
+
+                if (toolOutput?.data?.products && Array.isArray(toolOutput.data.products)) {
+                    return toolOutput.data.products;
+                }
+
+                if (toolOutput?.result && Array.isArray(toolOutput.result)) {
+                    return toolOutput.result;
+                }
+
+                return [];
+            }
+
+            function render() {
+                const container = document.getElementById('products');
+
+                if (!container) {
+                    return;
+                }
+
+                if (!Array.isArray(products) || products.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No products found</div>';
+                    return;
+                }
+
+                // Generate a consistent emoji for each product based on its name
+                const getProductEmoji = (name) => {
+                    const emojis = {
+                        'chair': '🪑',
+                        'armchair': '🛋️',
+                        'dining': '🍽️',
+                        'rocking': '🪑',
+                        'table': '🪵',
+                        'sofa': '🛋️',
+                        'couch': '🛋️',
+                        'desk': '🪵',
+                        'bed': '🛏️'
+                    };
+                    const lowerName = name.toLowerCase();
+                    for (const [key, emoji] of Object.entries(emojis)) {
+                        if (lowerName.includes(key)) return emoji;
+                    }
+                    return '🪑';
+                };
+
+                container.innerHTML = products.map(product => `
+                    <div class="product-card">
+                        <div class="product-image">
+                            ${getProductEmoji(product.name)}
+                        </div>
+                        <div class="product-content">
+                            <div class="product-name">${product.name}</div>
+                            <div class="price">$${product.price.toFixed(2)}</div>
+                            <div class="stock-indicator" style="color: ${product.availableQuantity > 0 ? 'var(--success)' : '#ef4444'};">
+                                <span>${product.availableQuantity > 0 ? '✓' : '✗'}</span>
+                                <span>${product.availableQuantity > 0 ? `${product.availableQuantity} in stock` : 'Out of stock'}</span>
+                            </div>
+                            <button
+                                class="add-to-cart-btn"
+                                data-product-id="${product.id}"
+                                data-available-quantity="${product.availableQuantity}"
+                                ${product.availableQuantity === 0 ? 'disabled' : ''}>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add click event listeners
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        if (this.classList.contains('loading')) {
+                            return;
+                        }
+
+                        const productId = this.getAttribute('data-product-id');
+                        const originalText = this.innerHTML;
+                        const stockIndicator = this.parentElement.querySelector('.stock-indicator');
+                        let currentQuantity = parseInt(this.getAttribute('data-available-quantity'));
+
+                        try {
+                            // Show loading state
+                            this.classList.add('loading');
+                            this.disabled = true;
+                            this.innerHTML = '<span class="spinner"></span>Adding...';
+
+                            if (window.openai?.callTool) {
+                                const result = await window.openai.callTool('AddProductToCart', {
+                                    productId: productId,
+                                    quantity: 1
+                                });
+
+                                // Optimistically update quantity
+                                currentQuantity -= 1;
+                                this.setAttribute('data-available-quantity', currentQuantity);
+
+                                if (currentQuantity > 0) {
+                                    stockIndicator.style.color = 'var(--success)';
+                                    stockIndicator.textContent = `✓ ${currentQuantity} in stock`;
+                                } else {
+                                    stockIndicator.style.color = '#dc3545';
+                                    stockIndicator.textContent = '✗ Out of stock';
+                                }
+
+                                // Show success state
+                                this.classList.remove('loading');
+                                this.classList.add('success');
+                                this.innerHTML = '✓ Added to Cart!';
+
+                                // Reset button after 2 seconds
+                                setTimeout(() => {
+                                    this.classList.remove('success');
+
+                                    if (currentQuantity > 0) {
+                                        this.disabled = false;
+                                        this.innerHTML = originalText;
+                                    } else {
+                                        this.disabled = true;
+                                        this.innerHTML = 'Out of Stock';
+                                        this.style.opacity = '0.5';
+                                        this.style.cursor = 'not-allowed';
+                                    }
+                                }, 2000);
+                            }
+                        } catch (err) {
+                            // Show error state
+                            this.classList.remove('loading');
+                            this.innerHTML = '✗ Failed';
+                            this.style.background = '#dc3545';
+
+                            // Reset button after 2 seconds
+                            setTimeout(() => {
+                                this.disabled = false;
+                                this.style.background = '';
+                                this.innerHTML = originalText;
+                            }, 2000);
+                        }
+                    });
+                });
+            }
+
+            // Handle the openai:set_globals event
+            const handleSetGlobals = (event) => {
+                const globals = event.detail?.globals;
+
+                if (!globals) {
+                    return;
+                }
+
+                // Extract products from the globals
+                products = getProductsFromGlobals(globals);
+
+                // Render the products
+                render();
+            };
+
+            // Listen for the event
+            window.addEventListener('openai:set_globals', handleSetGlobals, {
+                passive: true,
+            });
+
+            // Initial render
+            render();
+        })();
+    </script>
+</body>
+</html>
