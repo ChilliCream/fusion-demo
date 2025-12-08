@@ -1,6 +1,6 @@
 {
   "$schema": "../settings-schema.json",
-  "title": "Search Products",
+  "title": "View Shopping Basket",
   "icons": [
     {
       "source": "https://chillicream.com/favicon-32x32.png",
@@ -13,8 +13,7 @@
     "openWorldHint": false
   },
   "openAiComponent": {
-    "prefersBorder": false,
-    "allowToolCalls": true,
-    "toolInvokingStatusText": "Searching for products ..."
+    "toolInvokingStatusText": "Loading Shopping Cart ...",
+    "toolInvokedStatusText": "Shopping Cart"
   }
 }

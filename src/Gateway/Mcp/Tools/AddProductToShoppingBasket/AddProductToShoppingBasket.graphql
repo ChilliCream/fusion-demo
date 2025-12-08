@@ -1,0 +1,18 @@
+mutation AddProductToShoppingBasket($productId: ID!, $quantity: Int!) {
+  addProductToCart(input: { productId: $productId, quantity: $quantity }) {
+    cart {
+      id
+      items {
+        nodes {
+          product {
+            id
+            name
+            price
+            availableQuantity: quantity
+          }
+          quantity
+        }
+      }
+    }
+  }
+}

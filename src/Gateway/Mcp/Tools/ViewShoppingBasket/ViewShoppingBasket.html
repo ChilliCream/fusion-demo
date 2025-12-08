@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Basket</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 0;
+            background: transparent;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        :root {
+            --text: #374151;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --primary: #10a37f;
+            --primary-hover: #0d8a6b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --surface: #ffffff;
+            --surface-hover: #f9fafb;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #ececec;
+                --text-secondary: #9b9b9b;
+                --border: #2f2f2f;
+                --primary: #10a37f;
+                --primary-hover: #0d8a6b;
+                --danger: #ef4444;
+                --danger-hover: #dc2626;
+                --surface: #212121;
+                --surface-hover: #2a2a2a;
+            }
+        }
+        .cart-container {
+            max-width: 600px;
+        }
+        .cart-summary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .cart-summary h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .cart-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+        }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .item-price {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+        .quantity-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .quantity-btn:hover:not(:disabled) {
+            background: var(--border);
+        }
+        .quantity-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .quantity-display {
+            min-width: 24px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .remove-btn {
+            background: none;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+        .remove-btn:hover:not(:disabled) {
+            background: var(--danger);
+            color: white;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .checkout-btn:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+        .checkout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-cart-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="cart" class="cart-container"></div>
+    <script>
+        (function() {
+            console.log('[ViewCart] Widget script initializing at', new Date().toISOString());
+            let cartData = null;
+            let isLoading = true;
+            let eventCount = 0;
+
+            // Log all events for debugging
+            window.addEventListener('openai:set_globals', (e) => {
+                eventCount++;
+                console.log(`[ViewCart] ========== Event #${eventCount} fired at ${new Date().toISOString()} ==========`);
+                console.log(`[ViewCart] Event #${eventCount} toolOutput:`, e.detail?.globals?.toolOutput);
+                console.log(`[ViewCart] Event #${eventCount} widget.props.data:`, e.detail?.globals?.widget?.props?.data);
+            }, { passive: true, capture: true });
+
+            function getCartFromGlobals(globals) {
+                if (!globals) {
+                    return null;
+                }
+
+                // Check widget.props.data structure (GraphQL)
+                const widgetPropsData = globals.widget?.props?.data;
+
+                if (widgetPropsData?.viewer?.cart) {
+                    return widgetPropsData.viewer.cart;
+                }
+
+                if (widgetPropsData?.shoppingBasket) {
+                    return widgetPropsData.shoppingBasket;
+                }
+
+                if (widgetPropsData?.basket) {
+                    return widgetPropsData.basket;
+                }
+
+                if (widgetPropsData?.cart) {
+                    return widgetPropsData.cart;
+                }
+
+                // Check toolOutput structure
+                const toolOutput = globals.toolOutput;
+
+                if (toolOutput?.data?.viewer?.cart) {
+                    return toolOutput.data.viewer.cart;
+                }
+
+                if (toolOutput?.data?.shoppingBasket) {
+                    return toolOutput.data.shoppingBasket;
+                }
+
+                if (toolOutput?.data?.basket) {
+                    return toolOutput.data.basket;
+                }
+
+                if (toolOutput?.data?.cart) {
+                    return toolOutput.data.cart;
+                }
+
+                if (toolOutput?.result) {
+                    return toolOutput.result;
+                }
+
+                return null;
+            }
+
+            function getProductEmoji(name) {
+                const emojis = {
+                    'chair': '🪑',
+                    'armchair': '🛋️',
+                    'dining': '🍽️',
+                    'rocking': '🪑',
+                    'table': '🪵',
+                    'sofa': '🛋️',
+                    'couch': '🛋️',
+                    'desk': '🪵',
+                    'bed': '🛏️'
+                };
+                const lowerName = name.toLowerCase();
+                for (const [key, emoji] of Object.entries(emojis)) {
+                    if (lowerName.includes(key)) return emoji;
+                }
+                return '🛒';
+            }
+
+            async function updateQuantity(itemId, newQuantity) {
+                if (!window.openai?.callTool) return;
+
+                try {
+                    await window.openai.callTool('UpdateShoppingBasketItemQuantity', {
+                        shoppingBasketItemId: itemId,
+                        quantity: newQuantity
+                    });
+                } catch (err) {
+                    console.error('Failed to update quantity:', err);
+                }
+            }
+
+            async function removeItem(itemId) {
+                if (!window.openai?.callTool) return;
+
+                try {
+                    await window.openai.callTool('RemoveProductFromShoppingBasket', {
+                        shoppingBasketItemId: itemId
+                    });
+                } catch (err) {
+                    console.error('Failed to remove item:', err);
+                }
+            }
+
+            async function checkout() {
+                if (!window.openai?.callTool) return;
+
+                const checkoutBtn = document.querySelector('.checkout-btn');
+                if (!checkoutBtn || checkoutBtn.classList.contains('loading')) return;
+
+                try {
+                    // Show loading state
+                    checkoutBtn.classList.add('loading');
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.innerHTML = '<span class="spinner"></span>Processing...';
+
+                    await window.openai.callTool('Checkout', {});
+
+                    // Show success
+                    checkoutBtn.classList.remove('loading');
+                    checkoutBtn.innerHTML = '✓ Order Placed!';
+
+                    // Clear the cart and show empty state after a moment
+                    setTimeout(() => {
+                        cartData = null;
+                        render();
+                    }, 1500);
+                } catch (err) {
+                    console.error('Failed to checkout:', err);
+
+                    // Show error
+                    checkoutBtn.classList.remove('loading');
+                    checkoutBtn.innerHTML = '✗ Checkout Failed';
+                    checkoutBtn.style.background = '#dc2626';
+
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        checkoutBtn.disabled = false;
+                        checkoutBtn.style.background = '';
+                        checkoutBtn.innerHTML = 'Checkout';
+                    }, 2000);
+                }
+            }
+
+            function render() {
+                console.log('[ViewCart] render() called with cartData:', cartData);
+                const container = document.getElementById('cart');
+
+                if (!container) {
+                    console.log('[ViewCart] Container not found');
+                    return;
+                }
+
+                // Show loading state while waiting for data
+                if (isLoading) {
+                    console.log('[ViewCart] Rendering loading state');
+                    container.innerHTML = `
+                        <div class="empty-cart">
+                            <span class="spinner"></span>
+                            <p style="margin-top: 16px;">Loading cart...</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Handle GraphQL pagination structure (items.nodes)
+                const items = cartData?.items?.nodes || cartData?.items || [];
+                console.log('[ViewCart] Items to render:', items);
+
+                if (!cartData || items.length === 0) {
+                    console.log('[ViewCart] Rendering empty cart');
+                    container.innerHTML = `
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <h3>Your cart is empty</h3>
+                            <p style="margin-top: 8px;">Add some products to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const subtotal = items.reduce((sum, item) =>
+                    sum + (item.product.price * item.quantity), 0);
+
+                container.innerHTML = `
+                    <div class="cart-summary">
+                        <h2>🛒 Shopping Basket</h2>
+                        <div class="summary-row">
+                            <span>Items:</span>
+                            <span>${items.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span>$${subtotal.toFixed(2)}</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-items">
+                        ${items.map(item => `
+                            <div class="cart-item" data-item-id="${item.id}">
+                                <div class="item-image" style="${item.product.pictureUrl ? 'background: none; padding: 0;' : ''}">
+                                    ${item.product.pictureUrl
+                                        ? `<img src="${item.product.pictureUrl}" alt="${item.product.name}">`
+                                        : getProductEmoji(item.product.name)}
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.product.name}</div>
+                                    <div class="item-price">$${item.product.price.toFixed(2)} each</div>
+                                    <div class="item-controls">
+                                        <div class="quantity-control">
+                                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                                            <span class="quantity-display">${item.quantity}</span>
+                                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                        </div>
+                                        <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <button class="checkout-btn" onclick="checkout()">
+                        Checkout
+                    </button>
+                `;
+
+                // Make functions available globally for onclick handlers
+                window.updateQuantity = updateQuantity;
+                window.removeItem = removeItem;
+                window.checkout = checkout;
+            }
+
+            // Handle the openai:set_globals event
+            const handleSetGlobals = (event) => {
+                console.log('[ViewCart] openai:set_globals fired');
+                console.log('[ViewCart] event.detail:', event.detail);
+
+                const globals = event.detail?.globals;
+
+                if (!globals) {
+                    console.log('[ViewCart] No globals found');
+                    return;
+                }
+
+                console.log('[ViewCart] globals structure:', {
+                    hasWidget: !!globals.widget,
+                    hasToolOutput: !!globals.toolOutput,
+                    widgetPropsData: globals.widget?.props?.data,
+                    toolOutputData: globals.toolOutput?.data
+                });
+
+                console.log('[ViewCart] Full toolOutput:', JSON.stringify(globals.toolOutput, null, 2));
+                console.log('[ViewCart] Full globals:', JSON.stringify(globals, null, 2));
+
+                // Extract cart from the globals
+                cartData = getCartFromGlobals(globals);
+
+                console.log('[ViewCart] Extracted cartData:', cartData);
+                console.log('[ViewCart] Items:', cartData?.items?.nodes || cartData?.items || []);
+
+                // Only mark as loaded if we have actual data (toolOutput has data or we extracted cart data)
+                // This prevents the initial null event from hiding the loading state
+                if (globals.toolOutput?.data || globals.widget?.props?.data?.viewer || cartData !== null) {
+                    console.log('[ViewCart] Marking as loaded - have actual data');
+                    isLoading = false;
+                } else {
+                    console.log('[ViewCart] No data yet, keeping loading state');
+                }
+
+                // Render the cart
+                render();
+            };
+
+            // Listen for the event
+            window.addEventListener('openai:set_globals', handleSetGlobals, {
+                passive: true,
+            });
+
+            console.log('[ViewCart] Event listener registered, calling initial render');
+            // Initial render
+            render();
+        })();
+    </script>
+</body>
+</html>

@@ -9,6 +9,7 @@
     <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.10.13" />
     <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.10.13" />
     <PackageVersion Include="HotChocolate.Fusion.Adapters.Mcp" Version="16.0.0-p.10.13" />
+    <PackageVersion Include="HotChocolate.Fusion.Adapters.OpenApi" Version="16.0.0-p.10.13" />
     <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.10.13" />
     <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.10.13" />
     <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.10.13" />
@@ -46,5 +47,9 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.14.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
+  </ItemGroup>
+  <ItemGroup Label="Yarp">
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
   </ItemGroup>
 </Project>

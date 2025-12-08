@@ -126,7 +126,18 @@
     <div id="products" class="products-grid"></div>
     <script>
         (function() {
+            console.log('[SearchProducts] Widget script initializing at', new Date().toISOString());
             let products = [];
+            let isLoading = true;
+            let eventCount = 0;
+
+            // Log all events for debugging
+            window.addEventListener('openai:set_globals', (e) => {
+                eventCount++;
+                console.log(`[SearchProducts] ========== Event #${eventCount} fired at ${new Date().toISOString()} ==========`);
+                console.log(`[SearchProducts] Event #${eventCount} toolOutput:`, e.detail?.globals?.toolOutput);
+                console.log(`[SearchProducts] Event #${eventCount} widget.props.data:`, e.detail?.globals?.widget?.props?.data);
+            }, { passive: true, capture: true });
 
             function getProductsFromGlobals(globals) {
                 if (!globals) {
@@ -159,16 +170,29 @@
             }
 
             function render() {
+                console.log('[SearchProducts] render() called with products:', products);
+                console.log('[SearchProducts] products.length:', products?.length);
                 const container = document.getElementById('products');
 
                 if (!container) {
+                    console.log('[SearchProducts] Container not found');
+                    return;
+                }
+
+                // Show loading state while waiting for data
+                if (isLoading) {
+                    console.log('[SearchProducts] Rendering loading state');
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;"><span class="spinner" style="display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.1); border-top-color: #666; border-radius: 50%; animation: spin 0.6s linear infinite;"></span> <span style="margin-left: 8px;">Loading products...</span></div>';
                     return;
                 }
 
                 if (!Array.isArray(products) || products.length === 0) {
+                    console.log('[SearchProducts] No products, showing empty state');
                     container.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No products found</div>';
                     return;
                 }
+
+                console.log('[SearchProducts] Rendering', products.length, 'products');
 
                 // Generate a consistent emoji for each product based on its name
                 const getProductEmoji = (name) => {
@@ -192,8 +216,10 @@
 
                 container.innerHTML = products.map(product => `
                     <div class="product-card">
-                        <div class="product-image">
-                            ${getProductEmoji(product.name)}
+                        <div class="product-image" style="${product.pictureUrl ? 'background: none; padding: 0;' : ''}">
+                            ${product.pictureUrl
+                                ? `<img src="${product.pictureUrl}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+                                : getProductEmoji(product.name)}
                         </div>
                         <div class="product-content">
                             <div class="product-name">${product.name}</div>
@@ -232,7 +258,7 @@
                             this.innerHTML = '<span class="spinner"></span>Adding...';
 
                             if (window.openai?.callTool) {
-                                const result = await window.openai.callTool('AddProductToCart', {
+                                const result = await window.openai.callTool('AddProductToShoppingBasket', {
                                     productId: productId,
                                     quantity: 1
                                 });
@@ -288,16 +314,34 @@
 
             // Handle the openai:set_globals event
             const handleSetGlobals = (event) => {
+                console.log('[SearchProducts] handleSetGlobals called');
                 const globals = event.detail?.globals;
 
                 if (!globals) {
+                    console.log('[SearchProducts] No globals, returning');
                     return;
                 }
 
+                console.log('[SearchProducts] Full globals:', JSON.stringify(globals, null, 2));
+
                 // Extract products from the globals
-                products = getProductsFromGlobals(globals);
+                const extractedProducts = getProductsFromGlobals(globals);
+                console.log('[SearchProducts] Extracted products:', extractedProducts);
+                console.log('[SearchProducts] Products count:', extractedProducts.length);
+
+                products = extractedProducts;
+
+                // Only mark as loaded if we have actual data (toolOutput has data or we extracted products)
+                // This prevents the initial null event from hiding the loading state
+                if (globals.toolOutput?.data || globals.widget?.props?.data?.products || extractedProducts.length > 0) {
+                    console.log('[SearchProducts] Marking as loaded - have actual data');
+                    isLoading = false;
+                } else {
+                    console.log('[SearchProducts] No data yet, keeping loading state');
+                }
 
                 // Render the products
+                console.log('[SearchProducts] Calling render with', products.length, 'products');
                 render();
             };
 

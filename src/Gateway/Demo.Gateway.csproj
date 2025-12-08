@@ -3,6 +3,7 @@
     <PropertyGroup>
         <IsAotCompatible>true</IsAotCompatible>
         <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:10.0-noble</ContainerBaseImage>
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
@@ -12,12 +13,15 @@
 
     <ItemGroup>
         <PackageReference Include="HotChocolate.Fusion.Adapters.Mcp" />
+        <PackageReference Include="HotChocolate.Fusion.Adapters.OpenApi" />
         <PackageReference Include="HotChocolate.Fusion.AspNetCore"/>
         <PackageReference Include="HotChocolate.AspNetCore.Authorization"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
         <PackageReference Include="ChilliCream.Nitro.Fusion" />
         <PackageReference Include="ChilliCream.Nitro.App" />
+        <PackageReference Include="Yarp.ReverseProxy" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>
 
     <ItemGroup>

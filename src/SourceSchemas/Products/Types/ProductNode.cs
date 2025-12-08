@@ -17,10 +17,15 @@ public static partial class ProductNode
     [Tag("team-products")]
     public static Uri? GetPictureUrl(
         [Parent] Product product, 
-        IHttpContextAccessor httpContextAccessor)
-    {
-        var context = httpContextAccessor.HttpContext;
-        return product.PictureFileName is not null 
+        HttpContext context)
+    {   
+        if(context.Request.Headers.TryGetValue("x-gateway-baseurl", out var value) 
+            && !string.IsNullOrEmpty(value))
+        {
+            return new Uri($"{value}/images/{product.PictureFileName}");
+        }
+
+        return product.PictureFileName is not null
             ? new Uri($"{context!.Request.Scheme}://{context.Request.Host}/images/{product.PictureFileName}")
             : null;
     }
