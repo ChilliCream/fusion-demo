@@ -1,5 +1,5 @@
 {
-  "$schema": "../settings-schema.json",
+  "$schema": "../tool-settings-schema.json",
   "title": "Search Products",
   "icons": [
     {

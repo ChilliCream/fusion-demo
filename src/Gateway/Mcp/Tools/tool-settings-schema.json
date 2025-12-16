@@ -33,9 +33,9 @@
             }
           },
           "theme": {
-            "description": "The optional theme for this icon. Can be \"light\", \"dark\", or a custom theme identifier. Used to specify which UI theme the icon is designed for.",
-            "examples": ["light", "dark"],
-            "type": "string"
+            "description": "The optional theme for this icon. Can be \"light\" or \"dark\". Used to specify which UI theme the icon is designed for.",
+            "type": "string",
+            "enum": ["light", "dark"]
           }
         },
         "additionalProperties": false,

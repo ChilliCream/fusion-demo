@@ -59,6 +59,7 @@ public static class Extensions
                 metrics
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddMeter("Experimental.ModelContextProtocol")
                     .AddNitroExporter();
             })
             .WithTracing(tracing =>
@@ -69,36 +70,37 @@ public static class Extensions
 #endif
                     .AddAspNetCoreInstrumentation(
                         o =>
+                    {
+                        o.RecordException = true;
+
+                        o.EnrichWithHttpRequest = (activity, request) =>
                         {
-                            o.RecordException = true;
+                            var path = request.PathBase.HasValue || request.Path.HasValue
+                                ? (request.PathBase + request.Path).ToString()
+                                : "/";
 
-                            o.EnrichWithHttpRequest = (activity, request) =>
+                            // we override the display name to include the path otherwise
+                            // all legacy request will be just set to {method}. This is correct
+                            // otel behaviour but not useful at all
+                            activity.DisplayName += $" {path}";
+
+                            // elastic only treats a request as a "request" transaction
+                            // when http.url is set
+                            activity.SetTag("http.url", GetUri(request));
+                        };
+                        o.EnrichWithHttpResponse = (activity, _) =>
+                        {
+                            var rawDisplayName =
+                                activity.GetCustomProperty("graphqlDisplayName");
+                            if (rawDisplayName is string graphqlDisplayName &&
+                                !string.IsNullOrEmpty(graphqlDisplayName))
                             {
-                                var path = request.PathBase.HasValue || request.Path.HasValue
-                                    ? (request.PathBase + request.Path).ToString()
-                                    : "/";
-
-                                // we override the display name to include the path otherwise
-                                // all legacy request will be just set to {method}. This is correct
-                                // otel behaviour but not useful at all
-                                activity.DisplayName += $" {path}";
-
-                                // elastic only treats a request as a "request" transaction
-                                // when http.url is set
-                                activity.SetTag("http.url", GetUri(request));
-                            };
-                            o.EnrichWithHttpResponse = (activity, _) =>
-                            {
-                                var rawDisplayName =
-                                    activity.GetCustomProperty("graphqlDisplayName");
-                                if (rawDisplayName is string graphqlDisplayName &&
-                                    !string.IsNullOrEmpty(graphqlDisplayName))
-                                {
-                                    activity.DisplayName = graphqlDisplayName;
-                                }
-                            };
-                        })
+                                activity.DisplayName = graphqlDisplayName;
+                            }
+                        };
+                    })
                     .AddHttpClientInstrumentation()
+                    .AddSource("Experimental.ModelContextProtocol")
                     .AddNitroExporter();
             })
             .WithLogging(logging =>

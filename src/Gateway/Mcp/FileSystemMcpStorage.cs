@@ -13,8 +13,8 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
 {
     private readonly Lock _syncRoot = new();
     private readonly FileSystemWatcher _watcher;
+    private readonly string _promptsDirectoryPath;
     private readonly string _toolsDirectoryPath;
-    private static readonly string[] Extensions = [".graphql", ".html", ".json"];
 
     private readonly Channel<IFileEvent> _fileUpdatedEvents = Channel.CreateBounded<IFileEvent>(
         new BoundedChannelOptions(10)
@@ -25,7 +25,8 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         });
 
     private readonly CancellationTokenSource _cts = new();
-    private ImmutableArray<ObserverSession> _sessions = [];
+    private ImmutableArray<ObserverSession<PromptStorageEventArgs>> _promptSessions = [];
+    private ImmutableArray<ObserverSession<OperationToolStorageEventArgs>> _toolSessions = [];
     private bool _disposed;
 
     public FileSystemMcpStorage(string directoryPath)
@@ -39,6 +40,7 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             throw new DirectoryNotFoundException($"Could not find directory '{fullPath}'");
         }
 
+        _promptsDirectoryPath = Path.Combine(fullPath, "Prompts");
         _toolsDirectoryPath = Path.Combine(fullPath, "Tools");
 
         _watcher = new FileSystemWatcher
@@ -64,6 +66,33 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         FileUpdateProcessorAsync(_cts.Token).FireAndForget();
     }
 
+    public async ValueTask<IEnumerable<PromptDefinition>> GetPromptDefinitionsAsync(
+        CancellationToken cancellationToken)
+    {
+        var jsonFiles = Directory.EnumerateFiles(
+            _promptsDirectoryPath,
+            "*.json",
+            SearchOption.AllDirectories);
+
+        var definitions = ImmutableArray.CreateBuilder<PromptDefinition>();
+
+        foreach (var filePath in jsonFiles)
+        {
+            var directory = Path.GetDirectoryName(filePath)!;
+            var parentDirectory = Path.GetDirectoryName(directory);
+
+            if (parentDirectory != _promptsDirectoryPath)
+            {
+                continue;
+            }
+
+            var promptName = Path.GetFileNameWithoutExtension(filePath);
+            definitions.Add(await CreatePromptDefinitionAsync(directory, promptName, cancellationToken));
+        }
+
+        return definitions.ToImmutable();
+    }
+
     public async ValueTask<IEnumerable<OperationToolDefinition>> GetOperationToolDefinitionsAsync(
         CancellationToken cancellationToken)
     {
@@ -77,11 +106,33 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         foreach (var filePath in graphqlFiles)
         {
             var directory = Path.GetDirectoryName(filePath)!;
-            var fileBaseName = Path.GetFileNameWithoutExtension(filePath);
-            definitions.Add(await CreateOperationToolDefinition(directory, fileBaseName, cancellationToken));
+            var parentDirectory = Path.GetDirectoryName(directory);
+
+            if (parentDirectory != _toolsDirectoryPath)
+            {
+                continue;
+            }
+
+            var toolName = Path.GetFileNameWithoutExtension(filePath);
+            definitions.Add(await CreateOperationToolDefinitionAsync(directory, toolName, cancellationToken));
         }
 
         return definitions.ToImmutable();
+    }
+
+    public IDisposable Subscribe(IObserver<PromptStorageEventArgs> observer)
+    {
+        ArgumentNullException.ThrowIfNull(observer);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        var session = new ObserverSession<PromptStorageEventArgs>(this, observer);
+
+        lock (_syncRoot)
+        {
+            _promptSessions = _promptSessions.Add(session);
+        }
+
+        return session;
     }
 
     public IDisposable Subscribe(IObserver<OperationToolStorageEventArgs> observer)
@@ -89,21 +140,29 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         ArgumentNullException.ThrowIfNull(observer);
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        var session = new ObserverSession(this, observer);
+        var session = new ObserverSession<OperationToolStorageEventArgs>(this, observer);
 
         lock (_syncRoot)
         {
-            _sessions = _sessions.Add(session);
+            _toolSessions = _toolSessions.Add(session);
         }
 
         return session;
     }
 
-    private void Unsubscribe(ObserverSession session)
+    private void Unsubscribe(ObserverSession<PromptStorageEventArgs> session)
     {
         lock (_syncRoot)
         {
-            _sessions = _sessions.Remove(session);
+            _promptSessions = _promptSessions.Remove(session);
+        }
+    }
+
+    private void Unsubscribe(ObserverSession<OperationToolStorageEventArgs> session)
+    {
+        lock (_syncRoot)
+        {
+            _toolSessions = _toolSessions.Remove(session);
         }
     }
 
@@ -111,31 +170,88 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
     {
         await foreach (var @event in _fileUpdatedEvents.Reader.ReadAllAsync(cancellationToken))
         {
-            // Filter by supported extensions (graphql, html, json).
-            if (!Extensions.Contains(Path.GetExtension(@event.FilePath)))
+            if (@event.FilePath.StartsWith(_promptsDirectoryPath + Path.DirectorySeparatorChar))
             {
-                continue;
+                await ProcessPromptFileEventAsync(@event, cancellationToken);
             }
 
-            var directory = Path.GetDirectoryName(@event.FilePath)!;
-
-            // Only process changes in the Tools directory.
-            if (!directory.StartsWith(_toolsDirectoryPath + Path.DirectorySeparatorChar))
+            if (@event.FilePath.StartsWith(_toolsDirectoryPath + Path.DirectorySeparatorChar))
             {
-                continue;
+                await ProcessToolFileEventAsync(@event, cancellationToken);
             }
+        }
+    }
 
-            var toolName = Path.GetFileName(directory);
-            var graphqlFilePath = Path.Combine(directory, toolName + ".graphql");
+    private async Task ProcessPromptFileEventAsync(IFileEvent @event, CancellationToken cancellationToken)
+    {
+        var extension = Path.GetExtension(@event.FilePath);
 
-            try
+        if (extension != ".json")
+        {
+            return;
+        }
+
+        var directory = Path.GetDirectoryName(@event.FilePath)!;
+        var promptName = Path.GetFileName(directory);
+
+        try
+        {
+            switch (@event)
             {
-                if (@event is FileAddedEvent or FileModifiedEvent)
+                case FileAddedEvent or FileModifiedEvent:
+                    var eventType =
+                        @event is FileAddedEvent
+                            ? PromptStorageEventType.Added
+                            : PromptStorageEventType.Modified;
+
+                    var promptDefinition =
+                        await CreatePromptDefinitionAsync(directory, promptName, cancellationToken);
+
+                    NotifyObservers(
+                        new PromptStorageEventArgs(
+                            promptDefinition.Name,
+                            eventType,
+                            promptDefinition));
+
+                    break;
+
+                case FileRemovedEvent:
+                    // The prompt has been removed.
+                    NotifyObservers(
+                        new PromptStorageEventArgs(promptName, PromptStorageEventType.Removed));
+
+                    break;
+            }
+        }
+        catch
+        {
+            // ignore and wait for next update
+        }
+    }
+
+    private async Task ProcessToolFileEventAsync(IFileEvent @event, CancellationToken cancellationToken)
+    {
+        var extension = Path.GetExtension(@event.FilePath);
+
+        if (extension != ".graphql" && extension != ".html" && extension != ".json")
+        {
+            return;
+        }
+
+        var directory = Path.GetDirectoryName(@event.FilePath)!;
+        var toolName = Path.GetFileName(directory);
+        var graphqlFilePath = Path.Combine(directory, toolName + ".graphql");
+
+        try
+        {
+            switch (@event)
+            {
+                case FileAddedEvent or FileModifiedEvent:
                 {
                     // The GraphQL file should always exist.
                     if (!File.Exists(graphqlFilePath))
                     {
-                        continue;
+                        return;
                     }
 
                     var eventType =
@@ -144,21 +260,23 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
                             : OperationToolStorageEventType.Modified;
 
                     var operationToolDefinition =
-                        await CreateOperationToolDefinition(directory, toolName, cancellationToken);
+                        await CreateOperationToolDefinitionAsync(directory, toolName, cancellationToken);
 
                     NotifyObservers(
                         new OperationToolStorageEventArgs(
                             operationToolDefinition.Name,
                             eventType,
                             operationToolDefinition));
+
+                    break;
                 }
-                else if (@event is FileRemovedEvent)
+                case FileRemovedEvent:
                 {
                     if (File.Exists(graphqlFilePath))
                     {
                         // The component HTML or JSON file has been removed. Recreate the tool definition.
                         var operationToolDefinition =
-                            await CreateOperationToolDefinition(directory, toolName, cancellationToken);
+                            await CreateOperationToolDefinitionAsync(directory, toolName, cancellationToken);
 
                         NotifyObservers(
                             new OperationToolStorageEventArgs(
@@ -174,16 +292,77 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
                                 toolName,
                                 OperationToolStorageEventType.Removed));
                     }
+
+                    break;
                 }
             }
-            catch
-            {
-                // ignore and wait for next update
-            }
+        }
+        catch
+        {
+            // ignore and wait for next update
         }
     }
 
-    private static async Task<OperationToolDefinition> CreateOperationToolDefinition(
+    private static async Task<PromptDefinition> CreatePromptDefinitionAsync(
+        string directory,
+        string promptName,
+        CancellationToken cancellationToken)
+    {
+        var settingsFilePath = Path.Combine(directory, promptName + ".json");
+
+        var json = File.Exists(settingsFilePath)
+            ? await File.ReadAllTextAsync(settingsFilePath, cancellationToken)
+            : null;
+
+        var jsonSettings = json is not null
+            ? JsonSerializer.Deserialize(json, McpJsonSerializerContext.Default.McpPromptSettings)
+            : null;
+
+        return new PromptDefinition(promptName)
+        {
+            Title = jsonSettings?.Title,
+            Description = jsonSettings?.Description,
+            Arguments = jsonSettings?.Arguments?.Select(
+                a => new PromptArgumentDefinition(a.Name)
+                {
+                    Title = a.Title,
+                    Description = a.Description,
+                    Required = a.Required
+                }).ToArray(),
+            Icons = jsonSettings?.Icons?.Select(
+                i => new IconDefinition(i.Source)
+                {
+                    MimeType = i.MimeType,
+                    Sizes = i.Sizes,
+                    Theme = i.Theme
+                }).ToArray(),
+            Messages = jsonSettings?.Messages.Select(
+                m =>
+                {
+                    return m.Content switch
+                    {
+                        McpPromptSettingsTextContent content => new PromptMessageDefinition(
+                            MapRole(m.Role),
+                            new TextContentBlockDefinition(content.Text)),
+                        _ =>
+                            throw new NotSupportedException(
+                                $"Message content type '{m.Content.GetType().Name}' is not supported.")
+                    };
+                }).ToArray() ?? []
+        };
+    }
+
+    private static RoleDefinition MapRole(string role)
+    {
+        return role switch
+        {
+            "user" => RoleDefinition.User,
+            "assistant" => RoleDefinition.Assistant,
+            _ => throw new NotSupportedException($"Role '{role}' is not supported.")
+        };
+    }
+
+    private static async Task<OperationToolDefinition> CreateOperationToolDefinitionAsync(
         string directory,
         string toolName,
         CancellationToken cancellationToken)
@@ -206,7 +385,7 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             : null;
 
         var jsonSettings = json is not null
-            ? JsonSerializer.Deserialize(json, McpToolSettingsJsonSerializerContext.Default.McpToolSettings)
+            ? JsonSerializer.Deserialize(json, McpJsonSerializerContext.Default.McpToolSettings)
             : null;
 
         return new OperationToolDefinition(document)
@@ -215,7 +394,7 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             Title = jsonSettings?.Title,
             Icons =
                 jsonSettings?.Icons?.Select(
-                    i => new OperationToolIcon(i.Source)
+                    i => new IconDefinition(i.Source)
                     {
                         MimeType = i.MimeType,
                         Sizes = i.Sizes,
@@ -272,13 +451,33 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         return document;
     }
 
-    private void NotifyObservers(OperationToolStorageEventArgs args)
+    private void NotifyObservers(PromptStorageEventArgs args)
     {
-        ImmutableArray<ObserverSession> sessions;
+        ImmutableArray<ObserverSession<PromptStorageEventArgs>> sessions;
 
         lock (_syncRoot)
         {
-            sessions = _sessions;
+            sessions = _promptSessions;
+        }
+
+        if (sessions.IsEmpty)
+        {
+            return;
+        }
+
+        foreach (var session in sessions)
+        {
+            session.Notify(args);
+        }
+    }
+
+    private void NotifyObservers(OperationToolStorageEventArgs args)
+    {
+        ImmutableArray<ObserverSession<OperationToolStorageEventArgs>> sessions;
+
+        lock (_syncRoot)
+        {
+            sessions = _toolSessions;
         }
 
         if (sessions.IsEmpty)
@@ -306,7 +505,7 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
 
             lock (_syncRoot)
             {
-                foreach (var session in _sessions)
+                foreach (var session in _toolSessions)
                 {
                     session.Complete();
                 }
@@ -316,12 +515,12 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
         }
     }
 
-    private sealed class ObserverSession(
+    private sealed class ObserverSession<T>(
         FileSystemMcpStorage storage,
-        IObserver<OperationToolStorageEventArgs> observer)
+        IObserver<T> observer)
         : IDisposable
     {
-        public void Notify(OperationToolStorageEventArgs args)
+        public void Notify(T args)
         {
             try
             {
@@ -346,7 +545,20 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             }
         }
 
-        public void Dispose() => storage.Unsubscribe(this);
+        public void Dispose()
+        {
+            switch (this)
+            {
+                case ObserverSession<OperationToolStorageEventArgs> toolSession:
+                    storage.Unsubscribe(toolSession);
+                    break;
+                case ObserverSession<PromptStorageEventArgs> promptSession:
+                    storage.Unsubscribe(promptSession);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unsupported observer session type.");
+            }
+        }
     }
 }
 
