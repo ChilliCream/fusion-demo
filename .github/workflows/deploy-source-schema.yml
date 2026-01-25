@@ -95,7 +95,8 @@ jobs:
       - name: Upload Source Schema
         working-directory: ${{ inputs.project_path }}
         run: |
-          dotnet nitro fusion upload \
+          # Equivalent to `dotnet nitro fusion upload ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion upload \
             --source-schema-file "${{ inputs.schema_file }}" \
             --tag ${{ needs.version.outputs.version }} \
             --api-id ${{ secrets.NITRO_API_ID }} \
@@ -154,7 +155,8 @@ jobs:
 
       - name: Publish Gateway Schema
         run: |
-          dotnet nitro fusion publish \
+          # Equivalent to `dotnet nitro fusion publish ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes --fusion publish \
             --source-schema ${{ inputs.app_name }}
             --tag ${{ needs.version.outputs.version }} \
             --stage ${{ secrets.NITRO_STAGE }} \

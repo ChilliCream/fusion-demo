@@ -4,16 +4,12 @@
   "tools": {
     "aspire.cli": {
       "version": "9.4.2",
-      "commands": [
-        "aspire"
-      ],
+      "commands": ["aspire"],
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
-      "version": "16.0.0-p.9.19",
-      "commands": [
-        "nitro"
-      ],
+      "version": "16.0.0-p.10.33",
+      "commands": ["nitro"],
       "rollForward": false
     }
   }
