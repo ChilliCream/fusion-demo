@@ -38,7 +38,6 @@ jobs:
     outputs:
       tag: ${{ steps.meta.outputs.tag }}
       version: ${{ steps.meta.outputs.version }}
-      image: ${{ steps.meta.outputs.image }}
     steps:
       - name: Compute image tag
         id: meta
@@ -48,7 +47,6 @@ jobs:
           VERSION=${{ inputs.app_name }}-${SHORTSHA}
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
   build:
     runs-on: ubuntu-latest
@@ -123,14 +121,14 @@ jobs:
               --name ${{ inputs.app_name }} \
               --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --plan ${{ secrets.APP_SERVICE_PLAN }} \
-              --deployment-container-image-name ${{ needs.version.outputs.image }}
+              --deployment-container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.version.outputs.tag }}
           fi
 
           # Configure container settings
           az webapp config container set \
             --name ${{ inputs.app_name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --container-image-name ${{ needs.version.outputs.image }} \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.version.outputs.tag }} \
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
@@ -155,8 +153,8 @@ jobs:
       - name: Publish Gateway Schema
         run: |
           # Equivalent to `dotnet nitro fusion publish ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes --fusion publish \
-            --source-schema ${{ inputs.app_name }}
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion publish \
+            --source-schema ${{ inputs.app_name }} \
             --tag ${{ needs.version.outputs.version }} \
             --stage ${{ secrets.NITRO_STAGE }} \
             --api-id ${{ secrets.NITRO_API_ID }} \
