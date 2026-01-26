@@ -18,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Accounts
       container_port: 8080
       schema_file: src/SourceSchemas/Accounts/schema.graphqls
+      source_schema_name: accounts-api
     secrets: inherit

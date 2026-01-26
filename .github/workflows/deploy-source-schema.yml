@@ -20,6 +20,10 @@ on:
         description: Source Schema File
         required: true
         type: string
+      source_schema_name:
+        description: Name of the source schema (from schema-settings.json)
+        required: true
+        type: string
     secrets:
       AZURE_CREDENTIALS: { required: true }
       AZURE_SUBSCRIPTION_ID: { required: true }
@@ -154,7 +158,7 @@ jobs:
         run: |
           # Equivalent to `dotnet nitro fusion publish ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion publish \
-            --source-schema ${{ inputs.app_name }} \
+            --source-schema ${{ inputs.source_schema_name }} \
             --tag ${{ needs.version.outputs.version }} \
             --stage ${{ secrets.NITRO_STAGE }} \
             --api-id ${{ secrets.NITRO_API_ID }} \

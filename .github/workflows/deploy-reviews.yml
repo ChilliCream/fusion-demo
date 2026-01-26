@@ -18,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Reviews
       container_port: 8080
       schema_file: src/SourceSchemas/Reviews/schema.graphqls
+      source_schema_name: reviews-api
     secrets: inherit

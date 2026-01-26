@@ -18,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Payments
       container_port: 8080
       schema_file: src/SourceSchemas/Payments/schema.graphqls
+      source_schema_name: payments-api
     secrets: inherit

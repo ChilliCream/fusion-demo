@@ -18,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Order
       container_port: 8080
       schema_file: src/SourceSchemas/Order/schema.graphqls
+      source_schema_name: order-api
     secrets: inherit
