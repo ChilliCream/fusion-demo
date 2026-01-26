@@ -6,6 +6,7 @@ on:
       - "src/SourceSchemas/Reviews/**"
       - "src/Defaults/**"
       - ".github/workflows/deploy-reviews.yml"
+      - ".github/workflows/deploy-source-schema.yml"
       - "Directory.Packages.props"
   workflow_dispatch: {}
 

@@ -6,6 +6,7 @@ on:
       - "src/SourceSchemas/Products/**"
       - "src/Defaults/**"
       - ".github/workflows/deploy-products.yml"
+      - ".github/workflows/deploy-source-schema.yml"
       - "Directory.Packages.props"
   workflow_dispatch: {}
 
