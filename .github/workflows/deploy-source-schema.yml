@@ -93,7 +93,6 @@ jobs:
         run: dotnet run -- schema export
 
       - name: Upload Source Schema
-        working-directory: ${{ inputs.project_path }}
         run: |
           # Equivalent to `dotnet nitro fusion upload ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion upload \
