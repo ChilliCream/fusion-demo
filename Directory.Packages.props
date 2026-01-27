@@ -3,28 +3,27 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
-    <PackageVersion Include="HotChocolate" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.10.19" />
-    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.10.19">
+    <PackageVersion Include="HotChocolate" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-p.10.35" />
+    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.10.35">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
   </ItemGroup>
   <ItemGroup Label="Nitro">
-    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.16" />
-    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.16" />
-    <PackageVersion Include="ChilliCream.Nitro.Telemetry" Version="16.0.0-preview.16" />
-    <PackageVersion Include="ChilliCream.Nitro.App" Version="29.0.0-insider.98" />
+    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.17" />
+    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.17" />
+    <PackageVersion Include="ChilliCream.Nitro.Telemetry" Version="16.0.0-preview.17" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.0.2" />
