@@ -10,11 +10,6 @@
     <Project Path="src/Gateway/Demo.Gateway.csproj" />
   </Folder>
   <Folder Name="/src/SourceSchemas/">
-    <Project Path="src/SourceSchemas/Accounts/Demo.Accounts.csproj" />
-    <Project Path="src/SourceSchemas/Cart/Demo.Cart.csproj" />
-    <Project Path="src/SourceSchemas/Inventory/Demo.Inventory.csproj" />
-    <Project Path="src/SourceSchemas/Order/Demo.Order.csproj" />
-    <Project Path="src/SourceSchemas/Payments/Demo.Payments.csproj" />
     <Project Path="src/SourceSchemas/Products/Demo.Products.csproj" />
     <Project Path="src/SourceSchemas/Reviews/Demo.Reviews.csproj" />
     <Project Path="src/SourceSchemas/Shipping/Demo.Shipping.csproj" />

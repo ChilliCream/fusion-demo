@@ -3,7 +3,7 @@
 [QueryType]
 public static partial class ReviewQueries
 {
-    [Lookup, NodeResolver]
+    [NodeResolver]
     public static async Task<Review?> GetReviewByIdAsync(
         int id,
         IReviewByIdDataLoader reviewById,

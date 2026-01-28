@@ -20,11 +20,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Gateway\Demo.Gateway.csproj"/>
-        <ProjectReference Include="..\SourceSchemas\Accounts\Demo.Accounts.csproj"/>
-        <ProjectReference Include="..\SourceSchemas\Cart\Demo.Cart.csproj"/>
-        <ProjectReference Include="..\SourceSchemas\Inventory\Demo.Inventory.csproj"/>
-        <ProjectReference Include="..\SourceSchemas\Order\Demo.Order.csproj"/>
-        <ProjectReference Include="..\SourceSchemas\Payments\Demo.Payments.csproj"/>
         <ProjectReference Include="..\SourceSchemas\Products\Demo.Products.csproj"/>
         <ProjectReference Include="..\SourceSchemas\Reviews\Demo.Reviews.csproj"/>
         <ProjectReference Include="..\SourceSchemas\Shipping\Demo.Shipping.csproj" />

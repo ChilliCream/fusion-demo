@@ -7,7 +7,7 @@ namespace Demo.Products.Types;
 public static partial class ProductQueries
 {
     [Tag("team-products")]
-    [NodeResolver, Lookup]
+    [NodeResolver]
     public static async Task<Product?> GetProductByIdAsync(
         int id,
         IProductByIdDataLoader productById,
@@ -44,9 +44,9 @@ public static partial class ProductQueries
         }
 
         return await query
-                .OrderBy(t => t.Name)
-                .ThenBy(t => t.Id)
-                .ToPageAsync(arguments, cancellationToken)
-                .ToConnectionAsync();
+            .OrderBy(t => t.Name)
+            .ThenBy(t => t.Id)
+            .ToPageAsync(arguments, cancellationToken)
+            .ToConnectionAsync();
     }
 }

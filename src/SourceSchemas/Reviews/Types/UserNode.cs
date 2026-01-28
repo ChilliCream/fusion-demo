@@ -10,7 +10,6 @@ internal static partial class UserNode
     public static int GetId([Parent] User user)
         => user.Id;
     
-    [Shareable]
     public static string GetName([Parent] User user)
         => user.Name!;
 

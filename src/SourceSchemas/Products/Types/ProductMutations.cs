@@ -4,7 +4,7 @@ namespace Demo.Products.Types;
 public static partial class ProductMutations
 {
     public static async Task<FieldResult<Product, UnknownProductError>> UploadProductPictureAsync(
-        int productId,
+        [ID<Product>] int productId,
         IFile picture,
         ProductContext context,
         CancellationToken cancellationToken)

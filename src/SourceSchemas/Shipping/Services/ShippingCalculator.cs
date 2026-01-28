@@ -1,32 +1,25 @@
-namespace Demo.Shipping.Types;
+namespace Demo.Shipping.Services;
 
-[EntityKey("id")]
-public sealed record Product([property: ID<Product>] int Id)
+public class ShippingCalculator
 {
     public int GetDeliveryEstimate(
         string zip,
-        [Require(
-            """
-            {
-              weight,
-              length: dimension.length
-              width: dimension.width
-              height: dimension.height
-            }
-            """)]
-        ProductDimensionInput dimension)
+        double length,
+        double width,
+        double height,
+        int weight)
     {
         // Base delivery time starts at 2 days for local processing
         const int baseDays = 2;
-        
+
         // Calculate volume in cubic centimeters (assuming dimensions are in cm)
-        var volumeCm3 = dimension.Length * dimension.Width * dimension.Height;
-        
+        var volumeCm3 = length * width * height;
+
         // Distance factor based on ZIP code (simplified simulation)
         var distanceDays = GetDistanceDays(zip);
-        
+
         // Size and weight factors
-        var sizeDays = GetSizeDelayDays(volumeCm3, dimension.Weight);
+        var sizeDays = GetSizeDelayDays(volumeCm3, weight);
         
         // Add some realistic randomness (±1 day) based on ZIP code
         var variabilityDays = GetVariabilityDays(zip);
