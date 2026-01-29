@@ -62,54 +62,75 @@
       },
       "additionalProperties": false
     },
-    "openAiComponent": {
-      "description": "The optional OpenAI component configuration for this tool.",
+    "view": {
+      "description": "The optional view configuration for this tool.",
       "type": "object",
       "properties": {
-        "description": {
-          "description": "Human-readable summary surfaced to the model when the component loads, reducing redundant assistant narration.",
-          "type": "string"
-        },
-        "domain": {
-          "description": "Optional dedicated subdomain for hosted components.",
-          "type": "string",
-          "default": "https://web-sandbox.oaiusercontent.com"
-        },
-        "prefersBorder": {
-          "description": "Hint that the component should render inside a bordered card when supported.",
-          "type": "boolean"
-        },
-        "toolInvokingStatusText": {
-          "description": "Short status text while the tool runs (≤ 64 chars).",
-          "type": "string",
-          "maxLength": 64
-        },
-        "toolInvokedStatusText": {
-          "description": "Short status text after the tool completes (≤ 64 chars).",
-          "type": "string",
-          "maxLength": 64
-        },
-        "allowToolCalls": {
-          "description": "Allow component→tool calls through the client bridge.",
-          "type": "boolean"
-        },
         "csp": {
-          "description": "Define connect_domains and resource_domains arrays for the component's CSP snapshot.",
+          "description": "Content Security Policy configuration.",
           "type": "object",
           "properties": {
+            "baseUriDomains": {
+              "description": "Allowed base URIs for the document (base-uri directive).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "connectDomains": {
+              "description": "Origins for network requests (fetch/XHR/WebSocket).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "frameDomains": {
+              "description": "Origins for nested iframes (frame-src directive).",
               "type": "array",
               "items": {
                 "type": "string"
               }
             },
             "resourceDomains": {
+              "description": "Origins for static resources (scripts, images, styles, fonts).",
               "type": "array",
               "items": {
                 "type": "string"
               }
             }
-          }
+          },
+          "additionalProperties": false
+        },
+        "domain": {
+          "description": "Dedicated origin for view sandbox.",
+          "type": "string"
+        },
+        "permissions": {
+          "description": "Sandbox permissions requested by the view.",
+          "type": "object",
+          "properties": {
+            "camera": {
+              "description": "Request camera access (Permission Policy 'camera' feature).",
+              "type": "boolean"
+            },
+            "clipboardWrite": {
+              "description": "Request clipboard write access (Permission Policy 'clipboard-write' feature).",
+              "type": "boolean"
+            },
+            "geolocation": {
+              "description": "Request geolocation access (Permission Policy 'geolocation' feature).",
+              "type": "boolean"
+            },
+            "microphone": {
+              "description": "Request microphone access (Permission Policy 'microphone' feature).",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "prefersBorder": {
+          "description": "Visual boundary preference – 'true' if UI prefers a visible border.",
+          "type": "boolean"
         }
       },
       "additionalProperties": false

@@ -12,9 +12,7 @@
   "annotations": {
     "openWorldHint": false
   },
-  "openAiComponent": {
-    "prefersBorder": false,
-    "allowToolCalls": true,
-    "toolInvokingStatusText": "Searching for products ..."
+  "view": {
+    "prefersBorder": false
   }
 }

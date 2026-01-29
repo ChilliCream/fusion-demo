@@ -1,6 +1,6 @@
 using Demo.Gateway.Mcp;
 using HotChocolate.Adapters.Mcp.Extensions;
-using HotChocolate.Adapters.OpenApi;
+// using HotChocolate.Adapters.OpenApi;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Yarp.ReverseProxy.Configuration;
@@ -22,8 +22,8 @@ builder.Services
         });
     });
 
-builder.Services
-    .AddOpenApi(o => o.AddGraphQLTransformer());
+// builder.Services
+//     .AddOpenApi(o => o.AddGraphQLTransformer());
 
 builder.Services
     .AddHttpClient("fusion")
@@ -84,8 +84,8 @@ builder
     // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .AddMcp()
-    .AddMcpStorage(new FileSystemMcpStorage("./Mcp"))
-    .AddOpenApiDefinitionStorage(new FileSystemOpenApiDefinitionStorage("./OpenApi"));
+    .AddMcpStorage(new FileSystemMcpStorage("./Mcp"));
+    // .AddOpenApiDefinitionStorage(new FileSystemOpenApiDefinitionStorage("./OpenApi"));
 
 var app = builder.Build();
 
@@ -96,8 +96,8 @@ app.UseAuthorization();
 app.MapReverseProxy();
 app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
 app.MapGraphQLMcp();
-app.MapOpenApiEndpoints();
-app.MapOpenApi();
-app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
+// app.MapOpenApiEndpoints();
+// app.MapOpenApi();
+// app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 
 app.Run();

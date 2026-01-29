@@ -11,9 +11,5 @@
   ],
   "annotations": {
     "openWorldHint": false
-  },
-  "openAiComponent": {
-    "toolInvokingStatusText": "Loading Shopping Cart ...",
-    "toolInvokedStatusText": "Shopping Cart"
   }
 }
