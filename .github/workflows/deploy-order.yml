@@ -6,6 +6,7 @@ on:
       - "src/SourceSchemas/Order/**"
       - "src/Defaults/**"
       - ".github/workflows/deploy-order.yml"
+      - ".github/workflows/deploy-source-schema.yml"
       - "Directory.Packages.props"
   workflow_dispatch: {}
 
@@ -17,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Order
       container_port: 8080
       schema_file: src/SourceSchemas/Order/schema.graphqls
+      source_schema_name: order-api
     secrets: inherit

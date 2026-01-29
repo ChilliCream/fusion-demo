@@ -19,7 +19,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
         <PackageReference Include="ChilliCream.Nitro.Fusion" />
-        <PackageReference Include="ChilliCream.Nitro.App" />
         <PackageReference Include="Yarp.ReverseProxy" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>

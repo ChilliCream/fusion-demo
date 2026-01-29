@@ -6,6 +6,7 @@ on:
       - "src/SourceSchemas/Products/**"
       - "src/Defaults/**"
       - ".github/workflows/deploy-products.yml"
+      - ".github/workflows/deploy-source-schema.yml"
       - "Directory.Packages.props"
   workflow_dispatch: {}
 
@@ -17,4 +18,5 @@ jobs:
       project_path: src/SourceSchemas/Products
       container_port: 8080
       schema_file: src/SourceSchemas/Products/schema.graphqls
+      source_schema_name: products-api
     secrets: inherit

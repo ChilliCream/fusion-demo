@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.IO.Pipelines;
 using System.Text.Json;
 using System.Threading.Channels;
+using HotChocolate.Adapters.Mcp.Serialization;
 using HotChocolate.Adapters.Mcp.Storage;
 using HotChocolate.Buffers;
 using HotChocolate.Language;
@@ -314,52 +315,15 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             ? await File.ReadAllTextAsync(settingsFilePath, cancellationToken)
             : null;
 
-        var jsonSettings = json is not null
-            ? JsonSerializer.Deserialize(json, McpJsonSerializerContext.Default.McpPromptSettings)
+        var jsonDocument = json is not null
+            ? JsonDocument.Parse(json)
             : null;
 
-        return new PromptDefinition(promptName)
-        {
-            Title = jsonSettings?.Title,
-            Description = jsonSettings?.Description,
-            Arguments = jsonSettings?.Arguments?.Select(
-                a => new PromptArgumentDefinition(a.Name)
-                {
-                    Title = a.Title,
-                    Description = a.Description,
-                    Required = a.Required
-                }).ToArray(),
-            Icons = jsonSettings?.Icons?.Select(
-                i => new IconDefinition(i.Source)
-                {
-                    MimeType = i.MimeType,
-                    Sizes = i.Sizes,
-                    Theme = i.Theme
-                }).ToArray(),
-            Messages = jsonSettings?.Messages.Select(
-                m =>
-                {
-                    return m.Content switch
-                    {
-                        McpPromptSettingsTextContent content => new PromptMessageDefinition(
-                            MapRole(m.Role),
-                            new TextContentBlockDefinition(content.Text)),
-                        _ =>
-                            throw new NotSupportedException(
-                                $"Message content type '{m.Content.GetType().Name}' is not supported.")
-                    };
-                }).ToArray() ?? []
-        };
-    }
+        var promptSettings = jsonDocument is not null
+            ? McpPromptSettingsSerializer.Parse(jsonDocument)
+            : new McpPromptSettingsDto { Messages = [] };
 
-    private static RoleDefinition MapRole(string role)
-    {
-        return role switch
-        {
-            "user" => RoleDefinition.User,
-            "assistant" => RoleDefinition.Assistant,
-            _ => throw new NotSupportedException($"Role '{role}' is not supported.")
-        };
+        return PromptDefinition.From(promptName, promptSettings);
     }
 
     private static async Task<OperationToolDefinition> CreateOperationToolDefinitionAsync(
@@ -384,38 +348,15 @@ internal sealed class FileSystemMcpStorage : IMcpStorage, IAsyncDisposable
             ? await File.ReadAllTextAsync(jsonFilePath, cancellationToken)
             : null;
 
-        var jsonSettings = json is not null
-            ? JsonSerializer.Deserialize(json, McpJsonSerializerContext.Default.McpToolSettings)
+        var jsonDocument = json is not null
+            ? JsonDocument.Parse(json)
             : null;
 
-        return new OperationToolDefinition(document)
-        {
-            Name = toolName,
-            Title = jsonSettings?.Title,
-            Icons =
-                jsonSettings?.Icons?.Select(
-                    i => new IconDefinition(i.Source)
-                    {
-                        MimeType = i.MimeType,
-                        Sizes = i.Sizes,
-                        Theme = i.Theme
-                    }).ToImmutableArray(),
-            DestructiveHint = jsonSettings?.Annotations?.DestructiveHint,
-            IdempotentHint = jsonSettings?.Annotations?.IdempotentHint,
-            OpenWorldHint = jsonSettings?.Annotations?.OpenWorldHint,
-            OpenAiComponent = html is null ? null : new OpenAiComponent(html)
-            {
-                Csp = jsonSettings?.OpenAiComponent?.Csp is { } csp
-                    ? new OpenAiComponentCsp(csp.ConnectDomains, csp.ResourceDomains)
-                    : null,
-                Description = jsonSettings?.OpenAiComponent?.Description,
-                Domain = jsonSettings?.OpenAiComponent?.Domain,
-                PrefersBorder = jsonSettings?.OpenAiComponent?.PrefersBorder,
-                ToolInvokingStatusText = jsonSettings?.OpenAiComponent?.ToolInvokingStatusText,
-                ToolInvokedStatusText = jsonSettings?.OpenAiComponent?.ToolInvokedStatusText,
-                AllowToolCalls = jsonSettings?.OpenAiComponent?.AllowToolCalls ?? false
-            }
-        };
+        var toolSettings = jsonDocument is not null
+            ? McpToolSettingsSerializer.Parse(jsonDocument)
+            : null;
+
+        return OperationToolDefinition.From(document, toolName, toolSettings, html);
     }
 
     private static async ValueTask<DocumentNode> ReadDocumentAsync(
