@@ -37,7 +37,7 @@ on:
       NITRO_STAGE: { required: true }
 
 jobs:
-  version:
+  prepare:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.meta.outputs.tag }}
@@ -54,7 +54,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: version
+    needs: prepare
 
     steps:
       - name: Checkout
@@ -88,7 +88,7 @@ jobs:
           dotnet publish -c Release \
             -p:PublishProfile=DefaultContainer \
             -p:ContainerRepository=${{ inputs.app_name }} \
-            -p:ContainerImageTag=${{ needs.version.outputs.tag }} \
+            -p:ContainerImageTag=${{ needs.prepare.outputs.tag }} \
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
             -p:ContainerPort=${{ inputs.container_port }} \
             -p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:10.0
@@ -102,13 +102,13 @@ jobs:
           # Equivalent to `dotnet nitro fusion upload ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion upload \
             --source-schema-file "${{ inputs.schema_file }}" \
-            --tag ${{ needs.version.outputs.version }} \
+            --tag ${{ needs.prepare.outputs.version }} \
             --api-id ${{ secrets.NITRO_API_ID }} \
             --api-key ${{ secrets.NITRO_API_KEY }}
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [version, build]
+    needs: [prepare, build]
     concurrency:
       group: deploy-${{ inputs.app_name }}
       cancel-in-progress: false
@@ -128,14 +128,14 @@ jobs:
               --name ${{ inputs.app_name }} \
               --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --plan ${{ secrets.APP_SERVICE_PLAN }} \
-              --deployment-container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.version.outputs.tag }}
+              --deployment-container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.prepare.outputs.tag }}
           fi
 
           # Configure container settings
           az webapp config container set \
             --name ${{ inputs.app_name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.version.outputs.tag }} \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.app_name }}:${{ needs.prepare.outputs.tag }} \
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
@@ -162,7 +162,7 @@ jobs:
           # Equivalent to `dotnet nitro fusion publish ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion publish \
             --source-schema ${{ inputs.source_schema_name }} \
-            --tag ${{ needs.version.outputs.version }} \
+            --tag ${{ needs.prepare.outputs.version }} \
             --stage ${{ secrets.NITRO_STAGE }} \
             --api-id ${{ secrets.NITRO_API_ID }} \
             --api-key ${{ secrets.NITRO_API_KEY }}

@@ -11,11 +11,21 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build-publish-deploy:
+  prepare:
     runs-on: ubuntu-latest
-    concurrency:
-      group: deploy-gateway
-      cancel-in-progress: false
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - name: Compute image tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
 
     steps:
       - name: Checkout
@@ -38,14 +48,6 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Compute image tag
-        id: meta
-        run: |
-          TS=$(date -u +'%Y%m%dT%H%M%SZ')
-          SHORTSHA=${GITHUB_SHA::7}
-          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
-          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-gateway:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
-
       # Build .NET app and publish directly to an OCI image, then push to ACR.
       - name: dotnet publish -> container (push to ACR)
         working-directory: src/Gateway
@@ -53,10 +55,32 @@ jobs:
           dotnet restore
           dotnet publish -c Release \
             -p:ContainerRepository=ccc-eu1-demo-ca-gateway \
-            -p:ContainerImageTag=${{ steps.meta.outputs.tag }} \
+            -p:ContainerImageTag=${{ needs.prepare.outputs.tag }} \
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
             -p:PublishAot=true \
             -p:RuntimeIdentifier=linux-x64
+
+      - name: Upload OpenAPI collection
+        run: |
+          # Equivalent to `dotnet nitro openapi upload ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi upload \
+            --pattern "src/Gateway/OpenApi/*.graphql" \
+            --tag ${{ needs.prepare.outputs.tag }} \
+            --openapi-collection-id "" \
+            --api-key ${{ secrets.NITRO_API_KEY }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [prepare, build]
+    concurrency:
+      group: deploy-gateway
+      cancel-in-progress: false
+
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Create or Update App Service
         run: |
@@ -67,14 +91,14 @@ jobs:
               --name ccc-eu1-demo-ca-gateway \
               --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --plan ${{ secrets.APP_SERVICE_PLAN }} \
-              --deployment-container-image-name ${{ steps.meta.outputs.image }}
+              --deployment-container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-gateway:${{ needs.prepare.outputs.tag }}
           fi
 
           # Configure container settings
           az webapp config container set \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --container-image-name ${{ steps.meta.outputs.image }} \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-gateway:${{ needs.prepare.outputs.tag }} \
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
@@ -95,3 +119,13 @@ jobs:
           az webapp restart \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+
+      - name: Publish OpenAPI collection
+        run: |
+          # Equivalent to `dotnet nitro openapi publish ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi publish \
+            --openapi-collection-id "" \
+            --tag ${{ needs.prepare.outputs.tag }} \
+            --stage ${{ secrets.NITRO_STAGE }} \
+            --openapi-collection-id "" \
+            --api-key ${{ secrets.NITRO_API_KEY }}
