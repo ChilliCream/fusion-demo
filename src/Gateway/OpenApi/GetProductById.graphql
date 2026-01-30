@@ -1,0 +1,5 @@
+query GetProductById($id: ID!) @http(method: GET, route: "/products/{id}") {
+  productById(id: $id) {
+    ...Product
+  }
+}

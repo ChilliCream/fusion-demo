@@ -1,0 +1,7 @@
+fragment Product on Product {
+  id
+  name
+  price
+  availableQuantity: quantity
+  pictureUrl
+}
