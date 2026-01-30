@@ -1,0 +1,8 @@
+query AllProducts($first: Int, $after: String)
+@http(method: GET, route: "/products", queryParameters: ["first", "after"]) {
+  products(first: $first, after: $after) {
+    nodes {
+      ...Product
+    }
+  }
+}
