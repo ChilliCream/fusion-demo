@@ -27,6 +27,12 @@ jobs:
       - name: Build
         run: dotnet build --no-restore -c Release
 
+      - name: Export Source Schemas
+        run: |
+          for project in Accounts Cart Inventory Order Payments Products Reviews Shipping; do
+            dotnet run --project "src/SourceSchemas/$project" --no-build -c Release -- schema export
+          done
+
       - name: Validate GraphQL schema
         run: |
           dotnet nitro fusion validate \
