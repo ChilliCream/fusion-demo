@@ -1,3 +1,4 @@
+using HotChocolate.Adapters.OpenApi;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -16,6 +17,9 @@ builder.Services
 builder.Services
     .AddHttpClient("fusion")
     .AddHeaderPropagation();
+
+builder.Services
+    .AddOpenApi(o => o.AddGraphQLTransformer());
 
 builder.Services.AddLogging();
 
@@ -43,6 +47,7 @@ builder.Services.AddAuthorization(options =>
 builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
+    // TODO: Enable OpenAPI through Nitro
     .AddNitro(options => options.Metrics.Enabled = false)
     // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
@@ -54,5 +59,8 @@ app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
+app.MapOpenApiEndpoints();
+app.MapOpenApi();
+app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 
 app.Run();

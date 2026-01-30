@@ -1,0 +1,77 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c Release
+
+      - name: Validate GraphQL schema
+        run: |
+          dotnet nitro fusion validate \
+            --source-schema-file "src/SourceSchemas/Accounts/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Cart/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Inventory/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Order/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Payments/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Products/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Reviews/schema.graphqls" \
+            --source-schema-file "src/SourceSchemas/Shipping/schema.graphqls" \
+            --stage "dev" \
+            --api-id ${{ secrets.NITRO_API_ID }} \
+            --api-key ${{ secrets.NITRO_API_KEY }}
+
+      # TODO: Create OpenAPI collection once deployed to prod
+      - name: Validate OpenAPI documents
+        run: |
+          dotnet nitro openapi validate \
+            --openapi-collection-id "" \
+            --pattern "src/Gateway/OpenApi/*.graphql" \
+            --stage "dev" \
+            --api-key ${{ secrets.NITRO_API_KEY }}
+
+  frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: src/frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
