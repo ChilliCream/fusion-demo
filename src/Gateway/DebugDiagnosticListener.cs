@@ -9,6 +9,7 @@ using HotChocolate.Fusion.Diagnostics;
 using HotChocolate.Fusion.Execution;
 using HotChocolate.Fusion.Execution.Nodes;
 using HotChocolate.Language;
+using HotChocolate.Text.Json;
 using HotChocolate.Utilities;
 
 namespace HotChocolate.Fusion.AspNetCore;
@@ -48,7 +49,7 @@ internal sealed class DebugDiagnosticListener
         };
 
         using var buffer = new PooledArrayWriter(4096);
-        await using var jsonWriter = new Utf8JsonWriter(buffer, writerOptions);
+        var jsonWriter = new JsonWriter(buffer, writerOptions);
         var message = new StringBuilder();
 
         await foreach (var entry in _backlog.Reader.ReadAllAsync())
@@ -65,13 +66,11 @@ internal sealed class DebugDiagnosticListener
                     {
                         message.Clear();
                         buffer.Reset();
-                        jsonWriter.Reset();
 
                         JsonValueFormatter.WriteError(
                             jsonWriter,
                             error,
-                            serializerOptions,
-                            JsonNullIgnoreCondition.None);
+                            serializerOptions);
 
                         message.AppendLine(Encoding.UTF8.GetString(buffer.WrittenSpan));
 
