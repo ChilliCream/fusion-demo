@@ -44,7 +44,6 @@ builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
     .AddNitro(options => options.Metrics.Enabled = false)
-    // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
 
 var app = builder.Build();
