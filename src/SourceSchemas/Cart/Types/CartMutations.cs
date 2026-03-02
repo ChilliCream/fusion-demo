@@ -8,7 +8,7 @@ public static partial class CartMutations
 {
     [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart> AddProductToCartAsync(
-        [ID<Product>] int productId,
+        int productId,
         int quantity,
         CartContext context,
         CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ public static partial class CartMutations
 
     [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart?> RemoveProductFromCartAsync(
-        [ID<Product>] int productId,
+        int productId,
         int quantity,
         CartContext context,
         CancellationToken cancellationToken)

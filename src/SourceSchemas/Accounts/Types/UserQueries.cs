@@ -6,14 +6,13 @@ namespace Demo.Accounts.Types;
 [QueryType]
 public static partial class UserQueries
 {
-    [Lookup, NodeResolver]
+    [NodeResolver]
     public static async Task<User?> GetUserById(
         int id,
         IUserByIdDataLoader userById,
         CancellationToken cancellationToken)
         => await userById.LoadAsync(id, cancellationToken);
 
-    [Lookup]
     public static async Task<User?> GetUserByUsername(
         string username,
         IUserByNameDataLoader userByName,

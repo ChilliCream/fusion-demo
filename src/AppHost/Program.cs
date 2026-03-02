@@ -4,10 +4,6 @@ builder.AddGraphQLOrchestrator();
 
 var postgres = builder.AddPostgres("postgres");
 
-var keycloak = builder
-    .AddKeycloak("keycloak", port: 8080)
-    .WithRealmImport("./fusion-demo-realm.json");
-
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
     .WithReference(postgres.AddDatabase("accounts-db"))
@@ -53,24 +49,5 @@ var cartApi = builder
     .WithReference(postgres.AddDatabase("cart-db"))
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
-
-builder
-    .AddProject<Projects.Demo_Gateway>("gateway-api")
-    .WithGraphQLSchemaComposition(
-        settings: new GraphQLCompositionSettings
-        {
-            EnableGlobalObjectIdentification = true,
-            EnvironmentName = "aspire"
-        })
-    .WithReference(keycloak)
-    .WithEnvironment("Keycloak__Authority", keycloak.GetEndpoint("http"))
-    .WithReference(accountsApi)
-    .WithReference(inventoryApi)
-    .WithReference(orderApi)
-    .WithReference(paymentsApi)
-    .WithReference(productsApi)
-    .WithReference(reviewsApi)
-    .WithReference(shippingApi)
-    .WithReference(cartApi);
 
 builder.Build().Run();

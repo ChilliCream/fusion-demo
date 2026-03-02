@@ -19,7 +19,7 @@ public class Review
     public int AuthorId { get; set; }
 
     [Required]
-    public User? Author { get; set; }
+    public Author? Author { get; set; }
     
     [Required]
     public DateTimeOffset CreateAt { get; set; }

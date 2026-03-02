@@ -15,7 +15,7 @@ internal static class ReviewDataLoader
             .ToDictionaryAsync(t => t.Id, cancellationToken);
 
     [DataLoader]
-    public static async Task<Dictionary<int, Page<Review>>> GetReviewsByUserIdAsync(
+    public static async Task<Dictionary<int, Page<Review>>> GetReviewsByAuthorIdAsync(
         IReadOnlyList<int> ids,
         PagingArguments pagingArgs,
         QueryContext<Review> query,

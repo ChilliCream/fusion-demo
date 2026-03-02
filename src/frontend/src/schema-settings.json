@@ -1,8 +1,0 @@
-{
-  "name": "cart-api",
-  "transports": {
-    "http": {
-      "url": "http://localhost:5000/graphql"
-    }
-  }
-}

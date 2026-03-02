@@ -8,9 +8,4 @@ public static partial class Query
     /// </summary>
     public static Viewer GetViewer()
         => new Viewer();
-    
-    [Lookup, Internal]
-    public static Product? GetProductById(
-        [ID<Product>] int id)
-        => new(id);
 }

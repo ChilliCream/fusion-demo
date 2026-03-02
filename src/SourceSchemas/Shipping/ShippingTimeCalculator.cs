@@ -1,19 +1,9 @@
-namespace Demo.Shipping.Types;
+namespace Demo.Shipping;
 
-[EntityKey("id")]
-public sealed record Product([property: ID<Product>] int Id)
+public static class ShippingTimeCalculator
 {
-    public int GetDeliveryEstimate(
+    public static int GetDeliveryEstimate(
         string zip,
-        [Require(
-            """
-            {
-              weight,
-              length: dimension.length
-              width: dimension.width
-              height: dimension.height
-            }
-            """)]
         ProductDimensionInput dimension)
     {
         // Base delivery time starts at 2 days for local processing

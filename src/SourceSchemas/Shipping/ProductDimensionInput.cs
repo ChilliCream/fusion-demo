@@ -1,4 +1,4 @@
-namespace Demo.Shipping.Types;
+namespace Demo.Shipping;
 
 // The composition should remove it as its only used as a requirement, right?
 // [Inaccessible]

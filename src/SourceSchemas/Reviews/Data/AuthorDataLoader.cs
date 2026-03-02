@@ -1,9 +1,9 @@
 namespace Demo.Reviews.Data;
 
-internal static class UserDataLoader
+internal static class AuthorDataLoader
 {
     [DataLoader]
-    public static async Task<IReadOnlyDictionary<int, User>> GetUserByIdAsync(
+    public static async Task<IReadOnlyDictionary<int, Author>> GetUserByIdAsync(
         IReadOnlyList<int> ids,
         ReviewContext context,
         CancellationToken cancellationToken)

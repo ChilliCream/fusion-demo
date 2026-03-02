@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Cart.Types;
 
-public class Viewer
+public sealed class Viewer
 {
     public async Task<Data.Cart> GetCartAsync(
         CartContext context,

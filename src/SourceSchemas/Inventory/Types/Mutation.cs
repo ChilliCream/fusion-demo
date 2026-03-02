@@ -3,16 +3,16 @@ namespace Demo.Inventory.Types;
 [MutationType]
 public static partial class Mutation
 {
-    public static async Task<Product> RestockProductAsync(
-        [ID<Product>] int id,
+    public static async Task<int> RestockProductAsync(
+        int productId,
         int quantity,
         [Service] InventoryContext context)
     {
-        var inventory = await context.Inventory.FindAsync(id);
+        var inventory = await context.Inventory.FindAsync(productId);
 
         if (inventory is null)
         {
-            inventory = new InventoryItem { ProductId = id, Quantity = quantity };
+            inventory = new InventoryItem { ProductId = productId, Quantity = quantity };
             context.Inventory.Add(inventory);
         }
 
@@ -20,6 +20,6 @@ public static partial class Mutation
 
         await context.SaveChangesAsync();
 
-        return new Product(id, inventory);
+        return productId;
     }
 }

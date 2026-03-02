@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Gateway\Demo.Gateway.csproj"/>
+        <!--ProjectReference Include="..\Gateway\Demo.Gateway.csproj"/-->
         <ProjectReference Include="..\SourceSchemas\Accounts\Demo.Accounts.csproj"/>
         <ProjectReference Include="..\SourceSchemas\Cart\Demo.Cart.csproj"/>
         <ProjectReference Include="..\SourceSchemas\Inventory\Demo.Inventory.csproj"/>

@@ -6,15 +6,13 @@ namespace Demo.Products.Types;
 [QueryType]
 public static partial class ProductQueries
 {
-    [Tag("team-products")]
-    [NodeResolver, Lookup]
+    [NodeResolver]
     public static async Task<Product?> GetProductByIdAsync(
         int id,
         IProductByIdDataLoader productById,
         CancellationToken cancellationToken)
         => await productById.LoadAsync(id, cancellationToken);
 
-    [Tag("team-products")]
     [UsePaging]
     public static async Task<Connection<Product>> GetProducts(
         string? searchText,

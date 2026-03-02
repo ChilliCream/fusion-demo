@@ -5,7 +5,7 @@ namespace Demo.Order.Types;
 public static partial class OrderMutations
 {
     public static async Task<Data.Order> CreateOrderAsync(
-        [ID<User>] int userId,
+        int userId,
         OrderItemInput[] items,
         int weight,
         [Service] OrderContext context,

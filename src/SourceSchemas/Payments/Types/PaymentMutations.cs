@@ -4,7 +4,7 @@ namespace Demo.Payments.Types;
 public static partial class PaymentMutations
 {
     public static async Task<Payment> CreatePaymentAsync(
-        [ID<Order>] int orderId,
+        int orderId,
         [Service] PaymentContext context)
     {
         var payment = new Payment { OrderId = orderId, Status = PaymentStatus.Pending };

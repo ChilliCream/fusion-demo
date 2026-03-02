@@ -6,7 +6,7 @@ public class ReviewContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Review> Reviews => Set<Review>();
 
-    public DbSet<User> Users => Set<User>();
+    public DbSet<Author> Users => Set<Author>();
     
     public static async Task SeedDataAsync(
         IRequestExecutor executor, 
@@ -19,12 +19,12 @@ public class ReviewContext(DbContextOptions options) : DbContext(options)
         
         if (await context.Database.EnsureCreatedAsync(cancellationToken))
         {
-            var ada = new User
+            var ada = new Author
             {
                 Name = "Ada Lovelace"
             };
 
-            var alan = new User
+            var alan = new Author
             {
                 Name = "Alan Turing"
             };

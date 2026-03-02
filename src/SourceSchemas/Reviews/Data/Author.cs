@@ -1,6 +1,6 @@
 namespace Demo.Reviews.Data;
 
-public class User
+public class Author
 {
     [Key]
     public int Id { get; set; }
