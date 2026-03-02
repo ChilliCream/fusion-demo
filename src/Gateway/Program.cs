@@ -1,3 +1,4 @@
+using ChilliCream.Nitro.App;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -44,7 +45,8 @@ builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
     .AddNitro(options => options.Metrics.Enabled = false)
-    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true);
+    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
+    .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider);
 
 var app = builder.Build();
 
@@ -52,6 +54,6 @@ app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
+app.MapGraphQL();
 
 app.Run();
