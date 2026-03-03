@@ -13,7 +13,12 @@ public static class Extensions
     {
         var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-        builder.AddGlobalObjectIdentification(registerNodeInterface);
+        builder.AddGlobalObjectIdentification(
+            o =>
+            {
+                o.RegisterNodeInterface = registerNodeInterface;
+                o.MarkNodeFieldAsLookup = true;
+            });
         builder.AddInstrumentation();
         builder.AddMutationConventions();
         builder.AddPagingArguments();
