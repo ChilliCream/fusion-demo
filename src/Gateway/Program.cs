@@ -1,3 +1,4 @@
+using ChilliCream.Nitro.App;
 using Demo.Gateway.Mcp;
 using HotChocolate.Adapters.Mcp.Extensions;
 // using HotChocolate.Adapters.OpenApi;
@@ -81,8 +82,8 @@ builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
     .AddNitro(options => options.Metrics.Enabled = false)
-    // .AddDiagnosticEventListener(c => new DebugDiagnosticListener(c.GetRequiredService<IRootServiceProviderAccessor>().ServiceProvider.GetRequiredService<ILoggerFactory>()))
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
+    .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
     .AddMcp()
     .AddMcpStorage(new FileSystemMcpStorage("./Mcp"));
     // .AddOpenApiDefinitionStorage(new FileSystemOpenApiDefinitionStorage("./OpenApi"));
@@ -94,7 +95,7 @@ app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapReverseProxy();
-app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
+app.MapGraphQL();
 app.MapGraphQLMcp();
 // app.MapOpenApiEndpoints();
 // app.MapOpenApi();
