@@ -117,53 +117,10 @@
             gap: 8px;
             margin-top: 8px;
         }
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface-hover);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 4px 8px;
-        }
-        .quantity-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        .quantity-btn:hover:not(:disabled) {
-            background: var(--border);
-        }
-        .quantity-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
         .quantity-display {
-            min-width: 24px;
-            text-align: center;
+            font-size: 14px;
             font-weight: 500;
-        }
-        .remove-btn {
-            background: none;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
-            margin-left: auto;
-        }
-        .remove-btn:hover:not(:disabled) {
-            background: var(--danger);
-            color: white;
+            color: var(--text-secondary);
         }
         .checkout-btn {
             width: 100%;
@@ -211,293 +168,183 @@
 </head>
 <body>
     <div id="cart" class="cart-container"></div>
-    <script>
-        (function() {
-            console.log('[ViewCart] Widget script initializing at', new Date().toISOString());
-            let cartData = null;
-            let isLoading = true;
-            let eventCount = 0;
+    <script type="module">
+        import { App, applyDocumentTheme, applyHostStyleVariables, applyHostFonts } from 'https://cdn.jsdelivr.net/npm/@modelcontextprotocol/ext-apps@1.1.2/dist/src/app-with-deps.js';
 
-            // Log all events for debugging
-            window.addEventListener('openai:set_globals', (e) => {
-                eventCount++;
-                console.log(`[ViewCart] ========== Event #${eventCount} fired at ${new Date().toISOString()} ==========`);
-                console.log(`[ViewCart] Event #${eventCount} toolOutput:`, e.detail?.globals?.toolOutput);
-                console.log(`[ViewCart] Event #${eventCount} widget.props.data:`, e.detail?.globals?.widget?.props?.data);
-            }, { passive: true, capture: true });
+        let cartData = null;
+        let isLoading = true;
+        let app;
 
-            function getCartFromGlobals(globals) {
-                if (!globals) {
-                    return null;
-                }
+        function getCartFromResult(result) {
+            const sc = result?.structuredContent;
+            if (sc?.data?.viewer?.cart) return sc.data.viewer.cart;
+            if (sc?.data?.shoppingBasket) return sc.data.shoppingBasket;
+            if (sc?.viewer?.cart) return sc.viewer.cart;
+            if (sc?.shoppingBasket) return sc.shoppingBasket;
+            if (sc?.basket) return sc.basket;
+            if (sc?.cart) return sc.cart;
 
-                // Check widget.props.data structure (GraphQL)
-                const widgetPropsData = globals.widget?.props?.data;
-
-                if (widgetPropsData?.viewer?.cart) {
-                    return widgetPropsData.viewer.cart;
-                }
-
-                if (widgetPropsData?.shoppingBasket) {
-                    return widgetPropsData.shoppingBasket;
-                }
-
-                if (widgetPropsData?.basket) {
-                    return widgetPropsData.basket;
-                }
-
-                if (widgetPropsData?.cart) {
-                    return widgetPropsData.cart;
-                }
-
-                // Check toolOutput structure
-                const toolOutput = globals.toolOutput;
-
-                if (toolOutput?.data?.viewer?.cart) {
-                    return toolOutput.data.viewer.cart;
-                }
-
-                if (toolOutput?.data?.shoppingBasket) {
-                    return toolOutput.data.shoppingBasket;
-                }
-
-                if (toolOutput?.data?.basket) {
-                    return toolOutput.data.basket;
-                }
-
-                if (toolOutput?.data?.cart) {
-                    return toolOutput.data.cart;
-                }
-
-                if (toolOutput?.result) {
-                    return toolOutput.result;
-                }
-
-                return null;
-            }
-
-            function getProductEmoji(name) {
-                const emojis = {
-                    'chair': '🪑',
-                    'armchair': '🛋️',
-                    'dining': '🍽️',
-                    'rocking': '🪑',
-                    'table': '🪵',
-                    'sofa': '🛋️',
-                    'couch': '🛋️',
-                    'desk': '🪵',
-                    'bed': '🛏️'
-                };
-                const lowerName = name.toLowerCase();
-                for (const [key, emoji] of Object.entries(emojis)) {
-                    if (lowerName.includes(key)) return emoji;
-                }
-                return '🛒';
-            }
-
-            async function updateQuantity(itemId, newQuantity) {
-                if (!window.openai?.callTool) return;
-
+            const text = result?.content?.find(c => c.type === 'text')?.text;
+            if (text) {
                 try {
-                    await window.openai.callTool('UpdateShoppingBasketItemQuantity', {
-                        shoppingBasketItemId: itemId,
-                        quantity: newQuantity
-                    });
-                } catch (err) {
-                    console.error('Failed to update quantity:', err);
-                }
+                    const parsed = JSON.parse(text);
+                    if (parsed?.data?.viewer?.cart) return parsed.data.viewer.cart;
+                    if (parsed?.data?.shoppingBasket) return parsed.data.shoppingBasket;
+                    if (parsed?.viewer?.cart) return parsed.viewer.cart;
+                    if (parsed?.shoppingBasket) return parsed.shoppingBasket;
+                    return parsed;
+                } catch { /* not JSON */ }
             }
 
-            async function removeItem(itemId) {
-                if (!window.openai?.callTool) return;
+            return null;
+        }
 
-                try {
-                    await window.openai.callTool('RemoveProductFromShoppingBasket', {
-                        shoppingBasketItemId: itemId
-                    });
-                } catch (err) {
-                    console.error('Failed to remove item:', err);
-                }
+        function getProductEmoji(name) {
+            const emojis = {
+                'chair': '🪑', 'armchair': '🛋️', 'dining': '🍽️',
+                'rocking': '🪑', 'table': '🪵', 'sofa': '🛋️',
+                'couch': '🛋️', 'desk': '🪵', 'bed': '🛏️'
+            };
+            const lowerName = name.toLowerCase();
+            for (const [key, emoji] of Object.entries(emojis)) {
+                if (lowerName.includes(key)) return emoji;
             }
+            return '🛒';
+        }
 
-            async function checkout() {
-                if (!window.openai?.callTool) return;
+        async function checkout() {
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            if (!checkoutBtn || checkoutBtn.classList.contains('loading')) return;
 
-                const checkoutBtn = document.querySelector('.checkout-btn');
-                if (!checkoutBtn || checkoutBtn.classList.contains('loading')) return;
+            try {
+                checkoutBtn.classList.add('loading');
+                checkoutBtn.disabled = true;
+                checkoutBtn.innerHTML = '<span class="spinner"></span>Processing...';
 
-                try {
-                    // Show loading state
-                    checkoutBtn.classList.add('loading');
-                    checkoutBtn.disabled = true;
-                    checkoutBtn.innerHTML = '<span class="spinner"></span>Processing...';
+                await app.callServerTool({ name: 'Checkout', arguments: {} });
 
-                    await window.openai.callTool('Checkout', {});
+                checkoutBtn.classList.remove('loading');
+                checkoutBtn.innerHTML = '✓ Order Placed!';
 
-                    // Show success
-                    checkoutBtn.classList.remove('loading');
-                    checkoutBtn.innerHTML = '✓ Order Placed!';
+                setTimeout(() => {
+                    cartData = null;
+                    render();
+                }, 1500);
+            } catch {
+                checkoutBtn.classList.remove('loading');
+                checkoutBtn.innerHTML = '✗ Checkout Failed';
+                checkoutBtn.style.background = '#dc2626';
 
-                    // Clear the cart and show empty state after a moment
-                    setTimeout(() => {
-                        cartData = null;
-                        render();
-                    }, 1500);
-                } catch (err) {
-                    console.error('Failed to checkout:', err);
-
-                    // Show error
-                    checkoutBtn.classList.remove('loading');
-                    checkoutBtn.innerHTML = '✗ Checkout Failed';
-                    checkoutBtn.style.background = '#dc2626';
-
-                    // Reset after 2 seconds
-                    setTimeout(() => {
-                        checkoutBtn.disabled = false;
-                        checkoutBtn.style.background = '';
-                        checkoutBtn.innerHTML = 'Checkout';
-                    }, 2000);
-                }
+                setTimeout(() => {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.style.background = '';
+                    checkoutBtn.innerHTML = 'Checkout';
+                }, 2000);
             }
+        }
 
-            function render() {
-                console.log('[ViewCart] render() called with cartData:', cartData);
-                const container = document.getElementById('cart');
+        // Make checkout available globally for onclick handler
+        window.checkout = checkout;
 
-                if (!container) {
-                    console.log('[ViewCart] Container not found');
-                    return;
-                }
+        function render() {
+            const container = document.getElementById('cart');
+            if (!container) return;
 
-                // Show loading state while waiting for data
-                if (isLoading) {
-                    console.log('[ViewCart] Rendering loading state');
-                    container.innerHTML = `
-                        <div class="empty-cart">
-                            <span class="spinner"></span>
-                            <p style="margin-top: 16px;">Loading cart...</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                // Handle GraphQL pagination structure (items.nodes)
-                const items = cartData?.items?.nodes || cartData?.items || [];
-                console.log('[ViewCart] Items to render:', items);
-
-                if (!cartData || items.length === 0) {
-                    console.log('[ViewCart] Rendering empty cart');
-                    container.innerHTML = `
-                        <div class="empty-cart">
-                            <div class="empty-cart-icon">🛒</div>
-                            <h3>Your cart is empty</h3>
-                            <p style="margin-top: 8px;">Add some products to get started!</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const subtotal = items.reduce((sum, item) =>
-                    sum + (item.product.price * item.quantity), 0);
-
+            if (isLoading) {
                 container.innerHTML = `
-                    <div class="cart-summary">
-                        <h2>🛒 Shopping Basket</h2>
-                        <div class="summary-row">
-                            <span>Items:</span>
-                            <span>${items.reduce((sum, item) => sum + item.quantity, 0)}</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total:</span>
-                            <span>$${subtotal.toFixed(2)}</span>
-                        </div>
+                    <div class="empty-cart">
+                        <span class="spinner"></span>
+                        <p style="margin-top: 16px;">Loading cart...</p>
                     </div>
+                `;
+                return;
+            }
 
-                    <div class="cart-items">
-                        ${items.map(item => `
-                            <div class="cart-item" data-item-id="${item.id}">
-                                <div class="item-image" style="${item.product.pictureUrl ? 'background: none; padding: 0;' : ''}">
-                                    ${item.product.pictureUrl
-                                        ? `<img src="${item.product.pictureUrl}" alt="${item.product.name}">`
-                                        : getProductEmoji(item.product.name)}
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">${item.product.name}</div>
-                                    <div class="item-price">$${item.product.price.toFixed(2)} each</div>
-                                    <div class="item-controls">
-                                        <div class="quantity-control">
-                                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
-                                            <span class="quantity-display">${item.quantity}</span>
-                                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                                        </div>
-                                        <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
-                                    </div>
+            const items = cartData?.items?.nodes || cartData?.items || [];
+
+            if (!cartData || items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p style="margin-top: 8px;">Add some products to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const subtotal = items.reduce((sum, item) =>
+                sum + (item.product.price * item.quantity), 0);
+
+            container.innerHTML = `
+                <div class="cart-summary">
+                    <h2>🛒 Shopping Basket</h2>
+                    <div class="summary-row">
+                        <span>Items:</span>
+                        <span>${items.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>$${subtotal.toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <div class="cart-items">
+                    ${items.map(item => `
+                        <div class="cart-item" data-item-id="${item.product.id}">
+                            <div class="item-image" style="${item.product.pictureUrl ? 'background: none; padding: 0;' : ''}">
+                                ${item.product.pictureUrl
+                                    ? `<img src="${item.product.pictureUrl}" alt="${item.product.name}">`
+                                    : getProductEmoji(item.product.name)}
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">${item.product.name}</div>
+                                <div class="item-price">$${item.product.price.toFixed(2)} each</div>
+                                <div class="item-controls">
+                                    <span class="quantity-display">Qty: ${item.quantity}</span>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
+                        </div>
+                    `).join('')}
+                </div>
 
-                    <button class="checkout-btn" onclick="checkout()">
-                        Checkout
-                    </button>
-                `;
+                <button class="checkout-btn" onclick="checkout()">
+                    Checkout
+                </button>
+            `;
+        }
 
-                // Make functions available globally for onclick handlers
-                window.updateQuantity = updateQuantity;
-                window.removeItem = removeItem;
-                window.checkout = checkout;
-            }
+        function applyHostContext(ctx) {
+            if (ctx.theme) applyDocumentTheme(ctx.theme);
+            if (ctx.styles?.variables) applyHostStyleVariables(ctx.styles.variables);
+            if (ctx.styles?.css?.fonts) applyHostFonts(ctx.styles.css.fonts);
+        }
 
-            // Handle the openai:set_globals event
-            const handleSetGlobals = (event) => {
-                console.log('[ViewCart] openai:set_globals fired');
-                console.log('[ViewCart] event.detail:', event.detail);
+        // Create the MCP App instance
+        app = new App({ name: 'ViewShoppingBasket', version: '1.0.0' });
 
-                const globals = event.detail?.globals;
-
-                if (!globals) {
-                    console.log('[ViewCart] No globals found');
-                    return;
-                }
-
-                console.log('[ViewCart] globals structure:', {
-                    hasWidget: !!globals.widget,
-                    hasToolOutput: !!globals.toolOutput,
-                    widgetPropsData: globals.widget?.props?.data,
-                    toolOutputData: globals.toolOutput?.data
-                });
-
-                console.log('[ViewCart] Full toolOutput:', JSON.stringify(globals.toolOutput, null, 2));
-                console.log('[ViewCart] Full globals:', JSON.stringify(globals, null, 2));
-
-                // Extract cart from the globals
-                cartData = getCartFromGlobals(globals);
-
-                console.log('[ViewCart] Extracted cartData:', cartData);
-                console.log('[ViewCart] Items:', cartData?.items?.nodes || cartData?.items || []);
-
-                // Only mark as loaded if we have actual data (toolOutput has data or we extracted cart data)
-                // This prevents the initial null event from hiding the loading state
-                if (globals.toolOutput?.data || globals.widget?.props?.data?.viewer || cartData !== null) {
-                    console.log('[ViewCart] Marking as loaded - have actual data');
-                    isLoading = false;
-                } else {
-                    console.log('[ViewCart] No data yet, keeping loading state');
-                }
-
-                // Render the cart
-                render();
-            };
-
-            // Listen for the event
-            window.addEventListener('openai:set_globals', handleSetGlobals, {
-                passive: true,
-            });
-
-            console.log('[ViewCart] Event listener registered, calling initial render');
-            // Initial render
+        // Register handlers before connecting
+        app.ontoolresult = (result) => {
+            cartData = getCartFromResult(result);
+            isLoading = false;
             render();
-        })();
+        };
+
+        app.onhostcontextchanged = applyHostContext;
+
+        app.onteardown = async () => {
+            return {};
+        };
+
+        // Initial render (loading state)
+        render();
+
+        // Connect to the host
+        await app.connect();
+
+        // Apply initial host context
+        const ctx = app.getHostContext();
+        if (ctx) applyHostContext(ctx);
     </script>
 </body>
 </html>
