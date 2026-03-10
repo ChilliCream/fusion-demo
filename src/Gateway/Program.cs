@@ -59,7 +59,7 @@ app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGraphQL().WithOptions(new GraphQLServerOptions { Tool = {  ServeMode = GraphQLToolServeMode.Insider } });
+app.MapGraphQL().WithOptions(o => o.Tool.ServeMode = ServeMode.Insider);
 app.MapOpenApiEndpoints();
 app.MapOpenApi();
 app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
