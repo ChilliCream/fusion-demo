@@ -64,9 +64,9 @@ jobs:
         run: |
           # Equivalent to `dotnet nitro openapi upload ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi upload \
+            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --pattern "src/Gateway/OpenApi/*.graphql" \
             --tag ${{ needs.prepare.outputs.tag }} \
-            --openapi-collection-id "" \
             --api-key ${{ secrets.NITRO_API_KEY }}
 
   deploy:
@@ -124,8 +124,7 @@ jobs:
         run: |
           # Equivalent to `dotnet nitro openapi publish ...`
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi publish \
-            --openapi-collection-id "" \
+            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --tag ${{ needs.prepare.outputs.tag }} \
             --stage ${{ secrets.NITRO_STAGE }} \
-            --openapi-collection-id "" \
             --api-key ${{ secrets.NITRO_API_KEY }}

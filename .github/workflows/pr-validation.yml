@@ -48,11 +48,10 @@ jobs:
             --api-id ${{ secrets.NITRO_API_ID }} \
             --api-key ${{ secrets.NITRO_API_KEY }}
 
-      # TODO: Create OpenAPI collection once deployed to prod
       - name: Validate OpenAPI documents
         run: |
           dotnet nitro openapi validate \
-            --openapi-collection-id "" \
+            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --pattern "src/Gateway/OpenApi/*.graphql" \
             --stage "dev" \
             --api-key ${{ secrets.NITRO_API_KEY }}
