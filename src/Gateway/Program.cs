@@ -1,4 +1,5 @@
 using ChilliCream.Nitro.App;
+using HotChocolate.Adapters.OpenApi;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -17,6 +18,9 @@ builder.Services
 builder.Services
     .AddHttpClient("fusion")
     .AddHeaderPropagation();
+
+builder.Services
+    .AddOpenApi(o => o.AddGraphQLTransformer());
 
 builder.Services.AddLogging();
 
@@ -44,7 +48,11 @@ builder.Services.AddAuthorization(options =>
 builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
-    .AddNitro(options => options.Metrics.Enabled = false)
+    .AddNitro(options =>
+    {
+        options.Metrics.Enabled = false;
+        options.OpenApi.Enabled = true;
+    })
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider);
 
@@ -54,6 +62,9 @@ app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGraphQL();
+app.MapGraphQL().WithOptions(o => o.Tool.ServeMode = ServeMode.Insider);
+app.MapOpenApiEndpoints();
+app.MapOpenApi();
+app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 
 app.Run();

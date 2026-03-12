@@ -3,23 +3,26 @@
     <PropertyGroup>
         <IsAotCompatible>true</IsAotCompatible>
         <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime-deps:10.0-noble</ContainerBaseImage>
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
-        <Using Include="Demo.Gateway"/>
-        <Using Include="Demo.Gateway.Properties"/>
+        <Using Include="Demo.Gateway" />
+        <Using Include="Demo.Gateway.Properties" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Fusion.AspNetCore"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
+        <PackageReference Include="HotChocolate.Fusion.Adapters.OpenApi" />
+        <PackageReference Include="HotChocolate.Fusion.AspNetCore" />
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" />
         <PackageReference Include="ChilliCream.Nitro.Fusion" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>
