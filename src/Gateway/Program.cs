@@ -48,8 +48,11 @@ builder.Services.AddAuthorization(options =>
 builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far")
-    // TODO: Enable OpenAPI through Nitro
-    .AddNitro(options => options.Metrics.Enabled = false)
+    .AddNitro(options =>
+    {
+        options.Metrics.Enabled = false;
+        options.OpenApi.Enabled = true;
+    })
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider);
 

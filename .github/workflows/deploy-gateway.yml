@@ -126,5 +126,5 @@ jobs:
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi publish \
             --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --tag ${{ needs.prepare.outputs.tag }} \
-            --stage ${{ secrets.NITRO_STAGE }} \
+            --stage "dev" \
             --api-key ${{ secrets.NITRO_API_KEY }}

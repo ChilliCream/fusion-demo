@@ -34,7 +34,6 @@ on:
       ACR_PASSWORD: { required: true }
       NITRO_API_KEY: { required: true }
       NITRO_API_ID: { required: true }
-      NITRO_STAGE: { required: true }
 
 jobs:
   prepare:
@@ -163,6 +162,6 @@ jobs:
           dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion publish \
             --source-schema ${{ inputs.source_schema_name }} \
             --tag ${{ needs.prepare.outputs.version }} \
-            --stage ${{ secrets.NITRO_STAGE }} \
+            --stage "dev" \
             --api-id ${{ secrets.NITRO_API_ID }} \
             --api-key ${{ secrets.NITRO_API_KEY }}
