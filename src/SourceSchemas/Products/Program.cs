@@ -1,3 +1,4 @@
+using GreenDonut.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 
@@ -29,6 +30,7 @@ builder.Services.AddAuthorization();
 
 builder
     .AddGraphQL(Env.ProductsApi)
+    .ModifyPagingOptions(o => o.NullOrdering = NullOrdering.NativeNullsLast)
     .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
