@@ -31,14 +31,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up .NET 10 SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -76,12 +68,12 @@ jobs:
             .
 
       - name: Upload Nitro client operations
-        run: |
-          dotnet nitro client upload \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --operations-file "src/frontend/operations.json" \
-            --client-id ${{ secrets.CLIENT_ID }} \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-client-upload@v16.0.0-rc.1.14
+        with:
+          tag: ${{ needs.prepare.outputs.tag }}
+          operations-file: src/frontend/operations.json
+          client-id: ${{ secrets.CLIENT_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -93,29 +85,18 @@ jobs:
       FRONTEND_DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-frontend:${{ needs.prepare.outputs.tag }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up .NET 10 SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
       - name: Azure login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Publish Nitro client
-        run: |
-          dotnet nitro client publish \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --stage "dev" \
-            --client-id ${{ secrets.CLIENT_ID }} \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-client-publish@v16.0.0-rc.1.14
+        with:
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: dev
+          client-id: ${{ secrets.CLIENT_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
 
       - name: Create or Update App Service
         run: |
