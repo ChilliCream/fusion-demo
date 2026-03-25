@@ -4,7 +4,7 @@ public static class Env
 {
     public const string ProductsApi = "products-api";
     
-    public const string ProductsDb = "products-db";
+    public const string ProductsDb = "products_db";
     
     public static string Version => typeof(Env).Assembly.GetName().Version?.ToString() ?? "0.0.0";
 }

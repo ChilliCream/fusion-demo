@@ -8,39 +8,53 @@ var keycloak = builder
     .AddKeycloak("keycloak", port: 8080)
     .WithRealmImport("./fusion-demo-realm.json");
 
+var accountsDb = postgres.AddDatabase("accounts-db");
+var inventoryDb = postgres.AddDatabase("inventory-db");
+var orderDb = postgres.AddDatabase("order-db");
+var paymentsDb = postgres.AddDatabase("payments-db");
+var productsDb = postgres.AddDatabase("products-db");
+var reviewsDb = postgres.AddDatabase("reviews-db");
+var cartDb = postgres.AddDatabase("cart-db");
+
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
-    .WithReference(postgres.AddDatabase("accounts-db"))
+    .WithReference(accountsDb)
+    .WithEnvironment("ConnectionStrings__accounts_db", accountsDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var inventoryApi = builder
     .AddProject<Projects.Demo_Inventory>("inventory-api")
-    .WithReference(postgres.AddDatabase("inventory-db"))
+    .WithReference(inventoryDb)
+    .WithEnvironment("ConnectionStrings__inventory_db", inventoryDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var orderApi = builder
     .AddProject<Projects.Demo_Order>("order-api")
-    .WithReference(postgres.AddDatabase("order-db"))
+    .WithReference(orderDb)
+    .WithEnvironment("ConnectionStrings__order_db", orderDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var paymentsApi = builder
     .AddProject<Projects.Demo_Payments>("payments-api")
-    .WithReference(postgres.AddDatabase("payments-db"))
+    .WithReference(paymentsDb)
+    .WithEnvironment("ConnectionStrings__payments_db", paymentsDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var productsApi = builder
     .AddProject<Projects.Demo_Products>("products-api")
-    .WithReference(postgres.AddDatabase("products-db"))
+    .WithReference(productsDb)
+    .WithEnvironment("ConnectionStrings__products_db", productsDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
 var reviewsApi = builder
     .AddProject<Projects.Demo_Reviews>("reviews-api")
-    .WithReference(postgres.AddDatabase("reviews-db"))
+    .WithReference(reviewsDb)
+    .WithEnvironment("ConnectionStrings__reviews_db", reviewsDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 
@@ -50,7 +64,8 @@ var shippingApi = builder
 
 var cartApi = builder
     .AddProject<Projects.Demo_Cart>("cart-api")
-    .WithReference(postgres.AddDatabase("cart-db"))
+    .WithReference(cartDb)
+    .WithEnvironment("ConnectionStrings__cart_db", cartDb.Resource.ConnectionStringExpression)
     .WithGraphQLSchemaEndpoint()
     .WaitFor(postgres);
 

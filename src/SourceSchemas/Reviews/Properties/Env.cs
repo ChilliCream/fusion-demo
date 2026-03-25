@@ -4,7 +4,7 @@ public static class Env
 {
     public const string ReviewsApi = "reviews-api";
     
-    public const string ReviewsDb = "reviews-db";
+    public const string ReviewsDb = "reviews_db";
     
     public const string ReviewsRedis = "review-redis"; 
     
