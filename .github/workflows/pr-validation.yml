@@ -45,6 +45,7 @@ jobs:
           stage: dev
           api-id: ${{ secrets.NITRO_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
       - name: Validate MCP documents
         uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.14
@@ -54,6 +55,7 @@ jobs:
           tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
       - name: Validate OpenAPI documents
         uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.14
@@ -62,6 +64,7 @@ jobs:
           patterns: src/Gateway/OpenApi/*.graphql
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
   frontend:
     name: Build Frontend
@@ -100,3 +103,4 @@ jobs:
           operations-file: src/frontend/operations.json
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
