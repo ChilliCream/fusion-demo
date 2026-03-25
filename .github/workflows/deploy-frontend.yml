@@ -64,10 +64,16 @@ jobs:
           docker push "$FRONTEND_DOCKER_IMAGE"
 
       - name: Extract persisted operations from image
+        working-directory: src/frontend
         run: |
-          CONTAINER_ID=$(docker create "$FRONTEND_DOCKER_IMAGE")
-          docker cp "$CONTAINER_ID:/app/operations.json" "src/frontend/operations.json"
-          docker rm "$CONTAINER_ID"
+          docker build \
+            --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
+            --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
+            --target operations \
+            --output type=local,dest=. \
+            .
 
       - name: Upload Nitro client operations
         run: |

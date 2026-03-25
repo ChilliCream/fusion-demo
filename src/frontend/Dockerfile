@@ -32,6 +32,10 @@ RUN if [ "$VITE_ENABLE_PERSISTED_OPERATIONS" = "true" ]; then \
 # Build the application
 RUN yarn build
 
+# Persisted operations export stage
+FROM scratch AS operations
+COPY --from=builder /app/operations.json /operations.json
+
 # Production stage
 FROM nginx:alpine
 
