@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.meta.outputs.tag }}
-      image: ${{ steps.meta.outputs.image }}
     steps:
       - name: Compute image tag
         id: meta
@@ -21,11 +20,12 @@ jobs:
           TS=$(date -u +'%Y%m%dT%H%M%SZ')
           SHORTSHA=${GITHUB_SHA::7}
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
-          echo "image=${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-frontend:${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
   build:
     runs-on: ubuntu-latest
     needs: prepare
+    env:
+      FRONTEND_DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-frontend:${{ needs.prepare.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -59,13 +59,13 @@ jobs:
             --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }}" \
             --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
             --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
-            -t "${{ needs.prepare.outputs.image }}" \
+            -t "$FRONTEND_DOCKER_IMAGE" \
             .
-          docker push ${{ needs.prepare.outputs.image }}
+          docker push "$FRONTEND_DOCKER_IMAGE"
 
       - name: Extract persisted operations from image
         run: |
-          CONTAINER_ID=$(docker create ${{ needs.prepare.outputs.image }})
+          CONTAINER_ID=$(docker create "$FRONTEND_DOCKER_IMAGE")
           docker cp "$CONTAINER_ID:/app/operations.json" "src/frontend/operations.json"
           docker rm "$CONTAINER_ID"
 
@@ -83,6 +83,8 @@ jobs:
     concurrency:
       group: deploy-frontend
       cancel-in-progress: false
+    env:
+      FRONTEND_DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-frontend:${{ needs.prepare.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -118,14 +120,14 @@ jobs:
               --name ccc-eu1-demo-ca-frontend \
               --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
               --plan ${{ secrets.APP_SERVICE_PLAN }} \
-              --deployment-container-image-name ${{ needs.prepare.outputs.image }}
+              --deployment-container-image-name "$FRONTEND_DOCKER_IMAGE"
           fi
 
           # Configure container settings
           az webapp config container set \
             --name ccc-eu1-demo-ca-frontend \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --container-image-name ${{ needs.prepare.outputs.image }} \
+            --container-image-name "$FRONTEND_DOCKER_IMAGE" \
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
