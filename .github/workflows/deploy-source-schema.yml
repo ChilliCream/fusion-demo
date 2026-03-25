@@ -98,8 +98,7 @@ jobs:
 
       - name: Upload Source Schema
         run: |
-          # Equivalent to `dotnet nitro fusion upload ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion upload \
+          dotnet nitro fusion upload \
             --source-schema-file "${{ inputs.schema_file }}" \
             --tag ${{ needs.prepare.outputs.version }} \
             --api-id ${{ secrets.NITRO_API_ID }} \
@@ -113,6 +112,17 @@ jobs:
       cancel-in-progress: false
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore tools
+        run: dotnet tool restore
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -158,8 +168,7 @@ jobs:
 
       - name: Publish Gateway Schema
         run: |
-          # Equivalent to `dotnet nitro fusion publish ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- fusion publish \
+          dotnet nitro fusion publish \
             --source-schema ${{ inputs.source_schema_name }} \
             --tag ${{ needs.prepare.outputs.version }} \
             --stage "dev" \

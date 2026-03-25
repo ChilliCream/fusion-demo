@@ -77,6 +77,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -89,3 +97,16 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Persist Relay operations
+        run: yarn relay:persist
+        env:
+          VITE_ENABLE_PERSISTED_OPERATIONS: "true"
+
+      - name: Validate Client
+        run: |
+          dotnet nitro client validate \
+            --client-id ${{ secrets.CLIENT_ID }} \
+            --operations-file "operations.json" \
+            --stage "dev" \
+            --api-key ${{ secrets.NITRO_API_KEY }}

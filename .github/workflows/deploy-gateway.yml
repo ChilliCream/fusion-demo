@@ -36,6 +36,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Restore tools
+        run: dotnet tool restore
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -62,8 +65,7 @@ jobs:
 
       - name: Upload MCP Feature Collection
         run: |
-          # Equivalent to `dotnet nitro mcp upload ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- mcp upload \
+          dotnet nitro mcp upload \
             --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
             --prompt-pattern "src/Gateway/Mcp/Prompts/*/*.json" \
             --tool-pattern "src/Gateway/Mcp/Tools/*/*.graphql" \
@@ -72,8 +74,7 @@ jobs:
 
       - name: Upload OpenAPI collection
         run: |
-          # Equivalent to `dotnet nitro openapi upload ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi upload \
+          dotnet nitro openapi upload \
             --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --pattern "src/Gateway/OpenApi/*.graphql" \
             --tag ${{ needs.prepare.outputs.tag }} \
@@ -87,6 +88,17 @@ jobs:
       cancel-in-progress: false
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore tools
+        run: dotnet tool restore
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -132,8 +144,7 @@ jobs:
 
       - name: Publish MCP Feature Collection
         run: |
-          # Equivalent to `dotnet nitro mcp publish ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- mcp publish \
+          dotnet nitro mcp publish \
             --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
             --tag ${{ needs.prepare.outputs.tag }} \
             --stage "dev" \
@@ -141,8 +152,7 @@ jobs:
 
       - name: Publish OpenAPI collection
         run: |
-          # Equivalent to `dotnet nitro openapi publish ...`
-          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- openapi publish \
+          dotnet nitro openapi publish \
             --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
             --tag ${{ needs.prepare.outputs.tag }} \
             --stage "dev" \
