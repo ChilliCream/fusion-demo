@@ -105,6 +105,6 @@ jobs:
         run: |
           dotnet nitro client validate \
             --client-id ${{ secrets.CLIENT_ID }} \
-            --operations-file "src/frontend/operations.json" \
+            --operations-file "operations.json" \
             --stage "dev" \
             --api-key ${{ secrets.NITRO_API_KEY }}
