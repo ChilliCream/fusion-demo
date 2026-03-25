@@ -58,7 +58,8 @@ builder
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
     .AddInstrumentation()
-    .AddMcp();
+    .AddMcp()
+    .UsePersistedOperationPipeline();
 
 var app = builder.Build();
 
