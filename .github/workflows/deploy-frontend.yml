@@ -55,11 +55,11 @@ jobs:
         working-directory: src/frontend
         run: |
           docker build \
-            --build-arg VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }} \
-            --build-arg VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }} \
-            --build-arg VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }} \
-            --build-arg VITE_ENABLE_PERSISTED_OPERATIONS=true \
-            -t ${{ needs.prepare.outputs.image }} \
+            --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
+            --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
+            -t "${{ needs.prepare.outputs.image }}" \
             .
           docker push ${{ needs.prepare.outputs.image }}
 
