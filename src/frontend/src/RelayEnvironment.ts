@@ -9,6 +9,8 @@ import {
 const HTTP_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || "http://localhost:5116/graphql/";
 const CLIENT_ID = import.meta.env.VITE_GRAPHQL_CLIENT_ID || "";
 const CLIENT_VERSION = import.meta.env.VITE_GRAPHQL_CLIENT_VERSION || "";
+const ENABLE_PERSISTED_OPERATIONS =
+  String(import.meta.env.VITE_ENABLE_PERSISTED_OPERATIONS).toLowerCase() === "true";
 const TOKEN_KEY = 'auth_token';
 
 const fetchFn: FetchFunction = async (request, variables) => {
@@ -37,10 +39,17 @@ const fetchFn: FetchFunction = async (request, variables) => {
   const resp = await fetch(HTTP_ENDPOINT, {
     method: "POST",
     headers,
-    body: JSON.stringify({
-      query: request.text,
-      variables,
-    }),
+    body: JSON.stringify(
+      ENABLE_PERSISTED_OPERATIONS
+        ? {
+            id: request.id,
+            variables,
+          }
+        : {
+            query: request.text,
+            variables,
+          },
+    ),
   });
 
   return await resp.json();

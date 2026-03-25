@@ -2,13 +2,13 @@
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "relay-compiler --validate && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "relay": "relay-compiler --watch"
+    "relay": "relay-compiler --watch",
+    "relay:persist": "relay-compiler --repersist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
