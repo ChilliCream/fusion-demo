@@ -7,6 +7,8 @@ import {
 } from "relay-runtime";
 
 const HTTP_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || "http://localhost:5116/graphql/";
+const CLIENT_ID = import.meta.env.VITE_GRAPHQL_CLIENT_ID || "";
+const CLIENT_VERSION = import.meta.env.VITE_GRAPHQL_CLIENT_VERSION || "";
 const TOKEN_KEY = 'auth_token';
 
 const fetchFn: FetchFunction = async (request, variables) => {
@@ -22,6 +24,14 @@ const fetchFn: FetchFunction = async (request, variables) => {
   // Add Authorization header if token exists
   if (token) {
     headers.Authorization = `Bearer ${token}`;
+  }
+
+  if (CLIENT_ID) {
+    headers["GraphQL-Client-Id"] = CLIENT_ID;
+  }
+
+  if (CLIENT_VERSION) {
+    headers["GraphQL-Client-Version"] = CLIENT_VERSION;
   }
 
   const resp = await fetch(HTTP_ENDPOINT, {

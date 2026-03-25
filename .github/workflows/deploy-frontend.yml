@@ -44,6 +44,8 @@ jobs:
         run: |
           docker build \
             --build-arg VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }} \
+            --build-arg VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }} \
+            --build-arg VITE_GRAPHQL_CLIENT_VERSION=${{ steps.meta.outputs.tag }} \
             -t ${{ steps.meta.outputs.image }} \
             .
           docker push ${{ steps.meta.outputs.image }}
