@@ -1,4 +1,5 @@
 using ChilliCream.Nitro.App;
+using HotChocolate.Adapters.Mcp.Extensions;
 using HotChocolate.Adapters.OpenApi;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,10 +52,12 @@ builder
     .AddNitro(options =>
     {
         options.Metrics.Enabled = false;
+        options.Mcp.Enabled = true;
         options.OpenApi.Enabled = true;
     })
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
-    .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider);
+    .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
+    .AddMcp();
 
 var app = builder.Build();
 
@@ -63,6 +66,7 @@ app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGraphQL().WithOptions(o => o.Tool.ServeMode = ServeMode.Insider);
+app.MapGraphQLMcp();
 app.MapOpenApiEndpoints();
 app.MapOpenApi();
 app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));

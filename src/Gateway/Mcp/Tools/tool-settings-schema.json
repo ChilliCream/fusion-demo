@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Model Context Protocol tool settings for Hot Chocolate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "The optional human-readable title for the tool.",
+      "type": "string"
+    },
+    "icons": {
+      "description": "The optional icons for the tool.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "description": "The URI pointing to the icon resource. This can be an HTTP/HTTPS URL pointing to an image file or a data URI with base64-encoded image data.",
+            "type": "string",
+            "format": "uri",
+            "pattern": "^(data|https?):"
+          },
+          "mimeType": {
+            "description": "The optional MIME type of the icon. This can be used to override the server's MIME type if it's missing or generic. Common values include \"image/png\", \"image/jpeg\", \"image/svg+xml\", and \"image/webp\".",
+            "type": "string",
+            "pattern": "^[^/]+\/[^/]+$"
+          },
+          "sizes": {
+            "description": "The optional size specifications for the icon. This can specify one or more sizes at which the icon file can be used. Examples include \"48x48\", or \"any\" for scalable formats like SVG.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(\\d+x\\d+|any)$"
+            }
+          },
+          "theme": {
+            "description": "The optional theme for this icon. Can be \"light\" or \"dark\". Used to specify which UI theme the icon is designed for.",
+            "type": "string",
+            "enum": ["light", "dark"]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "source"
+        ]
+      }
+    },
+    "annotations": {
+      "type": "object",
+      "properties": {
+        "destructiveHint": {
+          "description": "A hint indicating whether this operation may cause destructive side effects.",
+          "type": "boolean"
+        },
+        "idempotentHint": {
+          "description": "A hint indicating whether this operation is idempotent (safe to retry).",
+          "type": "boolean"
+        },
+        "openWorldHint": {
+          "description": "A hint indicating whether this operation assumes an open-world model.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "view": {
+      "description": "The optional view configuration for this tool.",
+      "type": "object",
+      "properties": {
+        "csp": {
+          "description": "Content Security Policy configuration.",
+          "type": "object",
+          "properties": {
+            "baseUriDomains": {
+              "description": "Allowed base URIs for the document (base-uri directive).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "connectDomains": {
+              "description": "Origins for network requests (fetch/XHR/WebSocket).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "frameDomains": {
+              "description": "Origins for nested iframes (frame-src directive).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resourceDomains": {
+              "description": "Origins for static resources (scripts, images, styles, fonts).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "domain": {
+          "description": "Dedicated origin for view sandbox.",
+          "type": "string"
+        },
+        "permissions": {
+          "description": "Sandbox permissions requested by the view.",
+          "type": "object",
+          "properties": {
+            "camera": {
+              "description": "Request camera access (Permission Policy 'camera' feature).",
+              "type": "boolean"
+            },
+            "clipboardWrite": {
+              "description": "Request clipboard write access (Permission Policy 'clipboard-write' feature).",
+              "type": "boolean"
+            },
+            "geolocation": {
+              "description": "Request geolocation access (Permission Policy 'geolocation' feature).",
+              "type": "boolean"
+            },
+            "microphone": {
+              "description": "Request microphone access (Permission Policy 'microphone' feature).",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "prefersBorder": {
+          "description": "Visual boundary preference – 'true' if UI prefers a visible border.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

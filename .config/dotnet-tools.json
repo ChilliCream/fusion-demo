@@ -8,7 +8,7 @@
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
-      "version": "16.0.0-p.11.40",
+      "version": "16.0.0-rc.1.14",
       "commands": ["nitro"],
       "rollForward": false
     }

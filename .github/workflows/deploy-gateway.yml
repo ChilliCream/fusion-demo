@@ -60,6 +60,16 @@ jobs:
             -p:PublishAot=true \
             -p:RuntimeIdentifier=linux-x64
 
+      - name: Upload MCP Feature Collection
+        run: |
+          # Equivalent to `dotnet nitro mcp upload ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- mcp upload \
+            --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
+            --prompt-pattern "src/Gateway/Mcp/Prompts/*/*.json" \
+            --tool-pattern "src/Gateway/Mcp/Tools/*/*.graphql" \
+            --tag ${{ needs.prepare.outputs.tag }} \
+            --api-key ${{ secrets.NITRO_API_KEY }}
+
       - name: Upload OpenAPI collection
         run: |
           # Equivalent to `dotnet nitro openapi upload ...`
@@ -119,6 +129,15 @@ jobs:
           az webapp restart \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+
+      - name: Publish MCP Feature Collection
+        run: |
+          # Equivalent to `dotnet nitro mcp publish ...`
+          dotnet tool exec ChilliCream.Nitro.CommandLine --prerelease --yes -- mcp publish \
+            --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
+            --tag ${{ needs.prepare.outputs.tag }} \
+            --stage "dev" \
+            --api-key ${{ secrets.NITRO_API_KEY }}
 
       - name: Publish OpenAPI collection
         run: |

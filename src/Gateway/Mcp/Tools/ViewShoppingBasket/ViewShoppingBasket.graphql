@@ -1,0 +1,19 @@
+query ViewShoppingBasket {
+  viewer {
+    cart {
+      items {
+        nodes {
+          product {
+            id
+            name
+            price
+            availableQuantity: quantity
+            pictureUrl
+            deliveryEstimate(zip: "abc")
+          }
+          quantity
+        }
+      }
+    }
+  }
+}
