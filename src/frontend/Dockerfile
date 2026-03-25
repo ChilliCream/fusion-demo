@@ -26,7 +26,7 @@ ARG VITE_ENABLE_PERSISTED_OPERATIONS
 ENV VITE_ENABLE_PERSISTED_OPERATIONS=$VITE_ENABLE_PERSISTED_OPERATIONS
 
 RUN if [ "$VITE_ENABLE_PERSISTED_OPERATIONS" = "true" ]; then \
-  yarn relay:repersist; \
+  yarn relay:persist; \
   fi
 
 # Build the application
