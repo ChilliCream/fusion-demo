@@ -1,0 +1,23 @@
+query SearchProducts(
+  $text: String!
+  $minPrice: Float
+  $maxPrice: Float
+  $first: Int!
+  $after: String
+) {
+  products(
+    searchText: $text
+    minPrice: $minPrice
+    maxPrice: $maxPrice
+    first: $first
+    after: $after
+  ) {
+    nodes {
+      id
+      name
+      price
+      availableQuantity: quantity
+      pictureUrl
+    }
+  }
+}

@@ -1,0 +1,7 @@
+mutation Checkout {
+  checkout {
+    cart {
+      id
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Model Context Protocol prompt settings for Hot Chocolate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "The optional human-readable title of the prompt for display purposes.",
+      "type": "string"
+    },
+    "description": {
+      "description": "The optional human-readable description of the prompt.",
+      "type": "string"
+    },
+    "arguments": {
+      "description": "The optional list of arguments to use for templating the prompt",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the prompt argument.",
+            "type": "string"
+          },
+          "title": {
+            "description": "The optional human-readable title of the prompt argument for display purposes.",
+            "type": "string"
+          },
+          "description": {
+            "description": "The optional human-readable description of the prompt argument.",
+            "type": "string"
+          },
+          "required": {
+            "description": "A value indicating whether the prompt argument is required",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "icons": {
+      "description": "The optional icons for the prompt.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "description": "The URI pointing to the icon resource. This can be an HTTP/HTTPS URL pointing to an image file or a data URI with base64-encoded image data.",
+            "type": "string",
+            "format": "uri",
+            "pattern": "^(data|https?):"
+          },
+          "mimeType": {
+            "description": "The optional MIME type of the icon. This can be used to override the server's MIME type if it's missing or generic. Common values include \"image/png\", \"image/jpeg\", \"image/svg+xml\", and \"image/webp\".",
+            "type": "string",
+            "pattern": "^[^/]+\/[^/]+$"
+          },
+          "sizes": {
+            "description": "The optional size specifications for the icon. This can specify one or more sizes at which the icon file can be used. Examples include \"48x48\", or \"any\" for scalable formats like SVG.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(\\d+x\\d+|any)$"
+            }
+          },
+          "theme": {
+            "description": "The optional theme for this icon. Can be \"light\" or \"dark\". Used to specify which UI theme the icon is designed for.",
+            "type": "string",
+            "enum": ["light", "dark"]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "source"
+        ]
+      }
+    },
+    "messages": {
+      "description": "The messages that make up the prompt.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "description": "The role of the prompt message.",
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "description": "The content of the prompt message.",
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "description": "The type of the content block.",
+                    "const": "text"
+                  },
+                  "text": {
+                    "description": "The text content.",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "text"
+                ]
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "content"
+        ]
+      }
+    }
+  },
+  "required": ["messages"]
+}

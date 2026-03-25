@@ -1,0 +1,30 @@
+{
+  "$schema": "../prompt-settings-schema.json",
+  "title": "Search Products",
+  "description": "Search for products in the catalog based on a search query.",
+  "icons": [
+    {
+      "source": "https://chillicream.com/favicon-32x32.png",
+      "sizes": ["32x32"],
+      "mimeType": "image/png",
+      "theme": "dark"
+    }
+  ],
+  "arguments": [
+    {
+      "name": "searchQuery",
+      "title": "Search Query",
+      "description": "The search query to find relevant products.",
+      "required": true
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": {
+        "type": "text",
+        "text": "Find products related to \"{searchQuery}\" in the product catalog."
+      }
+    }
+  ]
+}

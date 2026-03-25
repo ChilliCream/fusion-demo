@@ -1,0 +1,15 @@
+{
+  "$schema": "../tool-settings-schema.json",
+  "title": "View Shopping Basket",
+  "icons": [
+    {
+      "source": "https://chillicream.com/favicon-32x32.png",
+      "sizes": ["32x32"],
+      "mimeType": "image/png",
+      "theme": "dark"
+    }
+  ],
+  "annotations": {
+    "openWorldHint": false
+  }
+}
