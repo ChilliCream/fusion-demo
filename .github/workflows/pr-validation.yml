@@ -50,8 +50,8 @@ jobs:
         uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.14
         with:
           mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
-          prompt-pattern: src/Gateway/Mcp/Prompts/*/*.json
-          tool-pattern: src/Gateway/Mcp/Tools/*/*.graphql
+          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
+          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
 
