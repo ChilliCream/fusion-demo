@@ -31,10 +31,14 @@ builder
     .AddAuthorization()
     .AddDefaultSettings()
     .AddReviewTypes()
-    .AddPostgresSubscriptions()
-    .AddWarmupTask(ReviewContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddPostgresSubscriptions();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await ReviewContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();

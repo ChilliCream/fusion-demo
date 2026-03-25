@@ -33,10 +33,14 @@ builder
     .AddAuthorization()
     .AddDefaultSettings()
     .AddUploadType()
-    .AddProductTypes()
-    .AddWarmupTask(ProductContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddProductTypes();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await ProductContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();

@@ -33,10 +33,14 @@ builder
     .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings(registerNodeInterface: false)
-    .AddCartTypes()
-    .AddWarmupTask(CartContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddCartTypes();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await CartContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();

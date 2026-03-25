@@ -4,12 +4,23 @@
   "tools": {
     "aspire.cli": {
       "version": "9.4.2",
-      "commands": ["aspire"],
+      "commands": [
+        "aspire"
+      ],
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
       "version": "16.0.0-rc.1.14",
-      "commands": ["nitro"],
+      "commands": [
+        "nitro"
+      ],
+      "rollForward": false
+    },
+    "dotnet-ef": {
+      "version": "10.0.5",
+      "commands": [
+        "dotnet-ef"
+      ],
       "rollForward": false
     }
   }

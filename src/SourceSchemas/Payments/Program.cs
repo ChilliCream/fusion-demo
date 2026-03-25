@@ -31,10 +31,14 @@ builder
     .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
-    .AddPaymentTypes()
-    .AddWarmupTask(PaymentContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddPaymentTypes();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await PaymentContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();

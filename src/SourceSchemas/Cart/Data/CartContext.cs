@@ -1,4 +1,3 @@
-using HotChocolate.Execution;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Cart.Data;
@@ -10,26 +9,12 @@ public class CartContext(DbContextOptions options) : DbContext(options)
     public DbSet<CartItem> CartItems => Set<CartItem>();
 
     public static async Task SeedDataAsync(
-        IRequestExecutor executor,
+        IServiceProvider services,
         CancellationToken cancellationToken = default)
     {
-        var services = executor.Schema.Services.GetRootServiceProvider();
         await using var scope = services.CreateAsyncScope();
         await using var context = scope.ServiceProvider.GetRequiredService<CartContext>();
 
-        // Ensure database is created
-        await context.Database.EnsureCreatedAsync(cancellationToken);
-
-        // Create initial cart if none exists
-        if (!await context.Carts.AnyAsync(cancellationToken))
-        {
-            var cart = new Cart
-            {
-                CreatedAt = DateTime.UtcNow
-            };
-
-            context.Carts.Add(cart);
-            await context.SaveChangesAsync(cancellationToken);
-        }
+        await context.Database.MigrateAsync(cancellationToken);
     }
 }

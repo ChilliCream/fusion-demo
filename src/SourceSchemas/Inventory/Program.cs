@@ -31,10 +31,14 @@ builder
     .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
-    .AddInventoryTypes()
-    .AddWarmupTask(InventoryContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddInventoryTypes();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await InventoryContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();

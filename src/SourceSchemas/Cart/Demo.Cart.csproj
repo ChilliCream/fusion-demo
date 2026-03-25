@@ -8,18 +8,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework"/>
-        <PackageReference Include="HotChocolate.Diagnostics"/>
-        <PackageReference Include="HotChocolate.Types.Analyzers"/>
-        <PackageReference Include="ChilliCream.Nitro"/>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="HotChocolate.AspNetCore" />
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" />
+        <PackageReference Include="HotChocolate.Diagnostics" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" />
+        <PackageReference Include="ChilliCream.Nitro" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Defaults\SourceSchemaDefaults\Demo.SourceSchemaDefaults.csproj"/>
-        <ProjectReference Include="..\..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\..\Defaults\SourceSchemaDefaults\Demo.SourceSchemaDefaults.csproj" />
+        <ProjectReference Include="..\..\Defaults\ServiceDefaults\Demo.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>

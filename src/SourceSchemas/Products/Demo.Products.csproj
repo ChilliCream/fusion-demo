@@ -20,6 +20,7 @@
         </PackageReference>
         <PackageReference Include="ChilliCream.Nitro" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
     </ItemGroup>
 
 

@@ -31,10 +31,14 @@ builder
     .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
-    .AddOrderTypes()
-    .AddWarmupTask(OrderContext.SeedDataAsync, skipIf: args.IsGraphQLCommand());
+    .AddOrderTypes();
 
 var app = builder.Build();
+
+if (!args.IsGraphQLCommand())
+{
+    await OrderContext.SeedDataAsync(app.Services);
+}
 
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();
