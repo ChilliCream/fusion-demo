@@ -152,11 +152,20 @@ jobs:
             --name ${{ inputs.app_name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
+      # TODO: Switch this to the Action once it has been published
       - name: Publish Gateway Schema
-        uses: ChilliCream/nitro-fusion-publish@v16.0.0-rc.1.14
-        with:
-          source-schemas: ${{ inputs.source_schema_name }}
-          tag: ${{ needs.prepare.outputs.version }}
-          stage: dev
-          api-id: ${{ secrets.NITRO_API_ID }}
-          api-key: ${{ secrets.NITRO_API_KEY }}
+        run: |
+          dotnet nitro fusion publish \
+            --source-schema ${{ inputs.source_schema_name }} \
+            --tag ${{ needs.prepare.outputs.version }} \
+            --stage "dev" \
+            --api-id ${{ secrets.NITRO_API_ID }} \
+            --api-key ${{ secrets.NITRO_API_KEY }}
+      # - name: Publish Gateway Schema
+      #   uses: ChilliCream/nitro-fusion-publish@v16.0.0-rc.1.14
+      #   with:
+      #     source-schemas: ${{ inputs.source_schema_name }}
+      #     tag: ${{ needs.prepare.outputs.version }}
+      #     stage: dev
+      #     api-id: ${{ secrets.NITRO_API_ID }}
+      #     api-key: ${{ secrets.NITRO_API_KEY }}
