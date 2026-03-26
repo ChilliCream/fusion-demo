@@ -36,9 +36,6 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore tools
-        run: dotnet tool restore
-
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -64,21 +61,21 @@ jobs:
             -p:RuntimeIdentifier=linux-x64
 
       - name: Upload MCP Feature Collection
-        run: |
-          dotnet nitro mcp upload \
-            --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
-            --prompt-pattern "src/Gateway/Mcp/Prompts/*/*.json" \
-            --tool-pattern "src/Gateway/Mcp/Tools/*/*.graphql" \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.14
+        with:
+          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
+          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
+          tag: ${{ needs.prepare.outputs.tag }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
 
       - name: Upload OpenAPI collection
-        run: |
-          dotnet nitro openapi upload \
-            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
-            --pattern "src/Gateway/OpenApi/*.graphql" \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.14
+        with:
+          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/*.graphql
+          tag: ${{ needs.prepare.outputs.tag }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -88,17 +85,6 @@ jobs:
       cancel-in-progress: false
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up .NET 10 SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore tools
-        run: dotnet tool restore
-
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -143,17 +129,17 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Publish MCP Feature Collection
-        run: |
-          dotnet nitro mcp publish \
-            --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --stage "dev" \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.14
+        with:
+          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: dev
+          api-key: ${{ secrets.NITRO_API_KEY }}
 
       - name: Publish OpenAPI collection
-        run: |
-          dotnet nitro openapi publish \
-            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
-            --tag ${{ needs.prepare.outputs.tag }} \
-            --stage "dev" \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.14
+        with:
+          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: dev
+          api-key: ${{ secrets.NITRO_API_KEY }}

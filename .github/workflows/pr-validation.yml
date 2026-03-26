@@ -18,9 +18,6 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore .NET tools
-        run: dotnet tool restore
-
       - name: Restore
         run: dotnet restore
 
@@ -34,36 +31,40 @@ jobs:
           done
 
       - name: Validate GraphQL schema
-        run: |
-          dotnet nitro fusion validate \
-            --source-schema-file "src/SourceSchemas/Accounts/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Cart/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Inventory/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Order/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Payments/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Products/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Reviews/schema.graphqls" \
-            --source-schema-file "src/SourceSchemas/Shipping/schema.graphqls" \
-            --stage "dev" \
-            --api-id ${{ secrets.NITRO_API_ID }} \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-fusion-validate@v16.0.0-rc.1.14
+        with:
+          source-schema-files: |
+            src/SourceSchemas/Accounts/schema.graphqls
+            src/SourceSchemas/Cart/schema.graphqls
+            src/SourceSchemas/Inventory/schema.graphqls
+            src/SourceSchemas/Order/schema.graphqls
+            src/SourceSchemas/Payments/schema.graphqls
+            src/SourceSchemas/Products/schema.graphqls
+            src/SourceSchemas/Reviews/schema.graphqls
+            src/SourceSchemas/Shipping/schema.graphqls
+          stage: dev
+          api-id: ${{ secrets.NITRO_API_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
       - name: Validate MCP documents
-        run: |
-          dotnet nitro mcp validate \
-            --mcp-feature-collection-id ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }} \
-            --prompt-pattern "src/Gateway/Mcp/Prompts/*/*.json" \
-            --tool-pattern "src/Gateway/Mcp/Tools/*/*.graphql" \
-            --stage "dev" \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.14
+        with:
+          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
+          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
+          stage: dev
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
       - name: Validate OpenAPI documents
-        run: |
-          dotnet nitro openapi validate \
-            --openapi-collection-id ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }} \
-            --pattern "src/Gateway/OpenApi/*.graphql" \
-            --stage "dev" \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.14
+        with:
+          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/*.graphql
+          stage: dev
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
 
   frontend:
     name: Build Frontend
@@ -76,14 +77,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up .NET 10 SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore .NET tools
-        run: dotnet tool restore
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -104,9 +97,10 @@ jobs:
           VITE_ENABLE_PERSISTED_OPERATIONS: "true"
 
       - name: Validate Client
-        run: |
-          dotnet nitro client validate \
-            --client-id ${{ secrets.CLIENT_ID }} \
-            --operations-file "operations.json" \
-            --stage "dev" \
-            --api-key ${{ secrets.NITRO_API_KEY }}
+        uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.14
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          operations-file: src/frontend/operations.json
+          stage: dev
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          comment-mode: "review"
