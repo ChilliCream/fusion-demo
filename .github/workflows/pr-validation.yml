@@ -66,6 +66,15 @@ jobs:
           api-key: ${{ secrets.NITRO_API_KEY }}
           comment-mode: "review"
 
+      # TODO: Remove again
+      - name: Upload OpenAPI documents
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.14
+        with:
+          tag: tobi-workflow-test
+          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/*.graphql
+          api-key: ${{ secrets.NITRO_API_KEY }}
+
   frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
