@@ -23,8 +23,6 @@ builder.Services
 builder.Services
     .AddOpenApi(o => o.AddGraphQLTransformer());
 
-builder.Services.AddLogging();
-
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
