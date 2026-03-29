@@ -9,6 +9,7 @@ using OpenTelemetry.Log;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Polly;
 
 namespace Microsoft.Extensions.Hosting;
 
@@ -30,13 +31,47 @@ public static class Extensions
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
             // Turn on resilience by default
-            http.AddStandardResilienceHandler(x => x.AttemptTimeout.Timeout = TimeSpan.FromSeconds(10));
+            http.AddStandardResilienceHandler(options =>
+            {
+                options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(10);
+
+                options.TotalRequestTimeout.TimeoutGenerator = args =>
+                {
+                    var isSse = IsServerSentEventRequest(args.Context.GetRequestMessage());
+                    return ValueTask.FromResult(
+                        isSse ? Timeout.InfiniteTimeSpan : options.TotalRequestTimeout.Timeout);
+                };
+
+                options.AttemptTimeout.TimeoutGenerator = args =>
+                {
+                    var isSse = IsServerSentEventRequest(args.Context.GetRequestMessage());
+                    return ValueTask.FromResult(
+                        isSse ? Timeout.InfiniteTimeSpan : options.AttemptTimeout.Timeout);
+                };
+                
+                options.Retry.ShouldHandle = args =>
+                {
+                    var isSse = IsServerSentEventRequest(args.Context.GetRequestMessage());
+                    return isSse ? ValueTask.FromResult(false) : options.Retry.ShouldHandle(args);
+                };
+            });
 
             // Turn on service discovery by default
             http.AddServiceDiscovery();
         });
 
         return builder;
+    }
+
+    private static bool IsServerSentEventRequest(HttpRequestMessage? request)
+    {
+        if (request is null)
+        {
+            return false;
+        }
+
+        return request.Headers.Accept.Any(acceptHeader =>
+            string.Equals(acceptHeader.MediaType, "text/event-stream", StringComparison.OrdinalIgnoreCase));
     }
 
     public static IHostApplicationBuilder ConfigureOpenTelemetry(
@@ -67,44 +102,40 @@ public static class Extensions
 #if INCLUDE_EF_TELEMETRY
                     .AddEntityFrameworkCoreInstrumentation()
 #endif
-                    .AddAspNetCoreInstrumentation(
-                        o =>
+                    .AddAspNetCoreInstrumentation(o =>
+                    {
+                        o.RecordException = true;
+
+                        o.EnrichWithHttpRequest = (activity, request) =>
                         {
-                            o.RecordException = true;
+                            var path = request.PathBase.HasValue || request.Path.HasValue
+                                ? (request.PathBase + request.Path).ToString()
+                                : "/";
 
-                            o.EnrichWithHttpRequest = (activity, request) =>
+                            // we override the display name to include the path otherwise
+                            // all legacy request will be just set to {method}. This is correct
+                            // otel behaviour but not useful at all
+                            activity.DisplayName += $" {path}";
+
+                            // elastic only treats a request as a "request" transaction
+                            // when http.url is set
+                            activity.SetTag("http.url", GetUri(request));
+                        };
+                        o.EnrichWithHttpResponse = (activity, _) =>
+                        {
+                            var rawDisplayName =
+                                activity.GetCustomProperty("graphqlDisplayName");
+                            if (rawDisplayName is string graphqlDisplayName &&
+                                !string.IsNullOrEmpty(graphqlDisplayName))
                             {
-                                var path = request.PathBase.HasValue || request.Path.HasValue
-                                    ? (request.PathBase + request.Path).ToString()
-                                    : "/";
-
-                                // we override the display name to include the path otherwise
-                                // all legacy request will be just set to {method}. This is correct
-                                // otel behaviour but not useful at all
-                                activity.DisplayName += $" {path}";
-
-                                // elastic only treats a request as a "request" transaction
-                                // when http.url is set
-                                activity.SetTag("http.url", GetUri(request));
-                            };
-                            o.EnrichWithHttpResponse = (activity, _) =>
-                            {
-                                var rawDisplayName =
-                                    activity.GetCustomProperty("graphqlDisplayName");
-                                if (rawDisplayName is string graphqlDisplayName &&
-                                    !string.IsNullOrEmpty(graphqlDisplayName))
-                                {
-                                    activity.DisplayName = graphqlDisplayName;
-                                }
-                            };
-                        })
+                                activity.DisplayName = graphqlDisplayName;
+                            }
+                        };
+                    })
                     .AddHttpClientInstrumentation()
                     .AddNitroExporter();
             })
-            .WithLogging(logging =>
-            {
-                logging.AddNitroExporter();
-            });
+            .WithLogging(logging => { logging.AddNitroExporter(); });
 
         builder.AddOpenTelemetryExporters();
 
@@ -178,7 +209,7 @@ public static class Extensions
         var path = request.Path.Value ?? string.Empty;
         var queryString = request.QueryString.Value ?? string.Empty;
         var length = scheme.Length + Uri.SchemeDelimiter.Length + host.Length + pathBase.Length
-            + path.Length + queryString.Length;
+                     + path.Length + queryString.Length;
 
         return string.Create(length,
             (scheme, host, pathBase, path, queryString),
