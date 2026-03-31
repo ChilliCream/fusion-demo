@@ -68,7 +68,7 @@ jobs:
             .
 
       - name: Upload Nitro client operations
-        uses: ChilliCream/nitro-client-upload@v16.0.0-rc.1.14
+        uses: ChilliCream/nitro-client-upload@v16.0.0-rc.1.23
         with:
           tag: ${{ needs.prepare.outputs.tag }}
           operations-file: src/frontend/operations.json
@@ -91,7 +91,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Publish Nitro client
-        uses: ChilliCream/nitro-client-publish@v16.0.0-rc.1.14
+        uses: ChilliCream/nitro-client-publish@v16.0.0-rc.1.23
         with:
           tag: ${{ needs.prepare.outputs.tag }}
           stage: dev
