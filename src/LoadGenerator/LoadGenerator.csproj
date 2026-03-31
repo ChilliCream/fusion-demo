@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="HotChocolate.Language" />
+    <PackageReference Include="HotChocolate.Transport.Http" />
+    <PackageReference Include="ModelContextProtocol.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="configuration\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

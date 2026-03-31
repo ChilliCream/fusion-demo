@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/AppHost/Demo.AppHost.csproj" />
+    <Project Path="src/LoadGenerator/LoadGenerator.csproj" />
   </Folder>
   <Folder Name="/src/Defaults/">
     <Project Path="src/Defaults/ServiceDefaults/Demo.ServiceDefaults.csproj" />

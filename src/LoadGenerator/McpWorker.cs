@@ -1,0 +1,193 @@
+using System.Diagnostics;
+using System.Text.Json;
+using ModelContextProtocol.Client;
+using Microsoft.Extensions.Options;
+
+namespace LoadGenerator;
+
+public sealed partial class McpWorker(
+    IOptions<LoadGeneratorOptions> options,
+    ILogger<McpWorker> logger,
+    ILoggerFactory loggerFactory,
+    IHostEnvironment environment) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        var config = options.Value;
+        var workerConfig = config.Mcp;
+
+        if (!workerConfig.Enabled)
+        {
+            LogDisabled(logger);
+            return;
+        }
+
+        var tools = LoadTools();
+
+        if (tools.Count == 0)
+        {
+            LogNoTools(logger);
+            return;
+        }
+
+        var toolNames = string.Join(", ", tools.Select(t => t.Name));
+        LogToolsLoaded(logger, tools.Count, toolNames);
+
+        var mcpEndpoint = config.GatewayUrl.TrimEnd('/') + "/graphql/mcp";
+
+        var transport = new HttpClientTransport(
+            new HttpClientTransportOptions
+            {
+                Endpoint = new Uri(mcpEndpoint),
+                Name = "LoadGenerator"
+            },
+            loggerFactory);
+
+        await using var client = await McpClient.CreateAsync(
+            transport,
+            loggerFactory: loggerFactory,
+            cancellationToken: stoppingToken);
+
+        using var semaphore = new SemaphoreSlim(workerConfig.MaxConcurrentRequests);
+
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            var batchSize = Random.Shared.Next(1, workerConfig.MaxRequestsPerBatch + 1);
+            var batch = Enumerable.Range(0, batchSize)
+                .Select(_ => tools[Random.Shared.Next(tools.Count)])
+                .ToList();
+
+            var tasks = new Task[batch.Count];
+            for (var i = 0; i < batch.Count; i++)
+            {
+                tasks[i] = ExecuteToolAsync(client, batch[i], semaphore, stoppingToken);
+            }
+
+            await Task.WhenAll(tasks);
+
+            var delayMs = Random.Shared.Next(workerConfig.MinDelayMs, workerConfig.MaxDelayMs + 1);
+            await Task.Delay(delayMs, stoppingToken);
+        }
+    }
+
+    private async Task ExecuteToolAsync(
+        McpClient client,
+        ToolInfo tool,
+        SemaphoreSlim semaphore,
+        CancellationToken ct)
+    {
+        await semaphore.WaitAsync(ct);
+        try
+        {
+            var arguments = SelectArguments(tool.SampleArguments);
+            var argumentsJson = arguments.Count > 0 ? JsonSerializer.Serialize(arguments) : "{}";
+
+            LogCallingTool(logger, tool.Name, argumentsJson);
+
+            var sw = Stopwatch.StartNew();
+            var result = await client.CallToolAsync(tool.Name, arguments, cancellationToken: ct);
+            sw.Stop();
+
+            if (result.IsError is true)
+            {
+                LogToolError(logger, tool.Name, sw.ElapsedMilliseconds);
+            }
+            else
+            {
+                LogToolSuccess(logger, tool.Name, sw.ElapsedMilliseconds);
+            }
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            // Shutting down
+        }
+        catch (Exception ex)
+        {
+            LogToolException(logger, ex, tool.Name);
+        }
+        finally
+        {
+            semaphore.Release();
+        }
+    }
+
+    private List<ToolInfo> LoadTools()
+    {
+        var path = Path.Combine(environment.ContentRootPath, "configuration", "tools.json");
+
+        if (!File.Exists(path))
+        {
+            path = Path.Combine(AppContext.BaseDirectory, "configuration", "tools.json");
+        }
+
+        var json = File.ReadAllText(path);
+        var entries = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+
+        var tools = new List<ToolInfo>();
+
+        foreach (var (name, entry) in entries)
+        {
+            var sampleArguments = new Dictionary<string, JsonElement[]>();
+            if (entry.TryGetProperty("arguments", out var argumentsElement))
+            {
+                foreach (var prop in argumentsElement.EnumerateObject())
+                {
+                    sampleArguments[prop.Name] = prop.Value.EnumerateArray().ToArray();
+                }
+            }
+
+            tools.Add(new ToolInfo(name, sampleArguments));
+        }
+
+        return tools;
+    }
+
+    private static Dictionary<string, object?> SelectArguments(
+        Dictionary<string, JsonElement[]> sampleArguments)
+    {
+        var dict = new Dictionary<string, object?>();
+
+        foreach (var (name, samples) in sampleArguments)
+        {
+            var selected = samples[Random.Shared.Next(samples.Length)];
+            dict[name] = selected.ValueKind switch
+            {
+                JsonValueKind.Null => null,
+                JsonValueKind.String => selected.GetString(),
+                JsonValueKind.Number when selected.TryGetInt64(out var l) => l,
+                JsonValueKind.Number => selected.GetDouble(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                _ => selected.GetRawText()
+            };
+        }
+
+        return dict;
+    }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "MCP load generator is disabled")]
+    private static partial void LogDisabled(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "No tools found in tools.json")]
+    private static partial void LogNoTools(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} tools: {names}")]
+    private static partial void LogToolsLoaded(ILogger logger, int count, string names);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Calling tool {tool} with arguments: {arguments}")]
+    private static partial void LogCallingTool(ILogger logger, string tool, string arguments);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Tool {tool} completed in {elapsedMs}ms - OK")]
+    private static partial void LogToolSuccess(ILogger logger, string tool, long elapsedMs);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Tool {tool} completed in {elapsedMs}ms with error")]
+    private static partial void LogToolError(ILogger logger, string tool, long elapsedMs);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error calling tool {tool}")]
+    private static partial void LogToolException(ILogger logger, Exception ex, string tool);
+
+    private sealed record ToolInfo(
+        string Name,
+        Dictionary<string, JsonElement[]> SampleArguments
+    );
+}
