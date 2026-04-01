@@ -135,6 +135,7 @@ jobs:
           tag: ${{ needs.prepare.outputs.tag }}
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
+          force: true
 
       - name: Publish OpenAPI collection
         uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.23
@@ -143,3 +144,4 @@ jobs:
           tag: ${{ needs.prepare.outputs.tag }}
           stage: dev
           api-key: ${{ secrets.NITRO_API_KEY }}
+          force: true

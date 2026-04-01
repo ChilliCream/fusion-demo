@@ -4,11 +4,19 @@ query SearchProducts(
   $maxPrice: Float
   $first: Int!
   $after: String
+  $includeErrorField: Boolean = false
 )
 @http(
   method: GET
   route: "/products/search"
-  queryParameters: ["text", "minPrice", "maxPrice", "first", "after"]
+  queryParameters: [
+    "text"
+    "minPrice"
+    "maxPrice"
+    "first"
+    "after"
+    "includeErrorField"
+  ]
 ) {
   products(
     searchText: $text
@@ -19,6 +27,7 @@ query SearchProducts(
   ) {
     nodes {
       ...Product
+      error @include(if: $includeErrorField)
     }
   }
 }

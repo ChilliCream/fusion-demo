@@ -5,57 +5,50 @@ schema {
 }
 
 type Query {
-  inventoryItemById(id: ID!): InventoryItem @fusion__tag(name: "team-inventor")
+  inventoryItemById(id: ID!): InventoryItem
+    @cost(weight: "10")
   node(id: ID!): Node
   orderById(id: ID!): Order
+    @cost(weight: "10")
   paymentById(id: ID!): Payment
-  productById(id: ID!): Product @fusion__tag(name: "team-products")
-  products(
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-    "Returns the first _n_ elements from the list."
-    first: Int
-    "Returns the last _n_ elements from the list."
-    last: Int
-    maxPrice: Float
-    minPrice: Float
-    searchText: String
-  ): ProductsConnection @fusion__tag(name: "team-products")
+    @cost(weight: "10")
+  productById(id: ID!): Product
+    @cost(weight: "10")
+  products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int maxPrice: Float minPrice: Float searchText: String): ProductsConnection
+    @cost(weight: "10")
   reviewById(id: ID!): Review
+    @cost(weight: "10")
   userById(id: ID!): User
+    @cost(weight: "10")
   userByUsername(username: String!): User
-  users(
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-    "Returns the first _n_ elements from the list."
-    first: Int
-    "Returns the last _n_ elements from the list."
-    last: Int
-  ): UsersConnection
+    @cost(weight: "10")
+  users("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): UsersConnection
+    @cost(weight: "10")
   viewer: Viewer!
 }
 
 type Mutation {
   addProductToCart(input: AddProductToCartInput!): AddProductToCartPayload!
+    @cost(weight: "10")
   checkout: CheckoutPayload!
+    @cost(weight: "10")
   createOrder(input: CreateOrderInput!): CreateOrderPayload!
+    @cost(weight: "10")
   createPayment(input: CreatePaymentInput!): CreatePaymentPayload!
+    @cost(weight: "10")
   createReview(input: CreateReviewInput!): CreateReviewPayload!
-  removeProductFromCart(
-    input: RemoveProductFromCartInput!
-  ): RemoveProductFromCartPayload!
+    @cost(weight: "10")
+  removeProductFromCart(input: RemoveProductFromCartInput!): RemoveProductFromCartPayload!
+    @cost(weight: "10")
   restockProduct(input: RestockProductInput!): RestockProductPayload!
-  uploadProductPicture(
-    input: UploadProductPictureInput!
-  ): UploadProductPicturePayload!
+    @cost(weight: "10")
+  uploadProductPicture(input: UploadProductPictureInput!): UploadProductPicturePayload!
+    @cost(weight: "10")
 }
 
 type Subscription {
   onCreateReview: Review
+    @cost(weight: "10")
 }
 
 type AddProductToCartPayload {
@@ -66,16 +59,8 @@ type AddProductToCartPayload {
 type Cart {
   createdAt: DateTime!
   id: ID!
-  items(
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-    "Returns the first _n_ elements from the list."
-    first: Int
-    "Returns the last _n_ elements from the list."
-    last: Int
-  ): CartItemsConnection
+  items("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): CartItemsConnection
+    @cost(weight: "10")
 }
 
 type CartItem {
@@ -129,6 +114,7 @@ type Order implements Node {
   id: ID!
   items: [OrderItem!]!
   payments: [Payment!]!
+    @cost(weight: "10")
   user: User!
   weight: Int!
 }
@@ -165,23 +151,18 @@ type Payment implements Node {
 type Product implements Node {
   deliveryEstimate(zip: String!): Int!
   dimension: ProductDimension!
+  error: Int!
   id: ID!
-  item: InventoryItem @fusion__tag(name: "team-inventor")
+  item: InventoryItem
+    @cost(weight: "10")
   name: String!
   pictureFileName: String
-  pictureUrl: URL @fusion__tag(name: "team-products")
+  pictureUrl: URI
   price: Float!
-  quantity: Int! @fusion__tag(name: "team-inventor")
-  reviews(
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-    "Returns the first _n_ elements from the list."
-    first: Int
-    "Returns the last _n_ elements from the list."
-    last: Int
-  ): ProductReviewsConnection
+  quantity: Int!
+    @cost(weight: "10")
+  reviews("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ProductReviewsConnection
+    @cost(weight: "10")
   weight: Int!
 }
 
@@ -242,6 +223,7 @@ type RestockProductPayload {
 
 type Review implements Node {
   author: User
+    @cost(weight: "10")
   body: String!
   createAt: DateTime!
   id: ID!
@@ -263,16 +245,8 @@ type User implements Node {
   birthdate: DateTime!
   id: ID!
   name: String!
-  reviews(
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-    "Returns the first _n_ elements from the list."
-    first: Int
-    "Returns the last _n_ elements from the list."
-    last: Int
-  ): UserReviewsConnection
+  reviews("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): UserReviewsConnection
+    @cost(weight: "10")
   username: String!
 }
 
@@ -314,6 +288,7 @@ type UsersEdge {
 
 type Viewer {
   cart: Cart!
+    @cost(weight: "10")
 }
 
 interface Error {
@@ -388,17 +363,28 @@ enum PaymentStatus {
   REFUNDED
 }
 
-"The `DateTime` scalar represents an exact point in time. This point in time is specified by having an offset to UTC and does not use a time zone."
-scalar DateTime
+enum ScalarSerializationType {
+  BOOLEAN
+  FLOAT
+  INT
+  LIST
+  OBJECT
+  STRING
+}
 
-"The `Decimal` scalar type represents a decimal floating-point number."
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
 
 "The `Upload` scalar type represents a file upload."
 scalar Upload
 
-scalar URL
+"The `URI` scalar type represents a Uniform Resource Identifier (URI) as defined by RFC 3986."
+scalar URI
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/uri.html")
 
-directive @fusion__tag(
-  name: String!
-) repeatable on SCHEMA | SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+directive @cost(weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION

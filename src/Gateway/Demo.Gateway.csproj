@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" />
         <PackageReference Include="HotChocolate.Fusion.Adapters.Mcp" />
         <PackageReference Include="HotChocolate.Fusion.Adapters.OpenApi" />
         <PackageReference Include="HotChocolate.Fusion.AspNetCore" />
