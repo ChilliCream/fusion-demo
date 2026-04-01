@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d00bd623832f451ad22accb47b36cfe>>
+ * @generated SignedSource<<596d0b55c4acbba9840c0c19b617ddd6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ProductsListPaginationQuery$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  includeErrorField?: boolean | null | undefined;
 };
 export type ProductsListPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ProductsList_products">;
@@ -33,6 +34,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": false,
+    "kind": "LocalArgument",
+    "name": "includeErrorField"
   }
 ],
 v1 = [
@@ -65,6 +71,11 @@ return {
             "kind": "Variable",
             "name": "cursor",
             "variableName": "cursor"
+          },
+          {
+            "kind": "Variable",
+            "name": "includeErrorField",
+            "variableName": "includeErrorField"
           }
         ],
         "kind": "FragmentSpread",
@@ -133,6 +144,20 @@ return {
                     "storageKey": null
                   },
                   {
+                    "condition": "includeErrorField",
+                    "kind": "Condition",
+                    "passingValue": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "error",
+                        "storageKey": null
+                      }
+                    ]
+                  },
+                  {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
@@ -192,16 +217,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ff138a369ac1e25a4da49e29a177b7b3",
+    "cacheID": "6be348307fb85a42c1bfce9a0bc54087",
     "id": null,
     "metadata": {},
     "name": "ProductsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ProductsListPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...ProductsList_products_1G22uz\n}\n\nfragment ProductCard_product on Product {\n  id\n  name\n  price\n  pictureUrl\n}\n\nfragment ProductsList_products_1G22uz on Query {\n  products(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ProductsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $includeErrorField: Boolean = false\n) {\n  ...ProductsList_products_1JPWBs\n}\n\nfragment ProductCard_product on Product {\n  id\n  name\n  price\n  pictureUrl\n}\n\nfragment ProductsList_products_1JPWBs on Query {\n  products(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        error @include(if: $includeErrorField)\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7780f29bc8b21396776bf2055132cd0c";
+(node as any).hash = "0f19dec5118eea7a988627df78724142";
 
 export default node;

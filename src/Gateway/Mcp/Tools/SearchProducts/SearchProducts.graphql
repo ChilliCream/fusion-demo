@@ -4,6 +4,7 @@ query SearchProducts(
   $maxPrice: Float
   $first: Int!
   $after: String
+  $includeErrorField: Boolean = false
 ) {
   products(
     searchText: $text
@@ -18,6 +19,7 @@ query SearchProducts(
       price
       availableQuantity: quantity
       pictureUrl
+      error @include(if: $includeErrorField)
     }
   }
 }
