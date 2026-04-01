@@ -97,6 +97,7 @@ jobs:
           stage: dev
           client-id: ${{ secrets.CLIENT_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          force: true
 
       - name: Create or Update App Service
         run: |
