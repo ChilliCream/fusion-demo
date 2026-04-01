@@ -8,13 +8,18 @@ import { useCallback } from "react";
 const ProductsListFragment = graphql`
   fragment ProductsList_products on Query
   @refetchable(queryName: "ProductsListPaginationQuery")
-  @argumentDefinitions(count: { type: "Int" }, cursor: { type: "String" }) {
+  @argumentDefinitions(
+    count: { type: "Int" }
+    cursor: { type: "String" }
+    includeErrorField: { type: "Boolean", defaultValue: false }
+  ) {
     products(first: $count, after: $cursor)
       @connection(key: "ProductsList_products") {
       edges {
         node {
           id
           ...ProductCard_product
+          error @include(if: $includeErrorField)
         }
       }
     }

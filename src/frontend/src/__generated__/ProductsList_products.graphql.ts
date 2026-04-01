@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbbb698593793eb56ef158096ffc3f96>>
+ * @generated SignedSource<<0a48a6e0ba8357f8043ea9e92f6ba4c6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type ProductsList_products$data = {
   readonly products: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly error?: number;
         readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"ProductCard_product">;
       };
@@ -43,6 +44,11 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "defaultValue": false,
+      "kind": "LocalArgument",
+      "name": "includeErrorField"
     }
   ],
   "kind": "Fragment",
@@ -107,6 +113,20 @@ return {
                   "name": "ProductCard_product"
                 },
                 {
+                  "condition": "includeErrorField",
+                  "kind": "Condition",
+                  "passingValue": true,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "error",
+                      "storageKey": null
+                    }
+                  ]
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -160,6 +180,6 @@ return {
 };
 })();
 
-(node as any).hash = "7780f29bc8b21396776bf2055132cd0c";
+(node as any).hash = "0f19dec5118eea7a988627df78724142";
 
 export default node;

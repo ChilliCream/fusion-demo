@@ -71,4 +71,4 @@ app.MapOpenApiEndpoints();
 app.MapOpenApi();
 app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 
-app.Run();
+app.RunWithGraphQLCommands(args);
