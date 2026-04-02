@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using System.Text.Json;
-using HotChocolate.Language;
 using HotChocolate.Transport;
 using HotChocolate.Transport.Http;
 using Microsoft.Extensions.Options;
@@ -69,9 +66,6 @@ public sealed partial class GraphQLWorker(
         try
         {
             var variables = SelectVariables(query.SampleVariables);
-            var variablesJson = variables.Count > 0 ? JsonSerializer.Serialize(variables) : "{}";
-
-            LogSendingQuery(logger, query.Name, variablesJson);
 
             var request = options.Value.GraphQL.UsePersistedOperations
                 ? new OperationRequest(
@@ -87,37 +81,20 @@ public sealed partial class GraphQLWorker(
                     variables: variables.Count > 0 ? variables : null,
                     extensions: null);
 
-            var sw = Stopwatch.StartNew();
             using var response = await client.PostAsync(request, new Uri("graphql", UriKind.Relative), ct);
-            sw.Stop();
 
             if (response.IsSuccessStatusCode)
             {
-                using var result = await response.ReadAsResultAsync(ct);
-                var hasErrors = result.Errors.ValueKind is not JsonValueKind.Undefined
-                    and not JsonValueKind.Null;
-
-                if (hasErrors)
-                {
-                    LogGraphQLErrors(logger, query.Name, sw.ElapsedMilliseconds, result.Errors.ToString());
-                }
-                else
-                {
-                    LogQuerySuccess(logger, query.Name, sw.ElapsedMilliseconds);
-                }
-            }
-            else
-            {
-                LogHttpError(logger, query.Name, sw.ElapsedMilliseconds, (int)response.StatusCode);
+                await response.ReadAsResultAsync(ct);
             }
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
             // Shutting down
         }
-        catch (Exception ex)
+        catch
         {
-            LogQueryException(logger, ex, query.Name);
+            // Errors are reported via OTel
         }
         finally
         {
@@ -144,10 +121,6 @@ public sealed partial class GraphQLWorker(
             var id = (string)entry["id"]!;
             var body = (string)entry["query"]!;
             var weight = entry.TryGetValue("weight", out var w) ? Convert.ToInt32(w) : 1;
-            var document = Utf8GraphQLParser.Parse(body);
-            var operation = document.Definitions.OfType<OperationDefinitionNode>().First();
-            var name = operation.Name?.Value ?? id;
-
             var sampleVariables = new Dictionary<string, object?[]>();
             if (entry.TryGetValue("variables", out var variablesObj)
                 && variablesObj is Dictionary<string, object?> variables)
@@ -158,7 +131,7 @@ public sealed partial class GraphQLWorker(
                 }
             }
 
-            items.Add((new QueryInfo(id, name, body, sampleVariables), weight));
+            items.Add((new QueryInfo(id, body, sampleVariables), weight));
         }
 
         return new WeightedList<QueryInfo>(items);
@@ -177,7 +150,7 @@ public sealed partial class GraphQLWorker(
         return dict;
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Load generator is disabled")]
+    [LoggerMessage(Level = LogLevel.Information, Message = "GraphQL load generator is disabled")]
     private static partial void LogDisabled(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "No queries found in queries.yaml")]
@@ -186,24 +159,8 @@ public sealed partial class GraphQLWorker(
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} queries")]
     private static partial void LogQueriesLoaded(ILogger logger, int count);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Sending {query} with variables: {variables}")]
-    private static partial void LogSendingQuery(ILogger logger, string query, string variables);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "{query} completed in {elapsedMs}ms - OK")]
-    private static partial void LogQuerySuccess(ILogger logger, string query, long elapsedMs);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "{query} completed in {elapsedMs}ms with GraphQL errors: {errors}")]
-    private static partial void LogGraphQLErrors(ILogger logger, string query, long elapsedMs, string errors);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "{query} failed in {elapsedMs}ms - HTTP {statusCode}")]
-    private static partial void LogHttpError(ILogger logger, string query, long elapsedMs, int statusCode);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "Error executing {query}")]
-    private static partial void LogQueryException(ILogger logger, Exception ex, string query);
-
     private sealed record QueryInfo(
         string Id,
-        string Name,
         string Body,
         Dictionary<string, object?[]> SampleVariables
     );

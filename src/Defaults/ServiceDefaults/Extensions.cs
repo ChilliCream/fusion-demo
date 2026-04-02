@@ -67,6 +67,7 @@ public static class Extensions
 #if INCLUDE_EF_TELEMETRY
                     .AddEntityFrameworkCoreInstrumentation()
 #endif
+                    .AddSource("Experimental.ModelContextProtocol")
                     .AddAspNetCoreInstrumentation(
                         o =>
                         {

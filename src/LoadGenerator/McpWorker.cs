@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.Text.Json;
 using ModelContextProtocol.Client;
 using Microsoft.Extensions.Options;
 using SharpYaml;
@@ -7,6 +5,7 @@ using SharpYaml;
 namespace LoadGenerator;
 
 public sealed partial class McpWorker(
+    IHttpClientFactory httpClientFactory,
     IOptions<LoadGeneratorOptions> options,
     ILogger<McpWorker> logger,
     ILoggerFactory loggerFactory,
@@ -35,12 +34,14 @@ public sealed partial class McpWorker(
 
         var mcpEndpoint = config.GatewayUrl.TrimEnd('/') + "/graphql/mcp";
 
+        var httpClient = httpClientFactory.CreateClient("Mcp");
         var transport = new HttpClientTransport(
             new HttpClientTransportOptions
             {
                 Endpoint = new Uri(mcpEndpoint),
                 Name = "LoadGenerator"
             },
+            httpClient,
             loggerFactory);
 
         await using var client = await McpClient.CreateAsync(
@@ -80,30 +81,15 @@ public sealed partial class McpWorker(
         try
         {
             var arguments = SelectArguments(tool.SampleArguments);
-            var argumentsJson = arguments.Count > 0 ? JsonSerializer.Serialize(arguments) : "{}";
-
-            LogCallingTool(logger, tool.Name, argumentsJson);
-
-            var sw = Stopwatch.StartNew();
-            var result = await client.CallToolAsync(tool.Name, arguments, cancellationToken: ct);
-            sw.Stop();
-
-            if (result.IsError is true)
-            {
-                LogToolError(logger, tool.Name, sw.ElapsedMilliseconds);
-            }
-            else
-            {
-                LogToolSuccess(logger, tool.Name, sw.ElapsedMilliseconds);
-            }
+            await client.CallToolAsync(tool.Name, arguments, cancellationToken: ct);
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
             // Shutting down
         }
-        catch (Exception ex)
+        catch
         {
-            LogToolException(logger, ex, tool.Name);
+            // Errors are reported via OTel
         }
         finally
         {
@@ -167,18 +153,6 @@ public sealed partial class McpWorker(
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} tools")]
     private static partial void LogToolsLoaded(ILogger logger, int count);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "Calling tool {tool} with arguments: {arguments}")]
-    private static partial void LogCallingTool(ILogger logger, string tool, string arguments);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "Tool {tool} completed in {elapsedMs}ms - OK")]
-    private static partial void LogToolSuccess(ILogger logger, string tool, long elapsedMs);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Tool {tool} completed in {elapsedMs}ms with error")]
-    private static partial void LogToolError(ILogger logger, string tool, long elapsedMs);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "Error calling tool {tool}")]
-    private static partial void LogToolException(ILogger logger, Exception ex, string tool);
 
     private sealed record ToolInfo(
         string Name,

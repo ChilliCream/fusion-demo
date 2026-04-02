@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
 using SharpYaml;
@@ -65,29 +64,15 @@ public sealed partial class OpenApiWorker(
         {
             var parameters = SelectParameters(endpoint.SampleParameters);
             var uri = BuildUri(endpoint.Route, parameters);
-
-            LogSendingRequest(logger, uri);
-
-            var sw = Stopwatch.StartNew();
             using var response = await httpClient.GetAsync(uri, ct);
-            sw.Stop();
-
-            if (response.IsSuccessStatusCode)
-            {
-                LogRequestSuccess(logger, uri, sw.ElapsedMilliseconds);
-            }
-            else
-            {
-                LogHttpError(logger, uri, sw.ElapsedMilliseconds, (int)response.StatusCode);
-            }
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
             // Shutting down
         }
-        catch (Exception ex)
+        catch
         {
-            LogRequestException(logger, ex, endpoint.Route);
+            // Errors are reported via OTel
         }
         finally
         {
@@ -175,18 +160,6 @@ public sealed partial class OpenApiWorker(
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} endpoints")]
     private static partial void LogEndpointsLoaded(ILogger logger, int count);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "Sending GET {uri}")]
-    private static partial void LogSendingRequest(ILogger logger, string uri);
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "GET {uri} completed in {elapsedMs}ms - OK")]
-    private static partial void LogRequestSuccess(ILogger logger, string uri, long elapsedMs);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "GET {uri} failed in {elapsedMs}ms - HTTP {statusCode}")]
-    private static partial void LogHttpError(ILogger logger, string uri, long elapsedMs, int statusCode);
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "Error requesting {route}")]
-    private static partial void LogRequestException(ILogger logger, Exception ex, string route);
 
     private sealed record EndpointInfo(
         string Route,
