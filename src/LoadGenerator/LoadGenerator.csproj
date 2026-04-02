@@ -21,6 +21,7 @@
   <ItemGroup>
     <Content Update="configuration\*.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
