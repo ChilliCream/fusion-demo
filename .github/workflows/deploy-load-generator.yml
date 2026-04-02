@@ -93,12 +93,6 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-          # Configure the exposed port
-          az webapp config appsettings set \
-            --name ccc-eu1-demo-ca-load-generator \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --settings WEBSITES_PORT=8080
-
           # Enable continuous deployment from ACR
           az webapp deployment container config \
             --name ccc-eu1-demo-ca-load-generator \
