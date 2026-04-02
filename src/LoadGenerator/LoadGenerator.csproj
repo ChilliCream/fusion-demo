@@ -6,10 +6,11 @@
     <PackageReference Include="HotChocolate.Language" />
     <PackageReference Include="HotChocolate.Transport.Http" />
     <PackageReference Include="ModelContextProtocol.Core" />
+    <PackageReference Include="SharpYaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="configuration\*.json">
+    <Content Update="configuration\*.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

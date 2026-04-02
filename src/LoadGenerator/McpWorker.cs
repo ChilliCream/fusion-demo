@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using ModelContextProtocol.Client;
 using Microsoft.Extensions.Options;
+using SharpYaml;
 
 namespace LoadGenerator;
 
@@ -112,29 +113,30 @@ public sealed partial class McpWorker(
 
     private WeightedList<ToolInfo> LoadTools()
     {
-        var path = Path.Combine(environment.ContentRootPath, "configuration", "tools.json");
+        var path = Path.Combine(environment.ContentRootPath, "configuration", "tools.yaml");
 
         if (!File.Exists(path))
         {
-            path = Path.Combine(AppContext.BaseDirectory, "configuration", "tools.json");
+            path = Path.Combine(AppContext.BaseDirectory, "configuration", "tools.yaml");
         }
 
-        var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
+        var yaml = File.ReadAllText(path);
+        var entries = YamlSerializer.Deserialize<List<Dictionary<string, object?>>>(yaml)!;
 
         var items = new List<(ToolInfo, int)>();
 
         foreach (var entry in entries)
         {
-            var name = entry.GetProperty("name").GetString()!;
-            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
+            var name = (string)entry["name"]!;
+            var weight = entry.TryGetValue("weight", out var w) ? Convert.ToInt32(w) : 1;
 
-            var sampleArguments = new Dictionary<string, JsonElement[]>();
-            if (entry.TryGetProperty("arguments", out var argumentsElement))
+            var sampleArguments = new Dictionary<string, object?[]>();
+            if (entry.TryGetValue("arguments", out var argumentsObj)
+                && argumentsObj is Dictionary<string, object?> arguments)
             {
-                foreach (var prop in argumentsElement.EnumerateObject())
+                foreach (var (key, value) in arguments)
                 {
-                    sampleArguments[prop.Name] = prop.Value.EnumerateArray().ToArray();
+                    sampleArguments[key] = ((List<object?>)value!).ToArray();
                 }
             }
 
@@ -145,23 +147,13 @@ public sealed partial class McpWorker(
     }
 
     private static Dictionary<string, object?> SelectArguments(
-        Dictionary<string, JsonElement[]> sampleArguments)
+        Dictionary<string, object?[]> sampleArguments)
     {
         var dict = new Dictionary<string, object?>();
 
         foreach (var (name, samples) in sampleArguments)
         {
-            var selected = samples[Random.Shared.Next(samples.Length)];
-            dict[name] = selected.ValueKind switch
-            {
-                JsonValueKind.Null => null,
-                JsonValueKind.String => selected.GetString(),
-                JsonValueKind.Number when selected.TryGetInt64(out var l) => l,
-                JsonValueKind.Number => selected.GetDouble(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                _ => selected.GetRawText()
-            };
+            dict[name] = samples[Random.Shared.Next(samples.Length)];
         }
 
         return dict;
@@ -170,7 +162,7 @@ public sealed partial class McpWorker(
     [LoggerMessage(Level = LogLevel.Information, Message = "MCP load generator is disabled")]
     private static partial void LogDisabled(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "No tools found in tools.json")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "No tools found in tools.yaml")]
     private static partial void LogNoTools(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} tools")]
@@ -190,6 +182,6 @@ public sealed partial class McpWorker(
 
     private sealed record ToolInfo(
         string Name,
-        Dictionary<string, JsonElement[]> SampleArguments
+        Dictionary<string, object?[]> SampleArguments
     );
 }

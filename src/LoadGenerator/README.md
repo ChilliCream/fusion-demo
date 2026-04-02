@@ -16,7 +16,7 @@ The load generator runs three independent background workers simultaneously. Eac
 
 Sends GraphQL queries to the gateway's `/graphql` endpoint using Hot Chocolate's `DefaultGraphQLHttpClient`.
 
-- Reads queries from `configuration/queries.json`
+- Reads queries from `configuration/queries.yaml`
 - Supports persisted operations (sends only the operation ID) or full query mode (sends the complete query body)
 - Randomly selects variable values from sample arrays defined in the configuration
 - Supports weighted selection to control how often each query is chosen
@@ -25,7 +25,7 @@ Sends GraphQL queries to the gateway's `/graphql` endpoint using Hot Chocolate's
 
 Calls tools on the gateway's MCP server at `/graphql/mcp` using the `McpClient` from `ModelContextProtocol.Core`.
 
-- Reads tool definitions from `configuration/tools.json`
+- Reads tool definitions from `configuration/tools.yaml`
 - Randomly selects argument values from sample arrays defined in the configuration
 - Supports weighted selection to control how often each tool is called
 
@@ -33,7 +33,7 @@ Calls tools on the gateway's MCP server at `/graphql/mcp` using the `McpClient` 
 
 Sends HTTP GET requests to the gateway's REST/OpenAPI endpoints.
 
-- Reads endpoint definitions from `configuration/endpoints.json`
+- Reads endpoint definitions from `configuration/endpoints.yaml`
 - Replaces path placeholders (e.g. `{id}`) with randomly selected sample values
 - Remaining parameters are added as query string parameters
 - Parameters with a randomly selected `null` value are omitted from the request
@@ -101,89 +101,76 @@ To disable a specific worker, set its `Enabled` to `false`:
 
 ## Configuration Data
 
-The `configuration/` directory contains the data files that define what requests each worker sends. Each file is a JSON array of objects with optional sample values for randomization.
+The `configuration/` directory contains YAML data files that define what requests each worker sends. Each file is a sequence of entries with optional sample values for randomization.
 
 All configuration entries support a `weight` property (integer, defaults to `1`) that controls how often the entry is selected relative to others. For example, an entry with `weight: 10` is 10x more likely to be picked than one with `weight: 1`. The same operation ID, route, or tool name can appear multiple times with different parameters and weights.
 
-### `configuration/queries.json` (GraphQL)
+### `configuration/queries.yaml` (GraphQL)
 
-An array of query objects. Each entry has:
+A sequence of query objects. Each entry has:
 
 - `id` (required) — the persisted operation ID (hash)
-- `query` (required) — the full GraphQL query string
-- `variables` (optional) — an object where each key is a variable name and the value is an array of sample values
+- `query` (required) — the full GraphQL query string (use YAML literal block `|` for multiline)
+- `variables` (optional) — a mapping where each key is a variable name and the value is a list of sample values
 - `weight` (optional) — selection weight, defaults to `1`
 
-```json
-[
-  {
-    "id": "f1a216fa82107e781221cbecd539efd2",
-    "query": "query ProductsPageQuery($count: Int!, $cursor: String) { ... }",
-    "variables": {
-      "count": [1, 5, 10, 15],
-      "cursor": [null, "abc123", "def456"]
-    },
-    "weight": 10
-  },
-  {
-    "id": "f1a216fa82107e781221cbecd539efd2",
-    "query": "query ProductsPageQuery($count: Int!, $cursor: String) { ... }",
-    "variables": {
-      "count": [1]
-    },
-    "weight": 1
-  }
-]
+```yaml
+- id: f1a216fa82107e781221cbecd539efd2
+  query: |
+    query ProductsPageQuery($count: Int!, $cursor: String) {
+      ...ProductsList_products_1G22uz
+    }
+  variables:
+    count: [1, 5, 10, 15]
+    cursor: [null, "abc123", "def456"]
+  weight: 10
+
+- id: f1a216fa82107e781221cbecd539efd2
+  query: |
+    query ProductsPageQuery($count: Int!, $cursor: String) {
+      ...ProductsList_products_1G22uz
+    }
+  variables:
+    count: [1]
+  weight: 1
 ```
 
-### `configuration/tools.json` (MCP)
+### `configuration/tools.yaml` (MCP)
 
-An array of tool objects. Each entry has:
+A sequence of tool objects. Each entry has:
 
 - `name` (required) — the tool name
-- `arguments` (optional) — an object where each key is an argument name and the value is an array of sample values
+- `arguments` (optional) — a mapping where each key is an argument name and the value is a list of sample values
 - `weight` (optional) — selection weight, defaults to `1`
 
-```json
-[
-  {
-    "name": "SearchProducts",
-    "arguments": {
-      "text": ["Chair", "Table", "Bookshelf"],
-      "first": [1, 5, 10, 15, 20]
-    },
-    "weight": 5
-  }
-]
+```yaml
+- name: SearchProducts
+  arguments:
+    text: [Chair, Table, Bookshelf]
+    first: [1, 5, 10, 15, 20]
+  weight: 5
 ```
 
-### `configuration/endpoints.json` (OpenAPI)
+### `configuration/endpoints.yaml` (OpenAPI)
 
-An array of endpoint objects. Routes can contain `{placeholder}` segments. Each entry has:
+A sequence of endpoint objects. Routes can contain `{placeholder}` segments. Each entry has:
 
 - `route` (required) — the route path
-- `parameters` (optional) — an object where each key is a parameter name and the value is an array of sample values
+- `parameters` (optional) — a mapping where each key is a parameter name and the value is a list of sample values
 - `weight` (optional) — selection weight, defaults to `1`
 
 Parameters matching a path placeholder replace it in the URL. All other parameters are appended as query string parameters. A randomly selected `null` value causes the parameter to be omitted.
 
-```json
-[
-  {
-    "route": "/products/{id}",
-    "parameters": {
-      "id": ["UHJvZHVjdDox", "UHJvZHVjdDoy"]
-    },
-    "weight": 5
-  },
-  {
-    "route": "/products/search",
-    "parameters": {
-      "text": ["Chair", "Table"],
-      "minPrice": [null, 100, 500],
-      "first": [5, 10, 20]
-    },
-    "weight": 1
-  }
-]
+```yaml
+- route: /products/{id}
+  parameters:
+    id: ["UHJvZHVjdDox", "UHJvZHVjdDoy"]
+  weight: 5
+
+- route: /products/search
+  parameters:
+    text: [Chair, Table]
+    minPrice: [null, 100, 500]
+    first: [5, 10, 20]
+  weight: 1
 ```

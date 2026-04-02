@@ -1,0 +1,193 @@
+- id: bcda494f685aa0d8ff63f6661d6bb60f
+  query: |
+    query CartPopoverQuery {
+      viewer {
+        cart {
+          ...CartPopover_cart
+          id
+        }
+      }
+    }
+
+    fragment CartItem_item on CartItem {
+      id
+      quantity
+      addedAt
+      product {
+        id
+        name
+        price
+        pictureUrl
+      }
+    }
+
+    fragment CartPopover_cart on Cart {
+      id
+      items {
+        nodes {
+          id
+          ...CartItem_item
+        }
+      }
+    }
+  weight: 100
+
+- id: f1a216fa82107e781221cbecd539efd2
+  query: |
+    query ProductsPageQuery(
+      $count: Int!
+      $cursor: String
+    ) {
+      ...ProductsList_products_1G22uz
+    }
+
+    fragment ProductCard_product on Product {
+      id
+      name
+      price
+      pictureUrl
+    }
+
+    fragment ProductsList_products_1G22uz on Query {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            ...ProductCard_product
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  variables:
+    count: [1, 5, 10, 15]
+    cursor: [null, "e31UYWJsZTox", "e31Db3VjaDoy", "e31DaGFpcjoz", "e31Cb29rc2hlbGY6NA=="]
+  weight: 100
+
+- id: 6be348307fb85a42c1bfce9a0bc54087
+  query: |
+    query ProductsListPaginationQuery(
+      $count: Int
+      $cursor: String
+      $includeErrorField: Boolean = false
+    ) {
+      ...ProductsList_products_1JPWBs
+    }
+
+    fragment ProductCard_product on Product {
+      id
+      name
+      price
+      pictureUrl
+    }
+
+    fragment ProductsList_products_1JPWBs on Query {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            ...ProductCard_product
+            error @include(if: $includeErrorField)
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  variables:
+    count: [null, 5, 10, 15]
+    cursor: [null, "e31UYWJsZTox", "e31Db3VjaDoy", "e31DaGFpcjoz", "e31Cb29rc2hlbGY6NA=="]
+  weight: 100
+
+# Exception
+- id: 6be348307fb85a42c1bfce9a0bc54087
+  query: |
+    query ProductsListPaginationQuery(
+      $count: Int
+      $cursor: String
+      $includeErrorField: Boolean = false
+    ) {
+      ...ProductsList_products_1JPWBs
+    }
+
+    fragment ProductCard_product on Product {
+      id
+      name
+      price
+      pictureUrl
+    }
+
+    fragment ProductsList_products_1JPWBs on Query {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            ...ProductCard_product
+            error @include(if: $includeErrorField)
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  variables:
+    includeErrorField: [true]
+  weight: 1
+
+# Missing variables
+- id: 6be348307fb85a42c1bfce9a0bc54087
+  query: |
+    query ProductsListPaginationQuery(
+      $count: Int
+      $cursor: String
+      $includeErrorField: Boolean = false
+    ) {
+      ...ProductsList_products_1JPWBs
+    }
+
+    fragment ProductCard_product on Product {
+      id
+      name
+      price
+      pictureUrl
+    }
+
+    fragment ProductsList_products_1JPWBs on Query {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            ...ProductCard_product
+            error @include(if: $includeErrorField)
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  weight: 1
+
+# Missing query
+- id: missing
+  query: |
+    query MissingQuery {
+      missing
+    }
+  weight: 1

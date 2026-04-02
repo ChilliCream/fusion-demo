@@ -4,6 +4,7 @@ using HotChocolate.Language;
 using HotChocolate.Transport;
 using HotChocolate.Transport.Http;
 using Microsoft.Extensions.Options;
+using SharpYaml;
 
 namespace LoadGenerator;
 
@@ -126,33 +127,34 @@ public sealed partial class GraphQLWorker(
 
     private WeightedList<QueryInfo> LoadQueries()
     {
-        var path = Path.Combine(environment.ContentRootPath, "configuration", "queries.json");
+        var path = Path.Combine(environment.ContentRootPath, "configuration", "queries.yaml");
 
         if (!File.Exists(path))
         {
-            path = Path.Combine(AppContext.BaseDirectory, "configuration", "queries.json");
+            path = Path.Combine(AppContext.BaseDirectory, "configuration", "queries.yaml");
         }
 
-        var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
+        var yaml = File.ReadAllText(path);
+        var entries = YamlSerializer.Deserialize<List<Dictionary<string, object?>>>(yaml)!;
 
         var items = new List<(QueryInfo, int)>();
 
         foreach (var entry in entries)
         {
-            var id = entry.GetProperty("id").GetString()!;
-            var body = entry.GetProperty("query").GetString()!;
-            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
+            var id = (string)entry["id"]!;
+            var body = (string)entry["query"]!;
+            var weight = entry.TryGetValue("weight", out var w) ? Convert.ToInt32(w) : 1;
             var document = Utf8GraphQLParser.Parse(body);
             var operation = document.Definitions.OfType<OperationDefinitionNode>().First();
             var name = operation.Name?.Value ?? id;
 
-            var sampleVariables = new Dictionary<string, JsonElement[]>();
-            if (entry.TryGetProperty("variables", out var variablesElement))
+            var sampleVariables = new Dictionary<string, object?[]>();
+            if (entry.TryGetValue("variables", out var variablesObj)
+                && variablesObj is Dictionary<string, object?> variables)
             {
-                foreach (var prop in variablesElement.EnumerateObject())
+                foreach (var (key, value) in variables)
                 {
-                    sampleVariables[prop.Name] = prop.Value.EnumerateArray().ToArray();
+                    sampleVariables[key] = ((List<object?>) value!).ToArray();
                 }
             }
 
@@ -163,23 +165,13 @@ public sealed partial class GraphQLWorker(
     }
 
     private static Dictionary<string, object?> SelectVariables(
-        Dictionary<string, JsonElement[]> sampleVariables)
+        Dictionary<string, object?[]> sampleVariables)
     {
         var dict = new Dictionary<string, object?>();
 
         foreach (var (name, samples) in sampleVariables)
         {
-            var selected = samples[Random.Shared.Next(samples.Length)];
-            dict[name] = selected.ValueKind switch
-            {
-                JsonValueKind.Null => null,
-                JsonValueKind.String => selected.GetString(),
-                JsonValueKind.Number when selected.TryGetInt64(out var l) => l,
-                JsonValueKind.Number => selected.GetDouble(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                _ => selected.GetRawText()
-            };
+            dict[name] = samples[Random.Shared.Next(samples.Length)];
         }
 
         return dict;
@@ -188,7 +180,7 @@ public sealed partial class GraphQLWorker(
     [LoggerMessage(Level = LogLevel.Information, Message = "Load generator is disabled")]
     private static partial void LogDisabled(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "No queries found in queries.json")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "No queries found in queries.yaml")]
     private static partial void LogNoQueries(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} queries")]
@@ -213,6 +205,6 @@ public sealed partial class GraphQLWorker(
         string Id,
         string Name,
         string Body,
-        Dictionary<string, JsonElement[]> SampleVariables
+        Dictionary<string, object?[]> SampleVariables
     );
 }

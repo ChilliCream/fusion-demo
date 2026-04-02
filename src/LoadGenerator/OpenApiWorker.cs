@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
+using SharpYaml;
 
 namespace LoadGenerator;
 
@@ -118,29 +118,30 @@ public sealed partial class OpenApiWorker(
 
     private WeightedList<EndpointInfo> LoadEndpoints()
     {
-        var path = Path.Combine(environment.ContentRootPath, "configuration", "endpoints.json");
+        var path = Path.Combine(environment.ContentRootPath, "configuration", "endpoints.yaml");
 
         if (!File.Exists(path))
         {
-            path = Path.Combine(AppContext.BaseDirectory, "configuration", "endpoints.json");
+            path = Path.Combine(AppContext.BaseDirectory, "configuration", "endpoints.yaml");
         }
 
-        var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
+        var yaml = File.ReadAllText(path);
+        var entries = YamlSerializer.Deserialize<List<Dictionary<string, object?>>>(yaml)!;
 
         var items = new List<(EndpointInfo, int)>();
 
         foreach (var entry in entries)
         {
-            var route = entry.GetProperty("route").GetString()!;
-            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
+            var route = (string)entry["route"]!;
+            var weight = entry.TryGetValue("weight", out var w) ? Convert.ToInt32(w) : 1;
 
-            var sampleParameters = new Dictionary<string, JsonElement[]>();
-            if (entry.TryGetProperty("parameters", out var parametersElement))
+            var sampleParameters = new Dictionary<string, object?[]>();
+            if (entry.TryGetValue("parameters", out var parametersObj)
+                && parametersObj is Dictionary<string, object?> parameters)
             {
-                foreach (var prop in parametersElement.EnumerateObject())
+                foreach (var (key, value) in parameters)
                 {
-                    sampleParameters[prop.Name] = prop.Value.EnumerateArray().ToArray();
+                    sampleParameters[key] = ((List<object?>)value!).ToArray();
                 }
             }
 
@@ -151,23 +152,13 @@ public sealed partial class OpenApiWorker(
     }
 
     private static Dictionary<string, object?> SelectParameters(
-        Dictionary<string, JsonElement[]> sampleParameters)
+        Dictionary<string, object?[]> sampleParameters)
     {
         var dict = new Dictionary<string, object?>();
 
         foreach (var (name, samples) in sampleParameters)
         {
-            var selected = samples[Random.Shared.Next(samples.Length)];
-            dict[name] = selected.ValueKind switch
-            {
-                JsonValueKind.Null => null,
-                JsonValueKind.String => selected.GetString(),
-                JsonValueKind.Number when selected.TryGetInt64(out var l) => l,
-                JsonValueKind.Number => selected.GetDouble(),
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                _ => selected.GetRawText()
-            };
+            dict[name] = samples[Random.Shared.Next(samples.Length)];
         }
 
         return dict;
@@ -179,7 +170,7 @@ public sealed partial class OpenApiWorker(
     [LoggerMessage(Level = LogLevel.Information, Message = "OpenAPI load generator is disabled")]
     private static partial void LogDisabled(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "No endpoints found in endpoints.json")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "No endpoints found in endpoints.yaml")]
     private static partial void LogNoEndpoints(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} endpoints")]
@@ -199,6 +190,6 @@ public sealed partial class OpenApiWorker(
 
     private sealed record EndpointInfo(
         string Route,
-        Dictionary<string, JsonElement[]> SampleParameters
+        Dictionary<string, object?[]> SampleParameters
     );
 }

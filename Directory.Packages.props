@@ -58,5 +58,6 @@
   <ItemGroup Label="Other">
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.5" />
+    <PackageVersion Include="SharpYaml" Version="3.7.0" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,45 @@
+- route: /products
+  parameters:
+    first: [null, 5, 10, 15, 20]
+    after: [null, "e31UYWJsZTox", "e31Db3VjaDoy", "e31DaGFpcjoz", "e31Cb29rc2hlbGY6NA=="]
+  weight: 100
+
+- route: /products/{id}
+  parameters:
+    id:
+      - "UHJvZHVjdDoxMw=="
+      - "UHJvZHVjdDoxNA=="
+      - "UHJvZHVjdDo2"
+      - "UHJvZHVjdDoxNg=="
+      - "UHJvZHVjdDo0"
+      - "UHJvZHVjdDoz"
+      - "UHJvZHVjdDo4"
+      - "UHJvZHVjdDoy"
+      - "UHJvZHVjdDo1"
+      - "UHJvZHVjdDo5"
+  weight: 100
+
+- route: /products/search
+  parameters:
+    text: [Bed, Bench, Bookshelf, Chair, Stool, Table]
+    minPrice: [null, 0, 100, 200, 500]
+    maxPrice: [null, 1000, 2000, 5000, 10000]
+    first: [5, 10, 15, 20]
+    after: [null, "e31UYWJsZTox", "e31Db3VjaDoy", "e31DaGFpcjoz", "e31Cb29rc2hlbGY6NA=="]
+  weight: 100
+
+# Exception
+- route: /products/search
+  parameters:
+    text: [Bed]
+    first: [10]
+    includeErrorField: [true]
+  weight: 1
+
+# Missing parameters
+- route: /products/search
+  weight: 1
+
+# Missing route
+- route: /missing
+  weight: 1
