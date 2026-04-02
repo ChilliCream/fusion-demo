@@ -1,0 +1,24 @@
+- name: SearchProducts
+  arguments:
+    text: [Bed, Bench, Bookshelf, Chair, Stool, Table]
+    minPrice: [null, 0, 100, 200, 500]
+    maxPrice: [null, 1000, 2000, 5000, 10000]
+    first: [1, 5, 10, 15, 20]
+    after: [null, "e31UYWJsZTox", "e31Db3VjaDoy", "e31DaGFpcjoz", "e31Cb29rc2hlbGY6NA=="]
+  weight: 1000
+
+# Exception
+- name: SearchProducts
+  arguments:
+    text: [Bed]
+    first: [10]
+    includeErrorField: [true]
+  weight: 1
+
+# Missing arguments
+- name: SearchProducts
+  weight: 1
+
+# Missing tool
+- name: Missing
+  weight: 1

@@ -16,6 +16,8 @@
     <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-rc.1.23" />
     <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-rc.1.23" />
     <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-rc.1.23" />
+    <PackageVersion Include="HotChocolate.Language" Version="16.0.0-rc.1.23" />
+    <PackageVersion Include="HotChocolate.Transport.Http" Version="16.0.0-rc.1.23" />
     <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-rc.1.23" />
     <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-rc.1.23">
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
+    <PackageVersion Include="ModelContextProtocol.Core" Version="1.2.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.6" />
   </ItemGroup>
   <ItemGroup Label="Nitro">
@@ -51,5 +54,10 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.14.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
+  </ItemGroup>
+  <ItemGroup Label="Other">
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.5" />
+    <PackageVersion Include="SharpYaml" Version="3.7.0" />
   </ItemGroup>
 </Project>
