@@ -30,8 +30,7 @@ public sealed partial class McpWorker(
             return;
         }
 
-        var toolNames = string.Join(", ", tools.Select(t => t.Name));
-        LogToolsLoaded(logger, tools.Count, toolNames);
+        LogToolsLoaded(logger, tools.Count);
 
         var mcpEndpoint = config.GatewayUrl.TrimEnd('/') + "/graphql/mcp";
 
@@ -54,7 +53,7 @@ public sealed partial class McpWorker(
         {
             var batchSize = Random.Shared.Next(1, workerConfig.MaxRequestsPerBatch + 1);
             var batch = Enumerable.Range(0, batchSize)
-                .Select(_ => tools[Random.Shared.Next(tools.Count)])
+                .Select(_ => tools.SelectRandom())
                 .ToList();
 
             var tasks = new Task[batch.Count];
@@ -111,7 +110,7 @@ public sealed partial class McpWorker(
         }
     }
 
-    private List<ToolInfo> LoadTools()
+    private WeightedList<ToolInfo> LoadTools()
     {
         var path = Path.Combine(environment.ContentRootPath, "configuration", "tools.json");
 
@@ -121,12 +120,15 @@ public sealed partial class McpWorker(
         }
 
         var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
 
-        var tools = new List<ToolInfo>();
+        var items = new List<(ToolInfo, int)>();
 
-        foreach (var (name, entry) in entries)
+        foreach (var entry in entries)
         {
+            var name = entry.GetProperty("name").GetString()!;
+            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
+
             var sampleArguments = new Dictionary<string, JsonElement[]>();
             if (entry.TryGetProperty("arguments", out var argumentsElement))
             {
@@ -136,10 +138,10 @@ public sealed partial class McpWorker(
                 }
             }
 
-            tools.Add(new ToolInfo(name, sampleArguments));
+            items.Add((new ToolInfo(name, sampleArguments), weight));
         }
 
-        return tools;
+        return new WeightedList<ToolInfo>(items);
     }
 
     private static Dictionary<string, object?> SelectArguments(
@@ -171,8 +173,8 @@ public sealed partial class McpWorker(
     [LoggerMessage(Level = LogLevel.Warning, Message = "No tools found in tools.json")]
     private static partial void LogNoTools(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} tools: {names}")]
-    private static partial void LogToolsLoaded(ILogger logger, int count, string names);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} tools")]
+    private static partial void LogToolsLoaded(ILogger logger, int count);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Calling tool {tool} with arguments: {arguments}")]
     private static partial void LogCallingTool(ILogger logger, string tool, string arguments);

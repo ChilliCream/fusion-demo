@@ -29,8 +29,7 @@ public sealed partial class OpenApiWorker(
             return;
         }
 
-        var routes = string.Join(", ", endpoints.Select(e => e.Route));
-        LogEndpointsLoaded(logger, endpoints.Count, routes);
+        LogEndpointsLoaded(logger, endpoints.Count);
 
         var httpClient = httpClientFactory.CreateClient("OpenApi");
         using var semaphore = new SemaphoreSlim(workerConfig.MaxConcurrentRequests);
@@ -39,7 +38,7 @@ public sealed partial class OpenApiWorker(
         {
             var batchSize = Random.Shared.Next(1, workerConfig.MaxRequestsPerBatch + 1);
             var batch = Enumerable.Range(0, batchSize)
-                .Select(_ => endpoints[Random.Shared.Next(endpoints.Count)])
+                .Select(_ => endpoints.SelectRandom())
                 .ToList();
 
             var tasks = new Task[batch.Count];
@@ -117,7 +116,7 @@ public sealed partial class OpenApiWorker(
         return query.Length > 0 ? $"{path}?{query}" : path;
     }
 
-    private List<EndpointInfo> LoadEndpoints()
+    private WeightedList<EndpointInfo> LoadEndpoints()
     {
         var path = Path.Combine(environment.ContentRootPath, "configuration", "endpoints.json");
 
@@ -127,12 +126,15 @@ public sealed partial class OpenApiWorker(
         }
 
         var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
 
-        var endpoints = new List<EndpointInfo>();
+        var items = new List<(EndpointInfo, int)>();
 
-        foreach (var (route, entry) in entries)
+        foreach (var entry in entries)
         {
+            var route = entry.GetProperty("route").GetString()!;
+            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
+
             var sampleParameters = new Dictionary<string, JsonElement[]>();
             if (entry.TryGetProperty("parameters", out var parametersElement))
             {
@@ -142,10 +144,10 @@ public sealed partial class OpenApiWorker(
                 }
             }
 
-            endpoints.Add(new EndpointInfo(route, sampleParameters));
+            items.Add((new EndpointInfo(route, sampleParameters), weight));
         }
 
-        return endpoints;
+        return new WeightedList<EndpointInfo>(items);
     }
 
     private static Dictionary<string, object?> SelectParameters(
@@ -180,8 +182,8 @@ public sealed partial class OpenApiWorker(
     [LoggerMessage(Level = LogLevel.Warning, Message = "No endpoints found in endpoints.json")]
     private static partial void LogNoEndpoints(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} endpoints: {routes}")]
-    private static partial void LogEndpointsLoaded(ILogger logger, int count, string routes);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} endpoints")]
+    private static partial void LogEndpointsLoaded(ILogger logger, int count);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Sending GET {uri}")]
     private static partial void LogSendingRequest(ILogger logger, string uri);

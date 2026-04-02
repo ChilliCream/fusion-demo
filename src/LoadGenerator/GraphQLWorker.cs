@@ -32,8 +32,7 @@ public sealed partial class GraphQLWorker(
             return;
         }
 
-        var names = string.Join(", ", queries.Select(q => q.Name));
-        LogQueriesLoaded(logger, queries.Count, names);
+        LogQueriesLoaded(logger, queries.Count);
 
         var httpClient = httpClientFactory.CreateClient("GraphQL");
         using var client = new DefaultGraphQLHttpClient(httpClient);
@@ -43,7 +42,7 @@ public sealed partial class GraphQLWorker(
         {
             var batchSize = Random.Shared.Next(1, workerConfig.MaxRequestsPerBatch + 1);
             var batch = Enumerable.Range(0, batchSize)
-                .Select(_ => queries[Random.Shared.Next(queries.Count)])
+                .Select(_ => queries.SelectRandom())
                 .ToList();
 
             var tasks = new Task[batch.Count];
@@ -125,7 +124,7 @@ public sealed partial class GraphQLWorker(
         }
     }
 
-    private List<QueryInfo> LoadQueries()
+    private WeightedList<QueryInfo> LoadQueries()
     {
         var path = Path.Combine(environment.ContentRootPath, "configuration", "queries.json");
 
@@ -135,13 +134,15 @@ public sealed partial class GraphQLWorker(
         }
 
         var json = File.ReadAllText(path);
-        var entries = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+        var entries = JsonSerializer.Deserialize<JsonElement[]>(json)!;
 
-        var queries = new List<QueryInfo>();
+        var items = new List<(QueryInfo, int)>();
 
-        foreach (var (id, entry) in entries)
+        foreach (var entry in entries)
         {
+            var id = entry.GetProperty("id").GetString()!;
             var body = entry.GetProperty("query").GetString()!;
+            var weight = entry.TryGetProperty("weight", out var w) ? w.GetInt32() : 1;
             var document = Utf8GraphQLParser.Parse(body);
             var operation = document.Definitions.OfType<OperationDefinitionNode>().First();
             var name = operation.Name?.Value ?? id;
@@ -155,10 +156,10 @@ public sealed partial class GraphQLWorker(
                 }
             }
 
-            queries.Add(new QueryInfo(id, name, body, sampleVariables));
+            items.Add((new QueryInfo(id, name, body, sampleVariables), weight));
         }
 
-        return queries;
+        return new WeightedList<QueryInfo>(items);
     }
 
     private static Dictionary<string, object?> SelectVariables(
@@ -190,8 +191,8 @@ public sealed partial class GraphQLWorker(
     [LoggerMessage(Level = LogLevel.Warning, Message = "No queries found in queries.json")]
     private static partial void LogNoQueries(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} queries: {names}")]
-    private static partial void LogQueriesLoaded(ILogger logger, int count, string names);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Loaded {count} queries")]
+    private static partial void LogQueriesLoaded(ILogger logger, int count);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Sending {query} with variables: {variables}")]
     private static partial void LogSendingQuery(ILogger logger, string query, string variables);
