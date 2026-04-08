@@ -94,7 +94,7 @@ jobs:
         run: dotnet run -- schema export
 
       - name: Upload Source Schema
-        uses: ChilliCream/nitro-fusion-upload@v16.0.0-rc.1.26
+        uses: ChilliCream/nitro-fusion-upload@v16.0.0-rc.1.27
         with:
           source-schema-files: ${{ inputs.schema_file }}
           tag: ${{ needs.prepare.outputs.version }}
@@ -153,7 +153,7 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Publish Gateway Schema
-        uses: ChilliCream/nitro-fusion-publish@v16.0.0-rc.1.26
+        uses: ChilliCream/nitro-fusion-publish@v16.0.0-rc.1.27
         with:
           source-schemas: ${{ inputs.source_schema_name }}
           tag: ${{ needs.prepare.outputs.version }}
