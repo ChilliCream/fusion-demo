@@ -49,7 +49,7 @@ builder
     // .AddFileSystemConfiguration("./gateway.far")
     .AddNitro(options =>
     {
-        options.Metrics.Enabled = false;
+        options.Metrics.Enabled = true;
         options.Mcp.Enabled = true;
         options.OpenApi.Enabled = true;
     })
