@@ -112,7 +112,7 @@ jobs:
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
               NITRO_URL=${{ secrets.NITRO_CLOUD_URL }} \
               NITRO_OTEL_URL=${{ secrets.NITRO_OTEL_URL }} \
-              LoadGenerator__GraphQL__ClientId=${{ vars.NITRO_LOAD_GENERATOR_API_ID }} \
+              LoadGenerator__GraphQL__ClientId=${{ vars.NITRO_LOAD_GENERATOR_CLIENT_ID }} \
               LoadGenerator__GraphQL__ClientVersion=v1
 
           # Restart the app to apply changes
