@@ -107,7 +107,7 @@ jobs:
         with:
           source-schema-files: ${{ inputs.schema_file }}
           tag: ${{ needs.prepare.outputs.version }}
-          api-id: ${{ vars[inputs.nitro_api_id_var] }}
+          api-id: ${{ vars.NITRO_GATEWAY_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
@@ -176,6 +176,6 @@ jobs:
           source-schemas: ${{ inputs.source_schema_name }}
           tag: ${{ needs.prepare.outputs.version }}
           stage: ${{ vars.NITRO_STAGE }}
-          api-id: ${{ vars[inputs.nitro_api_id_var] }}
+          api-id: ${{ vars.NITRO_GATEWAY_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
