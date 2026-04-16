@@ -64,7 +64,7 @@ jobs:
       - name: Upload MCP Feature Collection
         uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.30
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
           tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
           tag: ${{ needs.prepare.outputs.tag }}
@@ -74,7 +74,7 @@ jobs:
       - name: Upload OpenAPI collection
         uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.30
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
           tag: ${{ needs.prepare.outputs.tag }}
           api-key: ${{ secrets.NITRO_API_KEY }}
@@ -142,7 +142,7 @@ jobs:
       - name: Publish MCP Feature Collection
         uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.30
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
@@ -152,7 +152,7 @@ jobs:
       - name: Publish OpenAPI collection
         uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.30
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}

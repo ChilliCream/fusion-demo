@@ -24,12 +24,8 @@ on:
         description: Name of the source schema (from schema-settings.json)
         required: true
         type: string
-      nitro_api_id:
-        description: Nitro API ID for this source schema
-        required: true
-        type: string
-      nitro_stage:
-        description: Nitro deployment stage
+      nitro_api_id_var:
+        description: Name of the environment variable containing the Nitro API ID
         required: true
         type: string
       environment:
@@ -111,7 +107,7 @@ jobs:
         with:
           source-schema-files: ${{ inputs.schema_file }}
           tag: ${{ needs.prepare.outputs.version }}
-          api-id: ${{ inputs.nitro_api_id }}
+          api-id: ${{ vars[inputs.nitro_api_id_var] }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
@@ -158,9 +154,9 @@ jobs:
               WEBSITES_PORT=${{ inputs.container_port }} \
               ASPNETCORE_ENVIRONMENT=Production \
               ASPNETCORE_URLS=http://+:8080 \
-              NITRO_API_ID=${{ inputs.nitro_api_id }} \
+              NITRO_API_ID=${{ vars[inputs.nitro_api_id_var] }} \
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
-              NITRO_STAGE=${{ inputs.nitro_stage }} \
+              NITRO_STAGE=${{ vars.NITRO_STAGE }} \
               NITRO_URL=${{ secrets.NITRO_CLOUD_URL }}
 
           # Enable continuous deployment from ACR
@@ -179,7 +175,7 @@ jobs:
         with:
           source-schemas: ${{ inputs.source_schema_name }}
           tag: ${{ needs.prepare.outputs.version }}
-          stage: ${{ inputs.nitro_stage }}
-          api-id: ${{ inputs.nitro_api_id }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-id: ${{ vars[inputs.nitro_api_id_var] }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}

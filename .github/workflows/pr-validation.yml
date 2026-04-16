@@ -52,7 +52,7 @@ jobs:
       - name: Validate MCP documents
         uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.30
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
           tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
           stage: ${{ vars.NITRO_STAGE }}
@@ -63,7 +63,7 @@ jobs:
       - name: Validate OpenAPI documents
         uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.30
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
