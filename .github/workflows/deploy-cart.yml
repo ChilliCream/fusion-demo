@@ -9,6 +9,7 @@ on:
       - ".github/workflows/deploy-cart.yml"
       - ".github/workflows/deploy-source-schema.yml"
       - "Directory.Packages.props"
+  workflow_dispatch: {}
 
 jobs:
   deploy:
