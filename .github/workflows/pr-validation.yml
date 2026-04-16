@@ -32,7 +32,7 @@ jobs:
           done
 
       - name: Validate GraphQL schema
-        uses: ChilliCream/nitro-fusion-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-fusion-validate@v16.0.0-rc.1.32
         with:
           source-schema-files: |
             src/SourceSchemas/Accounts/schema.graphqls
@@ -50,7 +50,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate MCP documents
-        uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.32
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
@@ -61,7 +61,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate OpenAPI documents
-        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
@@ -102,7 +102,7 @@ jobs:
           VITE_ENABLE_PERSISTED_OPERATIONS: "true"
 
       - name: Validate Client
-        uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.32
         with:
           client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           operations-file: src/frontend/operations.json

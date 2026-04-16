@@ -62,7 +62,7 @@ jobs:
             -p:RuntimeIdentifier=linux-x64
 
       - name: Upload MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.32
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
@@ -72,7 +72,7 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
       - name: Upload OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
@@ -140,7 +140,7 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Publish MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.32
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
@@ -150,7 +150,7 @@ jobs:
           force: true
 
       - name: Publish OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
