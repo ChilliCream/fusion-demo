@@ -19,5 +19,7 @@ jobs:
       container_port: 8080
       schema_file: src/SourceSchemas/Products/schema.graphqls
       source_schema_name: products-api
-      nitro_api_id: ${{ secrets.NITRO_PRODUCTS_API_ID }}
+      nitro_api_id: ${{ vars.NITRO_PRODUCTS_API_ID }}
+      nitro_stage: ${{ vars.NITRO_STAGE }}
+      environment: ${{ vars.DEPLOY_ENVIRONMENT }}
     secrets: inherit

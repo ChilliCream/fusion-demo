@@ -24,6 +24,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: prepare
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
     env:
       FRONTEND_DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-frontend:${{ needs.prepare.outputs.tag }}
 
@@ -48,7 +49,7 @@ jobs:
         run: |
           docker build \
             --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
-            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_ID }}" \
             --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
             --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
             -t "$FRONTEND_DOCKER_IMAGE" \
@@ -60,7 +61,7 @@ jobs:
         run: |
           docker build \
             --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
-            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ secrets.CLIENT_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_ID }}" \
             --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
             --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
             --target operations \
@@ -72,12 +73,14 @@ jobs:
         with:
           tag: ${{ needs.prepare.outputs.tag }}
           operations-file: src/frontend/operations.json
-          client-id: ${{ secrets.CLIENT_ID }}
+          client-id: ${{ vars.NITRO_FRONTEND_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build]
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
     concurrency:
       group: deploy-frontend
       cancel-in-progress: false
@@ -94,9 +97,10 @@ jobs:
         uses: ChilliCream/nitro-client-publish@v16.0.0-rc.1.30
         with:
           tag: ${{ needs.prepare.outputs.tag }}
-          stage: dev
-          client-id: ${{ secrets.CLIENT_ID }}
+          stage: ${{ vars.NITRO_STAGE }}
+          client-id: ${{ vars.NITRO_FRONTEND_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           force: true
 
       - name: Create or Update App Service
