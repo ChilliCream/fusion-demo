@@ -105,7 +105,7 @@ jobs:
             --name ccc-eu1-demo-ca-load-generator \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --settings \
-              ASPNETCORE_ENVIRONMENT=Production \
+              DOTNET_ENVIRONMENT=Production \
               NITRO_API_ID=${{ vars.NITRO_LOAD_GENERATOR_API_ID }} \
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
