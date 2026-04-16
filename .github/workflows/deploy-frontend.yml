@@ -49,7 +49,7 @@ jobs:
         run: |
           docker build \
             --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
-            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_CLIENT_ID }}" \
             --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
             --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
             -t "$FRONTEND_DOCKER_IMAGE" \
@@ -61,7 +61,7 @@ jobs:
         run: |
           docker build \
             --build-arg "VITE_GRAPHQL_ENDPOINT=${{ vars.GRAPHQL_ENDPOINT }}" \
-            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_ID }}" \
+            --build-arg "VITE_GRAPHQL_CLIENT_ID=${{ vars.NITRO_FRONTEND_CLIENT_ID }}" \
             --build-arg "VITE_GRAPHQL_CLIENT_VERSION=${{ needs.prepare.outputs.tag }}" \
             --build-arg "VITE_ENABLE_PERSISTED_OPERATIONS=true" \
             --target operations \
@@ -73,7 +73,7 @@ jobs:
         with:
           tag: ${{ needs.prepare.outputs.tag }}
           operations-file: src/frontend/operations.json
-          client-id: ${{ vars.NITRO_FRONTEND_ID }}
+          client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
@@ -98,7 +98,7 @@ jobs:
         with:
           tag: ${{ needs.prepare.outputs.tag }}
           stage: ${{ vars.NITRO_STAGE }}
-          client-id: ${{ vars.NITRO_FRONTEND_ID }}
+          client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           force: true

@@ -111,7 +111,7 @@ jobs:
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
               NITRO_URL=${{ secrets.NITRO_CLOUD_URL }} \
-              LoadGenerator__GraphQL__ClientId=${{ vars.NITRO_FRONTEND_ID }} \
+              LoadGenerator__GraphQL__ClientId=${{ vars.NITRO_FRONTEND_CLIENT_ID }} \
               LoadGenerator__GraphQL__ClientVersion=${{ needs.prepare.outputs.tag }}
 
           # Restart the app to apply changes

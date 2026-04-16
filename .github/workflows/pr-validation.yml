@@ -104,7 +104,7 @@ jobs:
       - name: Validate Client
         uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.30
         with:
-          client-id: ${{ vars.NITRO_FRONTEND_ID }}
+          client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           operations-file: src/frontend/operations.json
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
