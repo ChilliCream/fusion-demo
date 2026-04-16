@@ -40,8 +40,8 @@ on:
       ACR_LOGIN_SERVER: { required: true }
       ACR_USERNAME: { required: true }
       ACR_PASSWORD: { required: true }
-      NITRO_API_KEY: { required: true }
-      NITRO_CLOUD_URL: { required: true }
+      NITRO_API_KEY: { required: false }
+      NITRO_CLOUD_URL: { required: false }
 
 jobs:
   prepare:
