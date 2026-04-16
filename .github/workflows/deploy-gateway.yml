@@ -111,11 +111,17 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-          # Configure the exposed port
+          # Configure app settings
           az webapp config appsettings set \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --settings WEBSITES_PORT=8080
+            --settings \
+              WEBSITES_PORT=8080 \
+              ASPNETCORE_ENVIRONMENT=Production \
+              ASPNETCORE_URLS=http://+:8080 \
+              NITRO_API_ID=${{ secrets.NITRO_GATEWAY_API_ID }} \
+              NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
+              NITRO_STAGE=dev
 
           # Enable continuous deployment from ACR
           az webapp deployment container config \

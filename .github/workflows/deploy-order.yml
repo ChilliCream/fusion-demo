@@ -19,4 +19,5 @@ jobs:
       container_port: 8080
       schema_file: src/SourceSchemas/Order/schema.graphqls
       source_schema_name: order-api
+      nitro_api_id: ${{ secrets.NITRO_ORDER_API_ID }}
     secrets: inherit

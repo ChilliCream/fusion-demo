@@ -19,4 +19,5 @@ jobs:
       container_port: 8080
       schema_file: src/SourceSchemas/Cart/schema.graphqls
       source_schema_name: cart-api
+      nitro_api_id: ${{ secrets.NITRO_CART_API_ID }}
     secrets: inherit

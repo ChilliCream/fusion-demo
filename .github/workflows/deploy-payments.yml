@@ -19,4 +19,5 @@ jobs:
       container_port: 8080
       schema_file: src/SourceSchemas/Payments/schema.graphqls
       source_schema_name: payments-api
+      nitro_api_id: ${{ secrets.NITRO_PAYMENTS_API_ID }}
     secrets: inherit

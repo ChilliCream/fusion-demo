@@ -99,11 +99,16 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --enable-cd true
 
-          # Set environment variables for GraphQL client headers
+          # Configure app settings
           az webapp config appsettings set \
             --name ccc-eu1-demo-ca-load-generator \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --settings \
+              ASPNETCORE_ENVIRONMENT=Production \
+              ASPNETCORE_URLS=http://+:8080 \
+              NITRO_API_ID=${{ secrets.NITRO_LOAD_GENERATOR_API_ID }} \
+              NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
+              NITRO_STAGE=dev \
               LoadGenerator__GraphQL__ClientId=${{ secrets.CLIENT_ID }} \
               LoadGenerator__GraphQL__ClientVersion=${{ needs.prepare.outputs.tag }}
 
