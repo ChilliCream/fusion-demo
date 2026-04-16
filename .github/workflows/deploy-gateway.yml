@@ -126,7 +126,8 @@ jobs:
               NITRO_API_ID=${{ vars.NITRO_GATEWAY_API_ID }} \
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
-              NITRO_URL=${{ secrets.NITRO_CLOUD_URL }}
+              NITRO_URL=${{ secrets.NITRO_CLOUD_URL }} \
+              NITRO_OTEL_URL=${{ secrets.NITRO_OTEL_URL }}
 
           # Enable continuous deployment from ACR
           az webapp deployment container config \

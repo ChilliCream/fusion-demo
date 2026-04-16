@@ -42,6 +42,7 @@ on:
       ACR_PASSWORD: { required: true }
       NITRO_API_KEY: { required: false }
       NITRO_CLOUD_URL: { required: false }
+      NITRO_OTEL_URL: { required: false }
 
 jobs:
   prepare:
@@ -157,7 +158,8 @@ jobs:
               NITRO_API_ID=${{ vars[inputs.nitro_api_id_var] }} \
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
-              NITRO_URL=${{ secrets.NITRO_CLOUD_URL }}
+              NITRO_URL=${{ secrets.NITRO_CLOUD_URL }} \
+              NITRO_OTEL_URL=${{ secrets.NITRO_OTEL_URL }}
 
           # Enable continuous deployment from ACR
           az webapp deployment container config \
