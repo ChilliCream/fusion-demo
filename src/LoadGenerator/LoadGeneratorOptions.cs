@@ -22,4 +22,6 @@ public class WorkerOptions
 public sealed class GraphQLWorkerOptions : WorkerOptions
 {
     public bool UsePersistedOperations { get; set; } = true;
+    public string? ClientId { get; set; }
+    public string? ClientVersion { get; set; }
 }

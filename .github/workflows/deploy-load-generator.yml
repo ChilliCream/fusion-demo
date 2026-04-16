@@ -99,6 +99,14 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --enable-cd true
 
+          # Set environment variables for GraphQL client headers
+          az webapp config appsettings set \
+            --name ccc-eu1-demo-ca-load-generator \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings \
+              LoadGenerator__GraphQL__ClientId=${{ secrets.CLIENT_ID }} \
+              LoadGenerator__GraphQL__ClientVersion=${{ needs.prepare.outputs.tag }}
+
           # Restart the app to apply changes
           az webapp restart \
             --name ccc-eu1-demo-ca-load-generator \
