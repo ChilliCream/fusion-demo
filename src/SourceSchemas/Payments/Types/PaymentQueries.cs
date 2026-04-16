@@ -11,6 +11,6 @@ public static partial class PaymentQueries
         => await productById.LoadAsync(id, cancellationToken);
 
     [Lookup, Internal]
-    public static Order GetOrderById([ID<Order>] int id) 
+    public static Order? GetOrderById([ID<Order>] int id)
         => new(id);
 }

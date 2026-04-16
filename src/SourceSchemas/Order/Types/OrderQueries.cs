@@ -11,6 +11,6 @@ public static partial class OrderQueries
         => await productById.LoadAsync(id, cancellationToken);
 
     [Lookup, Internal]
-    public static User GetUserById([ID<User>] int id) 
+    public static User? GetUserById([ID<User>] int id)
         => new(id);
 }

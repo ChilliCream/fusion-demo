@@ -26,6 +26,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: prepare
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
 
     steps:
       - name: Checkout
@@ -61,25 +62,28 @@ jobs:
             -p:RuntimeIdentifier=linux-x64
 
       - name: Upload MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.32
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
           tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
           tag: ${{ needs.prepare.outputs.tag }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
       - name: Upload OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
           tag: ${{ needs.prepare.outputs.tag }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
   deploy:
     runs-on: ubuntu-latest
     needs: [prepare, build]
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
     concurrency:
       group: deploy-gateway
       cancel-in-progress: false
@@ -111,11 +115,18 @@ jobs:
             --container-registry-user ${{ secrets.ACR_USERNAME }} \
             --container-registry-password ${{ secrets.ACR_PASSWORD }}
 
-          # Configure the exposed port
+          # Configure app settings
           az webapp config appsettings set \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --settings WEBSITES_PORT=8080
+            --settings \
+              WEBSITES_PORT=8080 \
+              ASPNETCORE_ENVIRONMENT=Production \
+              ASPNETCORE_URLS=http://+:8080 \
+              NITRO_API_ID=${{ vars.NITRO_GATEWAY_API_ID }} \
+              NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
+              NITRO_STAGE=${{ vars.NITRO_STAGE }} \
+              NITRO_URL=${{ secrets.NITRO_CLOUD_URL }}
 
           # Enable continuous deployment from ACR
           az webapp deployment container config \
@@ -129,19 +140,21 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
 
       - name: Publish MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.32
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
-          stage: dev
+          stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           force: true
 
       - name: Publish OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
-          stage: dev
+          stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           force: true

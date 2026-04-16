@@ -8,6 +8,7 @@ jobs:
   backend:
     name: Build Backend
     runs-on: ubuntu-latest
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
 
     steps:
       - name: Checkout
@@ -31,7 +32,7 @@ jobs:
           done
 
       - name: Validate GraphQL schema
-        uses: ChilliCream/nitro-fusion-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-fusion-validate@v16.0.0-rc.1.32
         with:
           source-schema-files: |
             src/SourceSchemas/Accounts/schema.graphqls
@@ -42,33 +43,37 @@ jobs:
             src/SourceSchemas/Products/schema.graphqls
             src/SourceSchemas/Reviews/schema.graphqls
             src/SourceSchemas/Shipping/schema.graphqls
-          stage: dev
-          api-id: ${{ secrets.NITRO_API_ID }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-id: ${{ vars.NITRO_GATEWAY_API_ID }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"
 
       - name: Validate MCP documents
-        uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-mcp-validate@v16.0.0-rc.1.32
         with:
-          mcp-feature-collection-id: ${{ secrets.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
           tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
-          stage: dev
+          stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"
 
       - name: Validate OpenAPI documents
-        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.32
         with:
-          openapi-collection-id: ${{ secrets.NITRO_OPENAPI_COLLECTION_ID }}
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/*.graphql
-          stage: dev
+          stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"
 
   frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
 
     defaults:
       run:
@@ -97,10 +102,11 @@ jobs:
           VITE_ENABLE_PERSISTED_OPERATIONS: "true"
 
       - name: Validate Client
-        uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.30
+        uses: ChilliCream/nitro-client-validate@v16.0.0-rc.1.32
         with:
-          client-id: ${{ secrets.CLIENT_ID }}
+          client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           operations-file: src/frontend/operations.json
-          stage: dev
+          stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"

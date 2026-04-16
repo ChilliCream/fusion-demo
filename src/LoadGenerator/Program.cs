@@ -47,6 +47,16 @@ builder.Services.AddHttpClient("GraphQL", (_, client) =>
         .GetSection(LoadGeneratorOptions.SectionName)
         .Get<LoadGeneratorOptions>() ?? new LoadGeneratorOptions();
     client.BaseAddress = new Uri(options.GatewayUrl.TrimEnd('/') + "/");
+
+    if (!string.IsNullOrWhiteSpace(options.GraphQL.ClientId))
+    {
+        client.DefaultRequestHeaders.Add("GraphQL-Client-Id", options.GraphQL.ClientId);
+    }
+
+    if (!string.IsNullOrWhiteSpace(options.GraphQL.ClientVersion))
+    {
+        client.DefaultRequestHeaders.Add("GraphQL-Client-Version", options.GraphQL.ClientVersion);
+    }
 });
 
 builder.Services.AddHttpClient("Mcp");
