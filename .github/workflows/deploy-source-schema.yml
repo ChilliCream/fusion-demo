@@ -103,6 +103,14 @@ jobs:
         working-directory: ${{ inputs.project_path }}
         run: dotnet run -- schema export
 
+      - name: Patch schema-settings.json with API ID
+        run: |
+          SETTINGS_FILE="$(dirname "${{ inputs.schema_file }}")/schema-settings.json"
+          jq --arg apiId "${{ vars[inputs.nitro_api_id_var] }}" \
+            '. * {extensions: {nitro: {apiId: $apiId}}}' \
+            "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+
       - name: Upload Source Schema
         uses: ChilliCream/nitro-fusion-upload@v16.0.0-rc.1.32
         with:
