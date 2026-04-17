@@ -6,11 +6,6 @@
       "url": "{{API_URL}}"
     }
   },
-  "extensions": {
-    "nitro": {
-      "apiId": "QXBpCmcwMTk5MGNhNWJjYjE3MjM2ODNmODZhOTQzNzM0M2QwMw=="
-    }
-  },
   "environments": {
     "aspire": {
       "API_URL": "http://localhost:5106/graphql"
