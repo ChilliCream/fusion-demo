@@ -1,0 +1,9 @@
+fragment Review on Review {
+  id
+  body
+  stars
+  createAt
+  product {
+    ...Product
+  }
+}

@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "src/Gateway/**"
+      - "!src/Gateway/Mcp/**"
+      - "!src/Gateway/OpenApi/**"
       - "src/Defaults/**"
       - ".github/workflows/deploy-gateway.yml"
       - "Directory.Packages.props"
@@ -60,25 +62,6 @@ jobs:
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
             -p:PublishAot=true \
             -p:RuntimeIdentifier=linux-x64
-
-      - name: Upload MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.32
-        with:
-          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
-          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
-          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
-          tag: ${{ needs.prepare.outputs.tag }}
-          api-key: ${{ secrets.NITRO_API_KEY }}
-          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
-
-      - name: Upload OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
-        with:
-          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
-          patterns: src/Gateway/OpenApi/*.graphql
-          tag: ${{ needs.prepare.outputs.tag }}
-          api-key: ${{ secrets.NITRO_API_KEY }}
-          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -139,23 +122,3 @@ jobs:
           az webapp restart \
             --name ccc-eu1-demo-ca-gateway \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-
-      - name: Publish MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.32
-        with:
-          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
-          tag: ${{ needs.prepare.outputs.tag }}
-          stage: ${{ vars.NITRO_STAGE }}
-          api-key: ${{ secrets.NITRO_API_KEY }}
-          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
-          force: true
-
-      - name: Publish OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
-        with:
-          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
-          tag: ${{ needs.prepare.outputs.tag }}
-          stage: ${{ vars.NITRO_STAGE }}
-          api-key: ${{ secrets.NITRO_API_KEY }}
-          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
-          force: true

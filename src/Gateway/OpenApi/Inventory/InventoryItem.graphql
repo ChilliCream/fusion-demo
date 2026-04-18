@@ -1,0 +1,7 @@
+fragment InventoryItem on InventoryItem {
+  id
+  quantity
+  product {
+    ...Product
+  }
+}

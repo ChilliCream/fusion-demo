@@ -1,0 +1,5 @@
+query GetReviewById($id: ID!) @http(method: GET, route: "/reviews/{id}") {
+  reviewById(id: $id) {
+    ...Review
+  }
+}

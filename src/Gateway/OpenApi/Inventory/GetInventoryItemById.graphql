@@ -1,0 +1,5 @@
+query GetInventoryItemById($id: ID!) @http(method: GET, route: "/inventory-items/{id}") {
+  inventoryItemById(id: $id) {
+    ...InventoryItem
+  }
+}

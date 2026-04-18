@@ -1,0 +1,95 @@
+name: OpenAPI Collections Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/Gateway/OpenApi/**"
+      - ".github/workflows/deploy-openapi-collections.yml"
+  workflow_dispatch: {}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - name: Compute tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: prepare
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload Shared OpenAPI collection
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/Shared/*.graphql
+          tag: ${{ needs.prepare.outputs.tag }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+
+      - name: Upload Inventory OpenAPI collection
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/Inventory/*.graphql
+          tag: ${{ needs.prepare.outputs.tag }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+
+      - name: Upload OpenAPI collection
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/*.graphql
+          tag: ${{ needs.prepare.outputs.tag }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [prepare, upload]
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    concurrency:
+      group: deploy-openapi-collections
+      cancel-in-progress: false
+    steps:
+      - name: Publish Shared OpenAPI collection
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          force: true
+
+      - name: Publish Inventory OpenAPI collection
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          force: true
+
+      - name: Publish OpenAPI collection
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
+          tag: ${{ needs.prepare.outputs.tag }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          force: true
