@@ -47,11 +47,11 @@ jobs:
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
-      - name: Upload OpenAPI collection
+      - name: Upload Products OpenAPI collection
         uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
-          patterns: src/Gateway/OpenApi/*.graphql
+          patterns: src/Gateway/OpenApi/Products/*.graphql
           tag: ${{ needs.prepare.outputs.tag }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
@@ -84,7 +84,7 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           force: true
 
-      - name: Publish OpenAPI collection
+      - name: Publish Products OpenAPI collection
         uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}

@@ -11,6 +11,8 @@ workflows=(
   deploy-reviews
   deploy-shipping
   deploy-gateway
+  deploy-mcp-collection
+  deploy-openapi-collections
   deploy-load-generator
   deploy-frontend
 )

@@ -60,11 +60,31 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"
 
-      - name: Validate OpenAPI documents
+      - name: Validate Shared OpenAPI collection
+        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/Shared/*.graphql
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          comment-mode: "review"
+
+      - name: Validate Inventory OpenAPI collection
+        uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.32
+        with:
+          openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
+          patterns: src/Gateway/OpenApi/Inventory/*.graphql
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          comment-mode: "review"
+
+      - name: Validate Products OpenAPI collection
         uses: ChilliCream/nitro-openapi-validate@v16.0.0-rc.1.32
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
-          patterns: src/Gateway/OpenApi/*.graphql
+          patterns: src/Gateway/OpenApi/Products/*.graphql
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
