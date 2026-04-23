@@ -26,9 +26,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.OrderApi);
+
 builder
     .AddGraphQL(Env.OrderApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddOrderTypes();

@@ -52,14 +52,17 @@ public static class Extensions
         });
 
         builder.Services
+            .AddNitro()
+            .AddOpenTelemetry();
+
+        builder.Services
             .AddOpenTelemetry()
             .ConfigureResource(b => b.AddService(name, "Demo", version))
             .WithMetrics(metrics =>
             {
                 metrics
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddNitroExporter();
+                    .AddHttpClientInstrumentation();
             })
             .WithTracing(tracing =>
             {
@@ -99,12 +102,7 @@ public static class Extensions
                                 }
                             };
                         })
-                    .AddHttpClientInstrumentation()
-                    .AddNitroExporter();
-            })
-            .WithLogging(logging =>
-            {
-                logging.AddNitroExporter();
+                    .AddHttpClientInstrumentation();
             });
 
         builder.AddOpenTelemetryExporters();

@@ -44,9 +44,11 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = null; // Allow anonymous by default
 });
 
+builder.Services.AddNitro().AddDefaults();
+
 builder
     .AddGraphQLGateway()
-    // .AddFileSystemConfiguration("./gateway.far")
+    // .AddFileSystemConfiguration("./gateway.far") 
     .AddNitro(options =>
     {
         options.Metrics.Enabled = true;

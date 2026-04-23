@@ -26,9 +26,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.PaymentsApi);
+
 builder
     .AddGraphQL(Env.PaymentsApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddPaymentTypes();

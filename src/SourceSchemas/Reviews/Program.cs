@@ -25,9 +25,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.ReviewsApi);
+
 builder
     .AddGraphQL(Env.ReviewsApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddReviewTypes()

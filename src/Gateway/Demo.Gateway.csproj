@@ -19,6 +19,7 @@
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" />
+        <PackageReference Include="ChilliCream.Nitro" />
         <PackageReference Include="ChilliCream.Nitro.Fusion" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>
