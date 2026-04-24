@@ -49,12 +49,6 @@ builder.Services.AddNitro().AddDefaults();
 builder
     .AddGraphQLGateway()
     // .AddFileSystemConfiguration("./gateway.far") 
-    .AddNitro(options =>
-    {
-        options.Metrics.Enabled = true;
-        options.Mcp.Enabled = true;
-        options.OpenApi.Enabled = true;
-    })
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
     .AddInstrumentation()
