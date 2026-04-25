@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload Shared OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Shared/*.graphql
@@ -39,7 +39,7 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
       - name: Upload Inventory OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Inventory/*.graphql
@@ -48,7 +48,7 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
       - name: Upload Products OpenAPI collection
-        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-upload@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Products/*.graphql
@@ -65,7 +65,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Publish Shared OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
@@ -75,7 +75,7 @@ jobs:
           force: true
 
       - name: Publish Inventory OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}
@@ -85,7 +85,7 @@ jobs:
           force: true
 
       - name: Publish Products OpenAPI collection
-        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-openapi-publish@v16.0.0-rc.1.40
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}

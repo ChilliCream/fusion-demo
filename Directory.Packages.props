@@ -3,23 +3,23 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
-    <PackageVersion Include="HotChocolate" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.Adapters.Mcp" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.Adapters.OpenApi" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Language" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Transport.Http" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-rc.1.33" />
-    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-rc.1.33">
+    <PackageVersion Include="HotChocolate" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Data.EntityFramework" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.Adapters.Mcp" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.Adapters.OpenApi" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.Composition" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.Packaging" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Subscriptions.Postgres" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.AspNetCore" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Fusion.Aspire" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Language" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Transport.Http" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Execution" Version="16.0.0-rc.1.40" />
+    <PackageVersion Include="HotChocolate.Types.Analyzers" Version="16.0.0-rc.1.40">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
@@ -31,10 +31,10 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
   <ItemGroup Label="Nitro">
-    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.25" />
-    <PackageVersion Include="ChilliCream.Nitro.HotChocolate" Version="16.0.0-preview.25" />
-    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.25" />
-    <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="16.0.0-preview.25" />
+    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.27" />
+    <PackageVersion Include="ChilliCream.Nitro.HotChocolate" Version="16.0.0-preview.27" />
+    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.27" />
+    <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="16.0.0-preview.27" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.2" />
@@ -48,13 +48,13 @@
     <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.5" />
   </ItemGroup>
   <ItemGroup Label="OpenTelemetry">
-    <PackageVersion Include="OpenTelemetry.Api" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.2" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
+    <PackageVersion Include="OpenTelemetry.Api" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.1-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
   </ItemGroup>
   <ItemGroup Label="Other">
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
