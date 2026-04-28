@@ -51,6 +51,11 @@ builder
     // .AddFileSystemConfiguration("./gateway.far") 
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
+    .ModifyNitroOptions(o =>
+    {
+        o.Mcp.Enabled = true;
+        o.OpenApi.Enabled = true;
+    })
     .AddInstrumentation()
     .AddMcp()
     .UsePersistedOperationPipeline();
