@@ -4,17 +4,17 @@ using SharpYaml;
 
 namespace LoadGenerator;
 
-public sealed partial class McpWorker(
+public sealed partial class McpToolWorker(
     IHttpClientFactory httpClientFactory,
     IOptions<LoadGeneratorOptions> options,
-    ILogger<McpWorker> logger,
+    ILogger<McpToolWorker> logger,
     ILoggerFactory loggerFactory,
     IHostEnvironment environment) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var config = options.Value;
-        var workerConfig = config.Mcp;
+        var workerConfig = config.McpTools;
 
         if (!workerConfig.Enabled)
         {
@@ -145,7 +145,7 @@ public sealed partial class McpWorker(
         return dict;
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "MCP load generator is disabled")]
+    [LoggerMessage(Level = LogLevel.Information, Message = "MCP tool load generator is disabled")]
     private static partial void LogDisabled(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "No tools found in tools.yaml")]

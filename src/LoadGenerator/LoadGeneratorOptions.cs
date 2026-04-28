@@ -6,7 +6,8 @@ public sealed class LoadGeneratorOptions
 
     public string GatewayUrl { get; set; } = "http://localhost:5000";
     public GraphQLWorkerOptions GraphQL { get; set; } = new();
-    public WorkerOptions Mcp { get; set; } = new();
+    public WorkerOptions McpTools { get; set; } = new();
+    public WorkerOptions McpPrompts { get; set; } = new();
     public WorkerOptions OpenApi { get; set; } = new();
 }
 

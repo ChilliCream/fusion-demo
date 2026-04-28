@@ -1,6 +1,6 @@
 # Load Generator
 
-A .NET Worker Service that generates load against the Fusion gateway by continuously sending randomized requests across three protocols: GraphQL, MCP (Model Context Protocol), and OpenAPI (REST).
+A .NET Worker Service that generates load against the Fusion gateway by continuously sending randomized requests across three protocols: GraphQL, MCP (Model Context Protocol), and OpenAPI (REST). MCP load is split into two workers — one for tool calls and one for prompt retrieval.
 
 ## Running
 
@@ -10,7 +10,7 @@ dotnet run --project src/LoadGenerator
 
 ## Workers
 
-The load generator runs three independent background workers simultaneously. Each worker can be enabled/disabled and configured independently.
+The load generator runs four independent background workers simultaneously. Each worker can be enabled/disabled and configured independently.
 
 ### GraphQLWorker
 
@@ -21,13 +21,21 @@ Sends GraphQL queries to the gateway's `/graphql` endpoint using Hot Chocolate's
 - Randomly selects variable values from sample arrays defined in the configuration
 - Supports weighted selection to control how often each query is chosen
 
-### McpWorker
+### McpToolWorker
 
 Calls tools on the gateway's MCP server at `/graphql/mcp` using the `McpClient` from `ModelContextProtocol.Core`.
 
 - Reads tool definitions from `configuration/tools.yaml`
 - Randomly selects argument values from sample arrays defined in the configuration
 - Supports weighted selection to control how often each tool is called
+
+### McpPromptWorker
+
+Retrieves prompts from the gateway's MCP server at `/graphql/mcp` using the `McpClient` from `ModelContextProtocol.Core`.
+
+- Reads prompt definitions from `configuration/prompts.yaml`
+- Randomly selects argument values from sample arrays defined in the configuration
+- Supports weighted selection to control how often each prompt is fetched
 
 ### OpenApiWorker
 
@@ -69,7 +77,14 @@ All settings are in `appsettings.json` under the `LoadGenerator` section. Enviro
       "UsePersistedOperations": true,
       "Enabled": true
     },
-    "Mcp": {
+    "McpTools": {
+      "MinDelayMs": 500,
+      "MaxDelayMs": 3000,
+      "MaxConcurrentRequests": 5,
+      "MaxRequestsPerBatch": 10,
+      "Enabled": true
+    },
+    "McpPrompts": {
       "MinDelayMs": 500,
       "MaxDelayMs": 3000,
       "MaxConcurrentRequests": 5,
@@ -92,7 +107,7 @@ To disable a specific worker, set its `Enabled` to `false`:
 ```json
 {
   "LoadGenerator": {
-    "Mcp": {
+    "McpTools": {
       "Enabled": false
     }
   }
@@ -149,6 +164,21 @@ A sequence of tool objects. Each entry has:
     text: [Chair, Table, Bookshelf]
     first: [1, 5, 10, 15, 20]
   weight: 5
+```
+
+### `configuration/prompts.yaml` (MCP)
+
+A sequence of prompt objects. Each entry has:
+
+- `name` (required) — the prompt name
+- `arguments` (optional) — a mapping where each key is an argument name and the value is a list of sample values
+- `weight` (optional) — selection weight, defaults to `1`
+
+```yaml
+- name: SearchProducts
+  arguments:
+    searchQuery: [Bed, Bench, Bookshelf, Chair, Stool, Table]
+  weight: 1
 ```
 
 ### `configuration/endpoints.yaml` (OpenAPI)

@@ -70,7 +70,8 @@ builder.Services.AddHttpClient("OpenApi", (_, client) =>
 });
 
 builder.Services.AddHostedService<GraphQLWorker>();
-builder.Services.AddHostedService<McpWorker>();
+builder.Services.AddHostedService<McpToolWorker>();
+builder.Services.AddHostedService<McpPromptWorker>();
 builder.Services.AddHostedService<OpenApiWorker>();
 
 var host = builder.Build();

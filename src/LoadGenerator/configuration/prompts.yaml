@@ -1,0 +1,3 @@
+- name: SearchProducts
+  arguments:
+    searchQuery: [Bed, Bench, Bookshelf, Chair, Stool, Table]
