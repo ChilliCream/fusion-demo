@@ -1,3 +1,12 @@
 - name: SearchProducts
   arguments:
     searchQuery: [Bed, Bench, Bookshelf, Chair, Stool, Table]
+  weight: 1000
+
+# Missing arguments
+- name: SearchProducts
+  weight: 1
+
+# Missing prompt
+- name: Missing
+  weight: 1
