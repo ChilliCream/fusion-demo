@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-mcp-upload@v16.0.0-rc.1.41
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
@@ -48,7 +48,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Publish MCP Feature Collection
-        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.32
+        uses: ChilliCream/nitro-mcp-publish@v16.0.0-rc.1.41
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           tag: ${{ needs.prepare.outputs.tag }}

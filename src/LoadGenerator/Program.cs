@@ -14,23 +14,21 @@ builder.Logging.AddOpenTelemetry(logging =>
 });
 
 builder.Services
+    .AddNitro()
+    .AddOpenTelemetry();
+
+builder.Services
     .AddOpenTelemetry()
     .ConfigureResource(r => r.AddService(Env.LoadGenerator, "Demo", Env.Version))
     .WithMetrics(metrics =>
     {
         metrics
-            .AddHttpClientInstrumentation()
-            .AddNitroExporter();
+            .AddHttpClientInstrumentation();
     })
     .WithTracing(tracing =>
     {
         tracing
-            .AddHttpClientInstrumentation()
-            .AddNitroExporter();
-    })
-    .WithLogging(logging =>
-    {
-        logging.AddNitroExporter();
+            .AddHttpClientInstrumentation();
     });
 
 if (!string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))

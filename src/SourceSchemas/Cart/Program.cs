@@ -28,9 +28,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.CartApi);
+
 builder
     .AddGraphQL(Env.CartApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings(registerNodeInterface: false)
     .AddCartTypes();

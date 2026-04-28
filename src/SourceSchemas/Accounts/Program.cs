@@ -26,9 +26,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.AccountsApi);
+
 builder
     .AddGraphQL(Env.AccountsApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddAccountTypes();

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <ItemGroup>
-    <PackageReference Include="ChilliCream.Nitro.Telemetry" />
+    <PackageReference Include="ChilliCream.Nitro" />
+    <PackageReference Include="ChilliCream.Nitro.OpenTelemetry" />
     <PackageReference Include="HotChocolate.Language" />
     <PackageReference Include="HotChocolate.Transport.Http" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />

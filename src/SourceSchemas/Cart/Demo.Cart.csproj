@@ -13,7 +13,7 @@
         <PackageReference Include="HotChocolate.Data.EntityFramework" />
         <PackageReference Include="HotChocolate.Diagnostics" />
         <PackageReference Include="HotChocolate.Types.Analyzers" />
-        <PackageReference Include="ChilliCream.Nitro" />
+        <PackageReference Include="ChilliCream.Nitro.HotChocolate" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

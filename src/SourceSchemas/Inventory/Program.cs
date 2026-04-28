@@ -26,9 +26,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.InventoryApi);
+
 builder
     .AddGraphQL(Env.InventoryApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddInventoryTypes();

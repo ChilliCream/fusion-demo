@@ -28,10 +28,11 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.ProductsApi);
+
 builder
     .AddGraphQL(Env.ProductsApi)
     .ModifyPagingOptions(o => o.NullOrdering = NullOrdering.NativeNullsLast)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings()
     .AddUploadType()

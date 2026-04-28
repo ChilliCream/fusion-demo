@@ -24,9 +24,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddNitro().AddHotChocolate(Env.ShippingApi);
+
 builder
     .AddGraphQL(Env.ShippingApi)
-    .AddNitro()
     .AddAuthorization()
     .AddDefaultSettings(registerNodeInterface: false)
     .AddShippingTypes();
