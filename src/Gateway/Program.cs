@@ -58,6 +58,7 @@ builder
     })
     .AddInstrumentation()
     .AddMcp()
+    .AddOpenApi()
     .UsePersistedOperationPipeline();
 
 var app = builder.Build();
