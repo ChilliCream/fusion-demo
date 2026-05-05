@@ -1,7 +1,6 @@
 using ChilliCream.Nitro.App;
 using HotChocolate.Adapters.Mcp.Extensions;
 using HotChocolate.Adapters.OpenApi;
-using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,14 +47,8 @@ builder.Services.AddNitro().AddDefaults();
 
 builder
     .AddGraphQLGateway()
-    // .AddFileSystemConfiguration("./gateway.far") 
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
     .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
-    .ModifyNitroOptions(o =>
-    {
-        o.Mcp.Enabled = true;
-        o.OpenApi.Enabled = true;
-    })
     .AddInstrumentation()
     .AddMcp()
     .AddOpenApi()

@@ -31,10 +31,10 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
   <ItemGroup Label="Nitro">
-    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.29" />
-    <PackageVersion Include="ChilliCream.Nitro.HotChocolate" Version="16.0.0-preview.29" />
-    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.29" />
-    <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="16.0.0-preview.29" />
+    <PackageVersion Include="ChilliCream.Nitro" Version="16.0.0-preview.30" />
+    <PackageVersion Include="ChilliCream.Nitro.HotChocolate" Version="16.0.0-preview.30" />
+    <PackageVersion Include="ChilliCream.Nitro.Fusion" Version="16.0.0-preview.30" />
+    <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="16.0.0-preview.30" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.2" />
