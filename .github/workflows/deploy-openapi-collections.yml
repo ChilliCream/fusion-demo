@@ -22,6 +22,7 @@ jobs:
           echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
 
   upload:
+    name: Upload ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs: prepare
     environment: ${{ vars.DEPLOY_ENVIRONMENT }}
@@ -29,13 +30,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: shared
+          - name: Shared
             collection-id: NITRO_OPENAPI_SHARED_COLLECTION_ID
             patterns: src/Gateway/OpenApi/Shared/*.graphql
-          - name: inventory
+          - name: Inventory
             collection-id: NITRO_OPENAPI_INVENTORY_COLLECTION_ID
             patterns: src/Gateway/OpenApi/Inventory/*.graphql
-          - name: products
+          - name: Products
             collection-id: NITRO_OPENAPI_COLLECTION_ID
             patterns: src/Gateway/OpenApi/Products/*.graphql
     steps:
@@ -52,6 +53,7 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
 
   deploy:
+    name: Deploy ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs: [prepare, upload]
     environment: ${{ vars.DEPLOY_ENVIRONMENT }}
@@ -59,11 +61,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: shared
+          - name: Shared
             collection-id: NITRO_OPENAPI_SHARED_COLLECTION_ID
-          - name: inventory
+          - name: Inventory
             collection-id: NITRO_OPENAPI_INVENTORY_COLLECTION_ID
-          - name: products
+          - name: Products
             collection-id: NITRO_OPENAPI_COLLECTION_ID
     concurrency:
       group: deploy-openapi-collections-${{ matrix.name }}
