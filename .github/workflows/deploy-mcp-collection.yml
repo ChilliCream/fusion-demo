@@ -25,16 +25,28 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare
     environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: products
+            collection-id: NITRO_MCP_FEATURE_COLLECTION_ID
+            prompt-patterns: src/Gateway/Mcp/Products/Prompts/*/*.json
+            tool-patterns: src/Gateway/Mcp/Products/Tools/*/*.graphql
+          - name: inventory
+            collection-id: NITRO_MCP_INVENTORY_FEATURE_COLLECTION_ID
+            prompt-patterns: src/Gateway/Mcp/Inventory/Prompts/*/*.json
+            tool-patterns: src/Gateway/Mcp/Inventory/Tools/*/*.graphql
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload MCP Feature Collection
+      - name: Upload MCP Feature Collection (${{ matrix.name }})
         uses: ChilliCream/nitro-mcp-upload@v16.0.1-p.3
         with:
-          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
-          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
-          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
+          mcp-feature-collection-id: ${{ vars[matrix.collection-id] }}
+          prompt-patterns: ${{ matrix.prompt-patterns }}
+          tool-patterns: ${{ matrix.tool-patterns }}
           tag: ${{ needs.prepare.outputs.tag }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
@@ -43,14 +55,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: [prepare, upload]
     environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: products
+            collection-id: NITRO_MCP_FEATURE_COLLECTION_ID
+          - name: inventory
+            collection-id: NITRO_MCP_INVENTORY_FEATURE_COLLECTION_ID
     concurrency:
-      group: deploy-mcp-collection
+      group: deploy-mcp-collection-${{ matrix.name }}
       cancel-in-progress: false
     steps:
-      - name: Publish MCP Feature Collection
+      - name: Publish MCP Feature Collection (${{ matrix.name }})
         uses: ChilliCream/nitro-mcp-publish@v16.0.1-p.3
         with:
-          mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
+          mcp-feature-collection-id: ${{ vars[matrix.collection-id] }}
           tag: ${{ needs.prepare.outputs.tag }}
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}

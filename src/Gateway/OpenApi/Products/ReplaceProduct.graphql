@@ -1,0 +1,10 @@
+query ReplaceProduct($id: ID!) @http(method: PATCH, route: "/products") {
+  productById(id: $id) {
+    ...Product
+    reviews {
+      nodes {
+        ...Review
+      }
+    }
+  }
+}

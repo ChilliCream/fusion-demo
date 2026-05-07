@@ -1,0 +1,10 @@
+query GetInventoryItem($id: ID!) {
+  inventoryItemById(id: $id) {
+    id
+    quantity
+    product {
+      id
+      name
+    }
+  }
+}

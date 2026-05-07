@@ -1,0 +1,10 @@
+query CreateProduct($id: ID!) @http(method: POST, route: "/products") {
+  productById(id: $id) {
+    ...Product
+    reviews {
+      nodes {
+        ...Review
+      }
+    }
+  }
+}

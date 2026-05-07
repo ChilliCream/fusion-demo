@@ -1,6 +1,6 @@
 {
-  "$schema": "../tool-settings-schema.json",
-  "title": "View Shopping Basket",
+  "$schema": "../../../tool-settings-schema.json",
+  "title": "Get Inventory Item",
   "icons": [
     {
       "source": "https://chillicream.com/favicon-32x32.png",
@@ -10,6 +10,7 @@
     }
   ],
   "annotations": {
-    "openWorldHint": false
+    "openWorldHint": false,
+    "idempotentHint": true
   }
 }

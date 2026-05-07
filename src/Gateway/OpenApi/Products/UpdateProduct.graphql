@@ -1,0 +1,10 @@
+query UpdateProduct($id: ID!) @http(method: PATCH, route: "/products/{id}") {
+  productById(id: $id) {
+    ...Product
+    reviews {
+      nodes {
+        ...Review
+      }
+    }
+  }
+}
