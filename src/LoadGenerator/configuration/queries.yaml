@@ -191,3 +191,59 @@
       missing
     }
   weight: 1
+
+# Missing field on existing type
+- id: 7e2c4d9a3b5f8e1c6a0d4b8f2c5e7a91
+  query: |
+    query MissingProductFieldQuery(
+      $count: Int
+      $cursor: String
+    ) {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            doesNotExist
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  variables:
+    count: [null, 5, 10]
+    cursor: [null, "e31UYWJsZTox", "e31Db3VjaDoy"]
+  weight: 1
+
+# Throwing field requested via @skip
+- id: 9f4b6c2e8a1d5f3b7c0e9a4d6b8f1c2e
+  query: |
+    query ProductFieldQueryWithErrors(
+      $count: Int
+      $cursor: String
+      $skipErrorField: Boolean = false
+    ) {
+      products(first: $count, after: $cursor) {
+        edges {
+          node {
+            id
+            error @skip(if: $skipErrorField)
+            __typename
+          }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  variables:
+    count: [null, 5, 10]
+    cursor: [null, "e31UYWJsZTox", "e31Db3VjaDoy"]
+    skipErrorField: [false]
+  weight: 1
