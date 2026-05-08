@@ -134,6 +134,14 @@
         }
       },
       "additionalProperties": false
+    },
+    "visibility": {
+      "description": "Tool visibility scope – who can access the tool. 'model': tool is visible to and callable by the agent. 'app': tool is callable by the app from this server only.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["model", "app"]
+      }
     }
   }
 }
