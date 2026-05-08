@@ -1,7 +1,9 @@
+using System.Text.Json.Serialization;
 using ChilliCream.Nitro.App;
 using HotChocolate.Adapters.Mcp.Extensions;
 using HotChocolate.Adapters.OpenApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,11 @@ builder.Services
 
 builder.Services
     .AddOpenApi(o => o.AddGraphQLTransformer());
+
+builder.Services.ConfigureHttpJsonOptions(o =>
+{
+    o.SerializerOptions.TypeInfoResolverChain.Add(ProblemDetailsJsonContext.Default);
+});
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -67,3 +74,7 @@ app.MapOpenApi();
 app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 
 app.RunWithGraphQLCommands(args);
+
+[JsonSerializable(typeof(ProblemDetails))]
+[JsonSerializable(typeof(HttpValidationProblemDetails))]
+internal sealed partial class ProblemDetailsJsonContext : JsonSerializerContext;
