@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload MCP Feature Collection (${{ matrix.name }})
-        uses: ChilliCream/nitro-mcp-upload@v16.0.1-p.3
+        uses: ChilliCream/nitro-mcp-upload@v16.0.1-p.4
         with:
           mcp-feature-collection-id: ${{ vars[matrix.collection-id] }}
           prompt-patterns: ${{ matrix.prompt-patterns }}
@@ -70,7 +70,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Publish MCP Feature Collection (${{ matrix.name }})
-        uses: ChilliCream/nitro-mcp-publish@v16.0.1-p.3
+        uses: ChilliCream/nitro-mcp-publish@v16.0.1-p.4
         with:
           mcp-feature-collection-id: ${{ vars[matrix.collection-id] }}
           tag: ${{ needs.prepare.outputs.tag }}
