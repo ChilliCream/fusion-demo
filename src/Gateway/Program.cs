@@ -55,7 +55,6 @@ builder.Services.AddNitro().AddDefaults();
 builder
     .AddGraphQLGateway()
     .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
-    .ModifyServerOptions(o => o.Tool.ServeMode = ServeMode.Insider)
     .AddInstrumentation()
     .AddMcp()
     .AddOpenApi()
@@ -67,7 +66,7 @@ app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseHeaderPropagation();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGraphQL().WithOptions(o => o.Tool.ServeMode = ServeMode.Insider);
+app.MapGraphQL();
 app.MapGraphQLMcp();
 app.MapOpenApiEndpoints();
 app.MapOpenApi();
