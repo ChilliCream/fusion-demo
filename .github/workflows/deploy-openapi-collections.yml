@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload OpenAPI collection (${{ matrix.name }})
-        uses: ChilliCream/nitro-openapi-upload@v16.0.3
+        uses: ChilliCream/nitro-openapi-upload@v16.0.5
         with:
           openapi-collection-id: ${{ vars[matrix.collection-id] }}
           patterns: ${{ matrix.patterns }}
@@ -72,7 +72,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Publish OpenAPI collection (${{ matrix.name }})
-        uses: ChilliCream/nitro-openapi-publish@v16.0.3
+        uses: ChilliCream/nitro-openapi-publish@v16.0.5
         with:
           openapi-collection-id: ${{ vars[matrix.collection-id] }}
           tag: ${{ needs.prepare.outputs.tag }}
