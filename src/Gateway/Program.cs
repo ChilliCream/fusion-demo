@@ -54,7 +54,12 @@ builder.Services.AddNitro().AddDefaults();
 
 builder
     .AddGraphQLGateway()
-    .ModifyRequestOptions(o => o.CollectOperationPlanTelemetry = true)
+    .ModifyRequestOptions(
+        o =>
+        {
+            o.CollectOperationPlanTelemetry = true;
+            o.AllowOperationPlanRequests = true;
+        })
     .AddInstrumentation()
     .AddMcp()
     .AddOpenApi()
