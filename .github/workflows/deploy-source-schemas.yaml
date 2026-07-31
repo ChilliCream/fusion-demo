@@ -1,0 +1,110 @@
+name: Fusion Stack Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "Directory.Packages.props"
+      - ".github/workflows/deploy-source-schemas.yaml"
+  workflow_dispatch: {}
+
+env:
+  APPHOST_PROJECT: src/AppHost/Demo.AppHost.csproj
+  ASPIRE_ENVIRONMENT: Production
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Compute release tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          echo "version=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    concurrency:
+      group: fusion-upload-${{ vars.NITRO_GATEWAY_API_ID }}
+      cancel-in-progress: false
+    env:
+      Parameters__stage: ${{ vars.NITRO_STAGE }}
+      Parameters__tag: ${{ needs.prepare.outputs.version }}
+      Parameters__nitroApiKey: ${{ secrets.NITRO_API_KEY }}
+      NITRO_CLOUD_URL: ${{ secrets.NITRO_CLOUD_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli --version 13.4.6
+
+      - name: Restore
+        run: dotnet restore Demo.slnx
+
+      - name: Build
+        run: dotnet build Demo.slnx --no-restore
+
+      - name: Upload immutable Fusion sources
+        run: >-
+          aspire do fusion-upload
+          --apphost "$APPHOST_PROJECT"
+          --environment "$ASPIRE_ENVIRONMENT"
+          --non-interactive
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [prepare, build]
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    concurrency:
+      group: fusion-publish-${{ vars.NITRO_STAGE }}
+      cancel-in-progress: false
+    env:
+      Azure__CredentialSource: AzureCli
+      Azure__Location: ${{ vars.AZURE_LOCATION }}
+      Azure__ResourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      Azure__SubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      Parameters__stage: ${{ vars.NITRO_STAGE }}
+      Parameters__tag: ${{ needs.prepare.outputs.version }}
+      Parameters__nitroApiKey: ${{ secrets.NITRO_API_KEY }}
+      NITRO_CLOUD_URL: ${{ secrets.NITRO_CLOUD_URL }}
+      NITRO_OTEL_URL: ${{ secrets.NITRO_OTEL_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli --version 13.4.6
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Restore
+        run: dotnet restore Demo.slnx
+
+      - name: Deploy stack and publish Fusion configuration
+        run: >-
+          aspire do fusion-publish
+          --apphost "$APPHOST_PROJECT"
+          --environment "$ASPIRE_ENVIRONMENT"
+          --non-interactive
