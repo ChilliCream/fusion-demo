@@ -1,8 +1,14 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddGraphQLOrchestrator();
+builder.AddNitro("dev");
 
 var postgres = builder.AddPostgres("postgres");
+
+// NATS backs the federated event streams. JetStream is enabled so the log is durable
+// and clients can replay from an event cursor.
+var nats = builder
+    .AddNats("nats")
+    .WithJetStream();
 
 var keycloak = builder
     .AddKeycloak("keycloak", port: 8080)
@@ -55,8 +61,10 @@ var reviewsApi = builder
     .AddProject<Projects.Demo_Reviews>("reviews-api")
     .WithReference(reviewsDb)
     .WithEnvironment("ConnectionStrings__reviews_db", reviewsDb.Resource.ConnectionStringExpression)
+    .WithReference(nats)
     .WithGraphQLSchemaEndpoint()
-    .WaitFor(postgres);
+    .WaitFor(postgres)
+    .WaitFor(nats);
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
@@ -71,6 +79,7 @@ var cartApi = builder
 
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
+    .WithNitroApiId("QXBpCmcwMTlkOTVlMmEwMTU3MDQwYWM1ZTdlODMxZWY0OTRmZQ==")
     .WithGraphQLSchemaComposition(
         settings: new GraphQLCompositionSettings
         {
@@ -79,6 +88,8 @@ builder
         })
     .WithReference(keycloak)
     .WithEnvironment("Keycloak__Authority", keycloak.GetEndpoint("http"))
+    .WithReference(nats)
+    .WaitFor(nats)
     .WithReference(accountsApi)
     .WithReference(inventoryApi)
     .WithReference(orderApi)

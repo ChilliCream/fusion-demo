@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults(Env.ReviewsApi, Env.Version);
 builder.AddNpgsqlDbContext<ReviewContext>(Env.ReviewsDb);
+builder.AddNatsClient(Env.Nats);
+builder.Services.AddHostedService<ReviewEventStreamInitializer>();
 
 builder.Services.AddCors();
 
@@ -31,8 +33,7 @@ builder
     .AddGraphQL(Env.ReviewsApi)
     .AddAuthorization()
     .AddDefaultSettings()
-    .AddReviewTypes()
-    .AddPostgresSubscriptions();
+    .AddReviewTypes();
 
 var app = builder.Build();
 

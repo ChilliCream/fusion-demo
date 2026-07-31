@@ -3,11 +3,7 @@ namespace Demo.Reviews.Types;
 [SubscriptionType]
 public static partial class ReviewSubscriptions
 {
-    [Subscribe]
-    [Topic(nameof(ReviewMutations.CreateReview))]
-    public static async Task<Review?> OnCreateReview(
-        [EventMessage] int reviewId,
-        IReviewByIdDataLoader reviewById,
-        CancellationToken cancellationToken)
-        => await reviewById.LoadAsync(reviewId, cancellationToken);
+    [EventStream("review { id }")]
+    public static ReviewCreated OnReviewCreated([EventCursor] string? after)
+        => EventStream.Create<ReviewCreated>(after);
 }

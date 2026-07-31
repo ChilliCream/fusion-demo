@@ -6,7 +6,9 @@ public static class Env
     
     public const string ReviewsDb = "reviews_db";
     
-    public const string ReviewsRedis = "review-redis"; 
-    
+    public const string ReviewsRedis = "review-redis";
+
+    public const string Nats = "nats";
+
     public static string Version => typeof(Env).Assembly.GetName().Version?.ToString() ?? "0.0.0";
 }
