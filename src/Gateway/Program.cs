@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using ChilliCream.Nitro.App;
-using HotChocolate.Adapters.Mcp.Extensions;
 using HotChocolate.Adapters.OpenApi;
+using HotChocolate.Fusion.Subscriptions.NATS;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,9 +59,23 @@ builder
             o.CollectOperationPlanTelemetry = true;
             o.AllowOperationPlanRequests = true;
         })
+    .ModifyServerOptions(
+        o =>
+        {
+            o.Tool.ServeMode = ChilliCream.Nitro.App.ServeMode.Insider;
+        })
     .AddInstrumentation()
     .AddMcp()
     .AddOpenApi()
+    .AddNatsEventStreamBroker(
+        o =>
+        {
+            o.Url = builder.Configuration.GetConnectionString(Env.Nats);
+            o.JetStream = new NatsJetStreamOptions
+            {
+                Stream = "reviews"
+            };
+        })
     .UsePersistedOperationPipeline();
 
 var app = builder.Build();

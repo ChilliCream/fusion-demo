@@ -16,6 +16,7 @@
         <PackageReference Include="HotChocolate.Fusion.Adapters.Mcp" />
         <PackageReference Include="HotChocolate.Fusion.Adapters.OpenApi" />
         <PackageReference Include="HotChocolate.Fusion.AspNetCore" />
+        <PackageReference Include="HotChocolate.Fusion.Subscriptions.NATS" />
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" />

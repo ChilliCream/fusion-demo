@@ -49,12 +49,23 @@ jobs:
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
           comment-mode: "review"
 
-      - name: Validate MCP documents
+      - name: Validate Products MCP documents
         uses: ChilliCream/nitro-mcp-validate@v16.5.0
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
-          prompt-patterns: src/Gateway/Mcp/Prompts/*/*.json
-          tool-patterns: src/Gateway/Mcp/Tools/*/*.graphql
+          prompt-patterns: src/Gateway/Mcp/Products/Prompts/*/*.json
+          tool-patterns: src/Gateway/Mcp/Products/Tools/*/*.graphql
+          stage: ${{ vars.NITRO_STAGE }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+          comment-mode: "review"
+
+      - name: Validate Inventory MCP documents
+        uses: ChilliCream/nitro-mcp-validate@v16.5.0
+        with:
+          mcp-feature-collection-id: ${{ vars.NITRO_MCP_INVENTORY_FEATURE_COLLECTION_ID }}
+          prompt-patterns: src/Gateway/Mcp/Inventory/Prompts/*/*.json
+          tool-patterns: src/Gateway/Mcp/Inventory/Tools/*/*.graphql
           stage: ${{ vars.NITRO_STAGE }}
           api-key: ${{ secrets.NITRO_API_KEY }}
           cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
