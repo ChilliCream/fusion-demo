@@ -17,4 +17,5 @@
         <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:10.0</ContainerBaseImage>
         <PublishProfile>DefaultContainer</PublishProfile>
     </PropertyGroup>
+
 </Project>
