@@ -40,7 +40,7 @@ jobs:
             tool-patterns: src/Gateway/Mcp/Inventory/Tools/*/*.graphql
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Upload MCP Feature Collection (${{ matrix.name }})
         uses: ChilliCream/nitro-mcp-upload@v16.5.0

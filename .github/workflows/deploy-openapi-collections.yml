@@ -41,7 +41,7 @@ jobs:
             patterns: src/Gateway/OpenApi/Products/*.graphql
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Upload OpenAPI collection (${{ matrix.name }})
         uses: ChilliCream/nitro-openapi-upload@v16.5.0
