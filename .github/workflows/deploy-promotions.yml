@@ -130,7 +130,8 @@ jobs:
             --settings \
               WEBSITES_PORT=8080 \
               PORT=8080 \
-              NODE_ENV=production
+              NODE_ENV=production \
+              DATABASE_URL="${{ secrets.PROMOTIONS_DATABASE_URL }}"
 
           # Enable continuous deployment from ACR
           az webapp deployment container config \

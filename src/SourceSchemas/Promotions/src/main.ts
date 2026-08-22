@@ -18,8 +18,8 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-// Applies pending migrations when a database is configured, otherwise falls
-// back to the in-memory promotions.
+// The store requires a configured PostgreSQL database (DATABASE_URL or the
+// standard PG* variables) and applies pending migrations before serving.
 const store = await createPromotionStore();
 
 const context: PromotionsContext = { store };

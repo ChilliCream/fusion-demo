@@ -1,9 +1,5 @@
 import pg from "pg";
-import {
-  seedPromotions,
-  type CreatePromotionInput,
-  type Promotion
-} from "./data.js";
+import type { CreatePromotionInput, Promotion } from "./data.js";
 import { runMigrations } from "./migrate.js";
 
 export interface PromotionStore {
@@ -12,20 +8,8 @@ export interface PromotionStore {
   createPromotion(input: CreatePromotionInput): Promise<Promotion>;
 }
 
-// The deployed Azure App Service does not provision a database yet, so the
-// store degrades to the previous in-memory behavior when neither DATABASE_URL
-// nor the standard PG* variables are configured.
 export async function createPromotionStore(): Promise<PromotionStore> {
   const config = databaseConfig();
-
-  if (config === null) {
-    console.warn(
-      "No PostgreSQL connection configured (DATABASE_URL or PG* environment " +
-        "variables); promotions are served from memory and are not persisted."
-    );
-
-    return new InMemoryPromotionStore();
-  }
 
   await runMigrations(config);
 
@@ -41,7 +25,7 @@ export async function createPromotionStore(): Promise<PromotionStore> {
   return new PgPromotionStore(pool);
 }
 
-function databaseConfig(): pg.PoolConfig | null {
+function databaseConfig(): pg.PoolConfig {
   if (process.env.DATABASE_URL) {
     return { connectionString: process.env.DATABASE_URL };
   }
@@ -53,36 +37,10 @@ function databaseConfig(): pg.PoolConfig | null {
     return {};
   }
 
-  return null;
-}
-
-class InMemoryPromotionStore implements PromotionStore {
-  private readonly promotions = seedPromotions.map((promotion) => ({
-    ...promotion
-  }));
-
-  private nextId = this.promotions.length + 1;
-
-  async listPromotions(): Promise<Promotion[]> {
-    return this.promotions;
-  }
-
-  async getPromotionById(id: string): Promise<Promotion | null> {
-    return this.promotions.find((promotion) => promotion.id === id) ?? null;
-  }
-
-  async createPromotion(input: CreatePromotionInput): Promise<Promotion> {
-    const promotion: Promotion = {
-      id: String(this.nextId++),
-      title: input.title,
-      description: input.description ?? null,
-      discountPercent: input.discountPercent
-    };
-
-    this.promotions.push(promotion);
-
-    return promotion;
-  }
+  throw new Error(
+    "No PostgreSQL connection configured: set DATABASE_URL or the standard " +
+      "PG* environment variables."
+  );
 }
 
 interface PromotionRow {
