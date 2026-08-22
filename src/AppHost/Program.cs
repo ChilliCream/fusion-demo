@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddNitro("dev");
+builder.AddNitroComposition("dev");
 
 var postgres = builder.AddPostgres("postgres");
 
@@ -27,35 +27,35 @@ var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
     .WithReference(accountsDb)
     .WithEnvironment("ConnectionStrings__accounts_db", accountsDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 var inventoryApi = builder
     .AddProject<Projects.Demo_Inventory>("inventory-api")
     .WithReference(inventoryDb)
     .WithEnvironment("ConnectionStrings__inventory_db", inventoryDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 var orderApi = builder
     .AddProject<Projects.Demo_Order>("order-api")
     .WithReference(orderDb)
     .WithEnvironment("ConnectionStrings__order_db", orderDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 var paymentsApi = builder
     .AddProject<Projects.Demo_Payments>("payments-api")
     .WithReference(paymentsDb)
     .WithEnvironment("ConnectionStrings__payments_db", paymentsDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 var productsApi = builder
     .AddProject<Projects.Demo_Products>("products-api")
     .WithReference(productsDb)
     .WithEnvironment("ConnectionStrings__products_db", productsDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 var reviewsApi = builder
@@ -63,20 +63,21 @@ var reviewsApi = builder
     .WithReference(reviewsDb)
     .WithEnvironment("ConnectionStrings__reviews_db", reviewsDb.Resource.ConnectionStringExpression)
     .WithReference(nats)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres)
     .WaitFor(nats);
 
 var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 // The promotions API is a TypeScript source schema (graphql-yoga + graphql-federation-subgraph).
-// The Aspire composition can only discover schema-settings.json for .NET project resources, so
-// its schema reaches the gateway through Nitro instead; the "aspire" environment in its
-// schema-settings.json routes the composed gateway back to this local resource on port 5118.
-// The database is wired through the standard PG* variables that the node-postgres client
-// reads natively, avoiding ADO.NET connection string parsing in TypeScript.
+// WithGraphQLHttpEndpoint resolves to the JavaScript overload in this project, which lets the
+// app join the local schema composition: the schema is downloaded live from the app's
+// /graphql/schema.graphql endpoint and the gateway routes to the app's allocated endpoint,
+// just like the .NET source schemas. The database is
+// wired through the standard PG* variables that the node-postgres client reads natively,
+// avoiding ADO.NET connection string parsing in TypeScript.
 var postgresEndpoint = postgres.Resource.PrimaryEndpoint;
 var postgresUser = postgres.Resource.UserNameParameter is { } userName
     ? ReferenceExpression.Create($"{userName}")
@@ -85,26 +86,27 @@ var postgresUser = postgres.Resource.UserNameParameter is { } userName
 var promotionsApi = builder
     .AddJavaScriptApp("promotions-api", "../SourceSchemas/Promotions")
     .WithNpm()
-    .WithHttpEndpoint(port: 5118, env: "PORT")
+    .WithReference(promotionsDb)
     .WithEnvironment("PGHOST", ReferenceExpression.Create($"{postgresEndpoint.Property(EndpointProperty.Host)}"))
     .WithEnvironment("PGPORT", ReferenceExpression.Create($"{postgresEndpoint.Property(EndpointProperty.Port)}"))
     .WithEnvironment("PGUSER", postgresUser)
     .WithEnvironment("PGPASSWORD", ReferenceExpression.Create($"{postgres.Resource.PasswordParameter}"))
     .WithEnvironment("PGDATABASE", promotionsDb.Resource.DatabaseName)
-    .WaitFor(promotionsDb);
+    .WithGraphQLHttpEndpoint()
+    .WaitFor(postgres);
 
 var cartApi = builder
     .AddProject<Projects.Demo_Cart>("cart-api")
     .WithReference(cartDb)
     .WithEnvironment("ConnectionStrings__cart_db", cartDb.Resource.ConnectionStringExpression)
-    .WithGraphQLSchemaEndpoint()
+    .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
 builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
     .WithNitroApiId("QXBpCmcwMTlkOTVlMmEwMTU3MDQwYWM1ZTdlODMxZWY0OTRmZQ==")
-    .WithGraphQLSchemaComposition(
-        settings: new GraphQLCompositionSettings
+    .WithNitroComposition(
+        new GraphQLCompositionSettings
         {
             EnableGlobalObjectIdentification = true,
             EnvironmentName = "aspire"
