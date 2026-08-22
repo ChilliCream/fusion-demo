@@ -21,6 +21,7 @@ var paymentsDb = postgres.AddDatabase("payments-db");
 var productsDb = postgres.AddDatabase("products-db");
 var reviewsDb = postgres.AddDatabase("reviews-db");
 var cartDb = postgres.AddDatabase("cart-db");
+var promotionsDb = postgres.AddDatabase("promotions-db");
 
 var accountsApi = builder
     .AddProject<Projects.Demo_Accounts>("accounts-api")
@@ -70,6 +71,28 @@ var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
     .WithGraphQLSchemaEndpoint();
 
+// The promotions API is a TypeScript source schema (graphql-yoga + graphql-federation-subgraph).
+// The Aspire composition can only discover schema-settings.json for .NET project resources, so
+// its schema reaches the gateway through Nitro instead; the "aspire" environment in its
+// schema-settings.json routes the composed gateway back to this local resource on port 5118.
+// The database is wired through the standard PG* variables that the node-postgres client
+// reads natively, avoiding ADO.NET connection string parsing in TypeScript.
+var postgresEndpoint = postgres.Resource.PrimaryEndpoint;
+var postgresUser = postgres.Resource.UserNameParameter is { } userName
+    ? ReferenceExpression.Create($"{userName}")
+    : ReferenceExpression.Create($"postgres");
+
+var promotionsApi = builder
+    .AddJavaScriptApp("promotions-api", "../SourceSchemas/Promotions")
+    .WithNpm()
+    .WithHttpEndpoint(port: 5118, env: "PORT")
+    .WithEnvironment("PGHOST", ReferenceExpression.Create($"{postgresEndpoint.Property(EndpointProperty.Host)}"))
+    .WithEnvironment("PGPORT", ReferenceExpression.Create($"{postgresEndpoint.Property(EndpointProperty.Port)}"))
+    .WithEnvironment("PGUSER", postgresUser)
+    .WithEnvironment("PGPASSWORD", ReferenceExpression.Create($"{postgres.Resource.PasswordParameter}"))
+    .WithEnvironment("PGDATABASE", promotionsDb.Resource.DatabaseName)
+    .WaitFor(promotionsDb);
+
 var cartApi = builder
     .AddProject<Projects.Demo_Cart>("cart-api")
     .WithReference(cartDb)
@@ -97,6 +120,7 @@ builder
     .WithReference(productsApi)
     .WithReference(reviewsApi)
     .WithReference(shippingApi)
-    .WithReference(cartApi);
+    .WithReference(cartApi)
+    .WithReference(promotionsApi);
 
 builder.Build().Run();

@@ -31,6 +31,17 @@ jobs:
             dotnet run --project "src/SourceSchemas/$project" --no-build -c Release -- schema export
           done
 
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Export Promotions Source Schema
+        working-directory: src/SourceSchemas/Promotions
+        run: |
+          npm ci
+          npm run export-schema
+
       - name: Validate GraphQL schema
         uses: ChilliCream/nitro-fusion-validate@v16.5.0
         with:
@@ -41,6 +52,7 @@ jobs:
             src/SourceSchemas/Order/schema.graphqls
             src/SourceSchemas/Payments/schema.graphqls
             src/SourceSchemas/Products/schema.graphqls
+            src/SourceSchemas/Promotions/schema.graphqls
             src/SourceSchemas/Reviews/schema.graphqls
             src/SourceSchemas/Shipping/schema.graphqls
           stage: ${{ vars.NITRO_STAGE }}

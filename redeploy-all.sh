@@ -8,6 +8,7 @@ workflows=(
   deploy-order
   deploy-payments
   deploy-products
+  deploy-promotions
   deploy-reviews
   deploy-shipping
   deploy-gateway
