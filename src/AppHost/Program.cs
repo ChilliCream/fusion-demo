@@ -72,7 +72,7 @@ var shippingApi = builder
     .WithGraphQLHttpEndpoint();
 
 // The promotions API is a TypeScript source schema (graphql-yoga + graphql-federation-subgraph).
-// WithGraphQLHttpEndpoint resolves to the JavaScript overload in this project, which lets the
+// WithGraphQLHttpEndpoint (the JavaScript overload from HotChocolate.Fusion.Aspire) lets the
 // app join the local schema composition: the schema is downloaded live from the app's
 // /graphql/schema.graphql endpoint and the gateway routes to the app's allocated endpoint,
 // just like the .NET source schemas. The database is
