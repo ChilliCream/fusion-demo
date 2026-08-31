@@ -64,10 +64,7 @@ builder
         {
             o.Tool.ServeMode = ChilliCream.Nitro.App.ServeMode.Insider;
         })
-    // TODO: re-enable once fixed — Fusion 16.6.1 (through 16.6.2-p.6) AddInstrumentation
-    // breaks all source schema fetches when an ActivityListener is active (OTel tracing):
-    // every operation returns null data without errors and no subgraph request is sent.
-    // .AddInstrumentation()
+    .AddInstrumentation()
     .AddMcp()
     .AddOpenApi()
     .AddNatsEventStreamBroker(
