@@ -22,13 +22,22 @@ export function LoginModal() {
   const { isLoginModalOpen, closeLogin, login, loading, error } = useAuth();
   const [username, setUsername] = useState("demo-user");
   const [password, setPassword] = useState("demo-password");
-  // Tracks whether the pointer actually went down on the backdrop itself
-  // (rather than inside the dialog) so a text-selection drag that starts on
-  // an input and is released over the backdrop doesn't close the modal: a
-  // "click" event still fires on the backdrop in that case (browsers
-  // resolve mousedown/mouseup target mismatches to the nearest common
-  // ancestor), which would otherwise discard the pending add-to-cart intent.
+  // Tracks whether the pointer both went down AND came back up on the
+  // backdrop itself (rather than inside the dialog), Radix-style, so a
+  // text-selection drag that crosses the backdrop/dialog boundary in either
+  // direction doesn't close the modal: when mousedown/mouseup targets
+  // differ, browsers still resolve a "click" event to their nearest common
+  // ancestor, which is the backdrop whenever the drag starts or ends inside
+  // the dialog (since the dialog is nested inside the backdrop) - that
+  // synthetic click's own `target === currentTarget` check can't tell a
+  // same-element click from a drag that merely passed through the backdrop.
+  // Requiring both origins to be the backdrop catches a drag started there
+  // and released inside the dialog (this would otherwise close the modal
+  // and discard the pending add-to-cart intent) as well as the
+  // already-fixed reverse case (drag started on an input, released over the
+  // backdrop).
   const pointerDownOnBackdrop = useRef(false);
+  const pointerUpOnBackdrop = useRef(false);
 
   useEffect(() => {
     if (!isLoginModalOpen) {
@@ -61,8 +70,16 @@ export function LoginModal() {
     pointerDownOnBackdrop.current = event.target === event.currentTarget;
   }
 
+  function handleBackdropPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    pointerUpOnBackdrop.current = event.target === event.currentTarget;
+  }
+
   function handleBackdropClick(event: ReactMouseEvent<HTMLDivElement>) {
-    if (pointerDownOnBackdrop.current && event.target === event.currentTarget) {
+    if (
+      pointerDownOnBackdrop.current &&
+      pointerUpOnBackdrop.current &&
+      event.target === event.currentTarget
+    ) {
       closeLogin();
     }
   }
@@ -71,6 +88,7 @@ export function LoginModal() {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-cc-black/60 p-4 backdrop-blur-sm"
       onPointerDown={handleBackdropPointerDown}
+      onPointerUp={handleBackdropPointerUp}
       onClick={handleBackdropClick}
     >
       <div
