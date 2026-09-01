@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { graphql, useMutation } from "react-relay";
 import { AuthContext, type AuthUser, type PendingAdd } from "./AuthContext";
 import type { AuthProviderAddToCartMutation } from "./__generated__/AuthProviderAddToCartMutation.graphql";
+import { RelayEnvironment } from "../RelayEnvironment";
 
 const KEYCLOAK_URL =
   import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8080";
@@ -122,6 +123,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setUser(null);
     setError(null);
+
+    // Mark every cached record stale so the next authenticated fetch (e.g.
+    // a later sign-in, same user or not) re-hits the network instead of a
+    // remounted component quietly resolving from this session's leftover
+    // store data - otherwise the header's cart badge (and any other
+    // authenticated view) can flash a stale count from before logout.
+    // `notify(undefined, true)` is the store's public, typed entry point for
+    // this (its `invalidateStore` boolean bumps the store's global
+    // invalidation epoch); the dedicated `invalidateStore()` method exists
+    // on the runtime's store implementation but isn't part of the `Store`
+    // type this package ships.
+    RelayEnvironment.getStore().notify(undefined, true);
   };
 
   const openLogin = (intent?: PendingAdd) => {
