@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5da5c8c72eb6a6c37d15d22c545fde7f>>
+ * @generated SignedSource<<4f7c011ab219645c80f5bdec653999d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type CartLineItem_cartItem$data = {
     readonly pictureUrl: any | null | undefined;
     readonly price: number;
     readonly promotion: {
-      readonly discountPercent: number;
+      readonly id: string;
     } | null | undefined;
   };
   readonly quantity: number;
@@ -97,13 +97,7 @@ return {
           "name": "promotion",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "discountPercent",
-              "storageKey": null
-            }
+            (v0/*: any*/)
           ],
           "storageKey": null
         }
@@ -116,6 +110,6 @@ return {
 };
 })();
 
-(node as any).hash = "8b5cb66d8de7a703b69fb95ef642881b";
+(node as any).hash = "260d1b864526ead2d373a8ac11745106";
 
 export default node;

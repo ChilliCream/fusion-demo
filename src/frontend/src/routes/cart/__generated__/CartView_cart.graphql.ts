@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<298348d7fbb89952a72756f70a702a7a>>
+ * @generated SignedSource<<282803162b7746613045da6c2a41b9c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type CartView_cart$data = {
         readonly discountedPrice: number;
         readonly price: number;
         readonly promotion: {
-          readonly discountPercent: number;
+          readonly id: string;
         } | null | undefined;
       };
       readonly quantity: number;
@@ -32,7 +32,15 @@ export type CartView_cart$key = {
   readonly " $fragmentSpreads": FragmentRefs<"CartView_cart">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -60,13 +68,7 @@ const node: ReaderFragment = {
           "name": "nodes",
           "plural": true,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "id",
-              "storageKey": null
-            },
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -104,13 +106,7 @@ const node: ReaderFragment = {
                   "name": "promotion",
                   "plural": false,
                   "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "discountPercent",
-                      "storageKey": null
-                    }
+                    (v0/*: any*/)
                   ],
                   "storageKey": null
                 }
@@ -132,7 +128,8 @@ const node: ReaderFragment = {
   "type": "Cart",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "7b2a4377f6a58f68ef13feab35db0a80";
+(node as any).hash = "8de819c3291f755cf939898abfd83610";
 
 export default node;

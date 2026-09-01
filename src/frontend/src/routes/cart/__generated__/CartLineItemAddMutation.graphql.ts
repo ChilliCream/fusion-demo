@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a97ea959d2d7352e7e68eb04ccb5d285>>
+ * @generated SignedSource<<328b4b5ca0a3416a00f32566d03c495d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -216,13 +216,6 @@ return {
                             "name": "promotion",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "discountPercent",
-                                "storageKey": null
-                              },
                               (v2/*: any*/)
                             ],
                             "storageKey": null
@@ -261,12 +254,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "efd20214a32dd599c9f986bc43479128",
+    "cacheID": "66f0cc0f4a0213702b67064a656477f8",
     "id": null,
     "metadata": {},
     "name": "CartLineItemAddMutation",
     "operationKind": "mutation",
-    "text": "mutation CartLineItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      discountPercent\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          discountPercent\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "mutation CartLineItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
   }
 };
 })();

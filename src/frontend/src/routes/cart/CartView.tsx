@@ -16,7 +16,7 @@ const CartViewFragment = graphql`
           price
           discountedPrice
           promotion {
-            discountPercent
+            id
           }
         }
         ...CartLineItem_cartItem

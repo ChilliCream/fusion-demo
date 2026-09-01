@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<11fd50a93d7514f35a38f9f8b20be395>>
+ * @generated SignedSource<<b29729db7448e9b2ff84c44b3947a95b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -159,13 +159,6 @@ return {
                             "name": "promotion",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "discountPercent",
-                                "storageKey": null
-                              },
                               (v0/*: any*/)
                             ],
                             "storageKey": null
@@ -203,12 +196,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e94f40e9808eeb5634f16487eb01bfe2",
+    "cacheID": "de1cdb66902239ca414030ebcec45915",
     "id": null,
     "metadata": {},
     "name": "CartSummaryCheckoutMutation",
     "operationKind": "mutation",
-    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      discountPercent\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          discountPercent\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
   }
 };
 })();

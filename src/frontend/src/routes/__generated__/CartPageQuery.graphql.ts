@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4cdfab47fc26af9f60aec5b76f18af06>>
+ * @generated SignedSource<<9168ac5293d021297923e1f24b59cc34>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -151,13 +151,6 @@ return {
                             "name": "promotion",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "discountPercent",
-                                "storageKey": null
-                              },
                               (v0/*: any*/)
                             ],
                             "storageKey": null
@@ -196,12 +189,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1b32baaf9b2df2f9095c5f0edf823a60",
+    "cacheID": "22065c66867c82b064d0bee41f31fb57",
     "id": null,
     "metadata": {},
     "name": "CartPageQuery",
     "operationKind": "query",
-    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      discountPercent\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          discountPercent\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
   }
 };
 })();
