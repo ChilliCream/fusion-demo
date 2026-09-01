@@ -2,6 +2,8 @@ import type { MouseEventHandler, ReactNode } from "react";
 
 export type ButtonVariant = "solid" | "outline";
 
+export type ButtonSize = "md" | "sm";
+
 export interface ButtonProps {
   children: ReactNode;
   /** Destination for an anchor-style button. Omit to render a `<button>`. */
@@ -16,12 +18,22 @@ export interface ButtonProps {
    * brightens on hover, used for secondary actions.
    */
   variant?: ButtonVariant;
+  /**
+   * Sizing preset. `"md"` (default) is the standard pill. `"sm"` is the
+   * compact pill used in the header, matching the prototype's `.btn-hdr`.
+   */
+  size?: ButtonSize;
   onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
   "aria-label"?: string;
 }
 
 const BASE_CLASSES =
-  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+
+const SIZE_CLASSES: Record<ButtonSize, string> = {
+  md: "px-7 py-3 text-sm",
+  sm: "px-5 py-2.5 text-[0.8125rem]",
+};
 
 // Filled pill: cream surface with the dark page color as the label.
 const SOLID_CLASSES = "bg-cc-heading text-cc-surface hover:bg-cc-white";
@@ -48,10 +60,16 @@ export function Button({
   type = "button",
   disabled,
   variant = "solid",
+  size = "md",
   onClick,
   ...rest
 }: ButtonProps) {
-  const cls = [BASE_CLASSES, VARIANT_CLASSES[variant], className ?? ""]
+  const cls = [
+    BASE_CLASSES,
+    SIZE_CLASSES[size],
+    VARIANT_CLASSES[variant],
+    className ?? "",
+  ]
     .filter(Boolean)
     .join(" ");
 

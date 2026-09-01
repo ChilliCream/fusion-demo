@@ -23,7 +23,7 @@ export function Header() {
         >
           <ChilliCreamWinking className="h-8 w-8 flex-none" />
           <ChilliCreamText className="h-6 w-auto flex-none" />
-          <span className="ml-1.5 border-l border-cc-card-border py-1 pl-3.5 font-heading text-[0.8125rem] font-semibold tracking-[0.24em] text-cc-accent uppercase">
+          <span className="ml-1.5 border-l border-cc-card-border pt-[0.3em] pb-[0.1em] pl-3.5 font-heading text-[0.8125rem] leading-none font-semibold tracking-[0.24em] text-cc-accent uppercase">
             Store
           </span>
         </Link>
@@ -40,7 +40,7 @@ export function Header() {
             Non-functional placeholder: the sign-in pill / account menu is
             wired up by the auth task (fusion-demo-js-0bx.4).
           */}
-          <Button variant="outline" className="px-5 py-2.5 text-[0.8125rem]">
+          <Button variant="outline" size="sm">
             Sign in
           </Button>
         </div>
