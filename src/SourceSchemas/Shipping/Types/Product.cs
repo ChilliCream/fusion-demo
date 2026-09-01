@@ -16,28 +16,77 @@ public sealed record Product([property: ID<Product>] int Id)
             """)]
         ProductDimensionInput dimension)
     {
+        // Reject obviously bogus postal codes before we compute anything from them.
+        var normalizedZip = NormalizeZip(zip);
+
         // Base delivery time starts at 2 days for local processing
         const int baseDays = 2;
-        
+
         // Calculate volume in cubic centimeters (assuming dimensions are in cm)
         var volumeCm3 = dimension.Length * dimension.Width * dimension.Height;
-        
+
         // Distance factor based on ZIP code (simplified simulation)
-        var distanceDays = GetDistanceDays(zip);
-        
+        var distanceDays = GetDistanceDays(normalizedZip);
+
         // Size and weight factors
         var sizeDays = GetSizeDelayDays(volumeCm3, dimension.Weight);
-        
+
         // Add some realistic randomness (±1 day) based on ZIP code
-        var variabilityDays = GetVariabilityDays(zip);
-        
+        var variabilityDays = GetVariabilityDays(normalizedZip);
+
         // Calculate total with minimum of 1 day
         var totalDays = Math.Max(1, baseDays + distanceDays + sizeDays + variabilityDays);
-        
+
         // Cap at reasonable maximum (14 days for demo purposes)
         return Math.Min(14, totalDays);
     }
-    
+
+    /// <summary>
+    /// Trims the given postal code and validates that it is plausible enough to estimate
+    /// delivery for. This is deliberately permissive (US/DE/UK-style postcodes) since this
+    /// is demo data, not a real postal-code dataset.
+    /// </summary>
+    private static string NormalizeZip(string zip)
+    {
+        var trimmed = zip.Trim();
+
+        if (!IsPlausiblePostalCode(trimmed))
+        {
+            throw new GraphQLException(
+                ErrorBuilder.New()
+                    .SetMessage("Invalid postal code.")
+                    .SetCode("INVALID_POSTAL_CODE")
+                    .Build());
+        }
+
+        return trimmed;
+    }
+
+    private static bool IsPlausiblePostalCode(string zip)
+    {
+        if (zip.Length is < 3 or > 10)
+        {
+            return false;
+        }
+
+        var hasDigit = false;
+
+        foreach (var c in zip)
+        {
+            if (char.IsAsciiLetterOrDigit(c) is false && c is not (' ' or '-'))
+            {
+                return false;
+            }
+
+            if (char.IsAsciiDigit(c))
+            {
+                hasDigit = true;
+            }
+        }
+
+        return hasDigit;
+    }
+
     private static int GetDistanceDays(string zip)
     {
         // Simulate distance based on ZIP code patterns
