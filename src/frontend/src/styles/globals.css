@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Font families ----
+     Heading voice is Josefin Sans, loaded via the Google Fonts <link> in
+     index.html (weights 400/600/700). Body voice is the native system
+     stack. `--font-sans` (Tailwind's `font-sans`) aliases the body voice so
+     existing utilities pick it up. */
+  --font-heading: "Josefin Sans", "Futura", "Trebuchet MS", sans-serif;
+  --font-body:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-body);
+
+  /* ---- Type scale ----
+     Each size ships its paired line-height, so `text-h1` etc. set both.
+     Ported verbatim from hc-10/website/app/globals.css. */
+  --text-hero: 6.5rem;
+  --text-hero--line-height: 1;
+  --text-h1: 4.875rem;
+  --text-h1--line-height: 1.05;
+  --text-h2: 3.625rem;
+  --text-h2--line-height: 1.1;
+  --text-h3: 2.75rem;
+  --text-h3--line-height: 1.15;
+  --text-h4: 2rem;
+  --text-h4--line-height: 1.25;
+  --text-h5: 1.5rem;
+  --text-h5--line-height: 1.3;
+  --text-h6: 1.125rem;
+  --text-h6--line-height: 1.4;
+  --text-lead: 2rem;
+  --text-lead--line-height: 1.25;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
+
+  /* Disable default Tailwind colors */
+  --color-*: initial;
+
+  --color-cc-heading: #f5f0ea;
+  --color-cc-ink: #a1a3af;
+  /* Long-form body prose: lighter than `cc-ink-dim` so paragraphs stay readable. */
+  --color-cc-prose: rgba(245, 241, 234, 0.8);
+  --color-cc-ink-dim: #94a3b8;
+  --color-cc-ink-faint: rgba(245, 241, 234, 0.16);
+  /* Faint light wash for hover/active surfaces (nav links, list items). */
+  --color-cc-hover: rgba(245, 241, 234, 0.05);
+  --color-cc-bg: #0b0f1a;
+  --color-cc-card-bg: rgba(12, 19, 34, 0.55);
+  --color-cc-card-border: rgba(245, 241, 234, 0.12);
+  --color-cc-card-border-hover: rgba(245, 241, 234, 0.32);
+  --color-cc-accent: #16b9e4;
+  --color-cc-accent-hover: #4cc9ee;
+
+  /* Secondary brand CTA. */
+  --color-cc-cta: oklch(51.8% 0.253 323.949);
+  --color-cc-cta-hover: oklch(45.2% 0.211 324.591);
+
+  /* Semantic admonition hues. Used with alpha modifiers, e.g.
+     `text-cc-danger bg-cc-danger/10 ring-cc-danger/30`. */
+  --color-cc-success: oklch(76.5% 0.177 163.223);
+  --color-cc-warning: oklch(82.8% 0.189 84.429);
+  --color-cc-danger: oklch(70.4% 0.191 22.216);
+
+  /* Solid brand navy surface. `cc-card-bg` is this color at 55%; use alpha
+     modifiers (e.g. `bg-cc-surface/95`) for other opacities. */
+  --color-cc-surface: #0c1322;
+
+  /* Raw white / black, used with alpha modifiers for hairlines and scrims. */
+  --color-cc-white: #fff;
+  --color-cc-black: #000;
+}
+
+@layer base {
+  :root {
+    /* Dark starfield surface shared by every store page. A few
+       radial-gradients layered on the page gradient give a hint of the
+       original WebGL nebula without the JS cost, anchored to the viewport
+       so the pattern doesn't scroll with content. */
+    --cc-dark-surface:
+      radial-gradient(
+        1px 1px at 17% 12%,
+        rgba(255, 255, 255, 0.5),
+        transparent 50%
+      ),
+      radial-gradient(
+        1px 1px at 34% 58%,
+        rgba(255, 255, 255, 0.45),
+        transparent 50%
+      ),
+      radial-gradient(
+        1.5px 1.5px at 62% 23%,
+        rgba(255, 255, 255, 0.4),
+        transparent 50%
+      ),
+      radial-gradient(
+        1px 1px at 82% 71%,
+        rgba(255, 255, 255, 0.6),
+        transparent 50%
+      ),
+      radial-gradient(
+        1px 1px at 12% 84%,
+        rgba(255, 255, 255, 0.4),
+        transparent 50%
+      ),
+      radial-gradient(
+        1.5px 1.5px at 48% 91%,
+        rgba(255, 255, 255, 0.35),
+        transparent 50%
+      ),
+      radial-gradient(
+        1px 1px at 91% 8%,
+        rgba(255, 255, 255, 0.45),
+        transparent 50%
+      ),
+      radial-gradient(
+        1px 1px at 27% 31%,
+        rgba(255, 255, 255, 0.4),
+        transparent 50%
+      ),
+      radial-gradient(
+        1.2px 1.2px at 73% 49%,
+        rgba(255, 255, 255, 0.5),
+        transparent 50%
+      ),
+      radial-gradient(
+        80% 50% at 70% 0%,
+        rgba(80, 60, 200, 0.12),
+        transparent 60%
+      ),
+      linear-gradient(
+        180deg,
+        #0c1322 0%,
+        #0c1322 22%,
+        #0b1220 38%,
+        #0a111e 58%,
+        #09101c 78%,
+        #08101a 100%
+      );
+  }
+
+  html {
+    background-color: var(--color-cc-bg);
+    color: var(--color-cc-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-cc-bg);
+    color: var(--color-cc-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    font-weight: 400;
+    min-height: 100vh;
+    /* Dark starfield surface. The 9 star layers are viewport-sized and the
+       nebula + base gradient are auto; everything is anchored to the
+       viewport so the pattern doesn't scroll with content. */
+    background-image: var(--cc-dark-surface);
+    background-size:
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      100vw 100vh,
+      auto,
+      auto;
+    background-attachment: fixed;
+  }
+}
