@@ -235,7 +235,7 @@ export function ProductCard({ product }: ProductCardProps) {
           it via z-30 so a click here always lands on the button and never
           reaches the overlay underneath.
         */}
-        <div className="absolute right-3 bottom-3 z-30 translate-y-1.5 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <div className="absolute right-3 bottom-3 z-30 translate-y-1.5 opacity-0 transition-[opacity,translate] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <Button
             variant="solid"
             size="sm"

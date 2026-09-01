@@ -129,11 +129,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // remounted component quietly resolving from this session's leftover
     // store data - otherwise the header's cart badge (and any other
     // authenticated view) can flash a stale count from before logout.
-    // `Store.notify(undefined, true)` is the public, typed equivalent of
-    // `RecordSourceProxy.invalidateStore()` (that method lives on the proxy
-    // handed to `environment.commitUpdate(store => store.invalidateStore())`,
-    // not on `Store` itself) - its `invalidateStore` boolean bumps the
-    // store's global invalidation epoch the same way.
+    // `invalidateStore()` is declared on `RecordSourceSelectorProxy` (the
+    // mutation updater proxy), not on the `RecordSourceProxy` that
+    // `environment.commitUpdate(store => store.invalidateStore())` hands
+    // you, so that idiom doesn't type-check here (@types/relay-runtime
+    // 19.0.3) even though it works at runtime. `Store.notify(undefined,
+    // true)` is the public, typed equivalent this code uses instead - its
+    // boolean bumps the store's global invalidation epoch the same way.
     RelayEnvironment.getStore().notify(undefined, true);
   };
 
