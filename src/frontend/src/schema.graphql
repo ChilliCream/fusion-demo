@@ -1,390 +1,1186 @@
-schema {
+schema
+  @fusion__execution(
+    nodeResolution: GATEWAY
+    shareableFieldRuntimeTypeRouting: SOURCE_LOCAL
+  ) {
   query: Query
   mutation: Mutation
   subscription: Subscription
 }
 
-type Query {
-  inventoryItemById(id: ID!): InventoryItem
+type Query
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: INVENTORY_API)
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: PROMOTIONS_API)
+  @fusion__type(schema: RECOMMENDATIONS_API)
+  @fusion__type(schema: REVIEWS_API)
+  @fusion__type(schema: SHIPPING_API) {
+  inventoryItemById(id: ID! @fusion__inputField(schema: INVENTORY_API)): InventoryItem
     @cost(weight: "10")
-  node(id: ID!): Node
-  orderById(id: ID!): Order
+    @fusion__tag(name: "team-inventor")
+    @fusion__cost(schema: INVENTORY_API, weight: "10")
+    @fusion__field(schema: INVENTORY_API)
+  node(id: ID!): Node @fusion__gateway_field
+  orderById(id: ID! @fusion__inputField(schema: ORDER_API)): Order
     @cost(weight: "10")
-  paymentById(id: ID!): Payment
+    @fusion__cost(schema: ORDER_API, weight: "10")
+    @fusion__field(schema: ORDER_API)
+  paymentById(id: ID! @fusion__inputField(schema: PAYMENTS_API)): Payment
     @cost(weight: "10")
-  productById(id: ID!): Product
+    @fusion__cost(schema: PAYMENTS_API, weight: "10")
+    @fusion__field(schema: PAYMENTS_API)
+  productById(id: ID! @fusion__inputField(schema: PRODUCTS_API)): Product
     @cost(weight: "10")
-  products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int maxPrice: Float minPrice: Float searchText: String): ProductsConnection
+    @fusion__tag(name: "team-products")
+    @fusion__cost(schema: PRODUCTS_API, weight: "10")
+    @fusion__field(schema: PRODUCTS_API)
+  products(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String @fusion__inputField(schema: PRODUCTS_API)
+    "Returns the elements in the list that come before the specified cursor."
+    before: String @fusion__inputField(schema: PRODUCTS_API)
+    "Returns the first _n_ elements from the list."
+    first: Int @fusion__inputField(schema: PRODUCTS_API)
+    "Returns the last _n_ elements from the list."
+    last: Int @fusion__inputField(schema: PRODUCTS_API)
+    maxPrice: Float @fusion__inputField(schema: PRODUCTS_API)
+    minPrice: Float @fusion__inputField(schema: PRODUCTS_API)
+    searchText: String @fusion__inputField(schema: PRODUCTS_API)
+  ): ProductsConnection
     @cost(weight: "10")
-  reviewById(id: ID!): Review
+    @fusion__tag(name: "team-products")
+    @fusion__cost(schema: PRODUCTS_API, weight: "10")
+    @fusion__field(schema: PRODUCTS_API)
+  promotionById(id: ID! @fusion__inputField(schema: PROMOTIONS_API)): Promotion
     @cost(weight: "10")
-  userById(id: ID!): User
+    @fusion__cost(schema: PROMOTIONS_API, weight: "10")
+    @fusion__field(schema: PROMOTIONS_API)
+  "Fetches the currently running promotions."
+  promotions: [Promotion!]!
     @cost(weight: "10")
-  userByUsername(username: String!): User
+    @fusion__cost(schema: PROMOTIONS_API, weight: "10")
+    @fusion__field(schema: PROMOTIONS_API)
+  recommendationById(id: ID! @fusion__inputField(schema: RECOMMENDATIONS_API)): Recommendation
     @cost(weight: "10")
-  users("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): UsersConnection
+    @fusion__cost(schema: RECOMMENDATIONS_API, weight: "10")
+    @fusion__field(schema: RECOMMENDATIONS_API)
+  recommendations: [Recommendation!]!
     @cost(weight: "10")
-  viewer: Viewer!
+    @fusion__cost(schema: RECOMMENDATIONS_API, weight: "10")
+    @fusion__field(schema: RECOMMENDATIONS_API)
+  reviewById(id: ID! @fusion__inputField(schema: REVIEWS_API)): Review
+    @cost(weight: "10")
+    @fusion__cost(schema: REVIEWS_API, weight: "10")
+    @fusion__field(schema: REVIEWS_API)
+  userById(id: ID! @fusion__inputField(schema: ACCOUNTS_API)): User
+    @cost(weight: "10")
+    @fusion__cost(schema: ACCOUNTS_API, weight: "10")
+    @fusion__field(schema: ACCOUNTS_API)
+  userByUsername(username: String! @fusion__inputField(schema: ACCOUNTS_API)): User
+    @cost(weight: "10")
+    @fusion__cost(schema: ACCOUNTS_API, weight: "10")
+    @fusion__field(schema: ACCOUNTS_API)
+  users(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String @fusion__inputField(schema: ACCOUNTS_API)
+    "Returns the elements in the list that come before the specified cursor."
+    before: String @fusion__inputField(schema: ACCOUNTS_API)
+    "Returns the first _n_ elements from the list."
+    first: Int @fusion__inputField(schema: ACCOUNTS_API)
+    "Returns the last _n_ elements from the list."
+    last: Int @fusion__inputField(schema: ACCOUNTS_API)
+  ): UsersConnection
+    @cost(weight: "10")
+    @fusion__cost(schema: ACCOUNTS_API, weight: "10")
+    @fusion__field(schema: ACCOUNTS_API)
+  viewer: Viewer! @fusion__field(schema: CART_API)
 }
 
-type Mutation {
-  addProductToCart(input: AddProductToCartInput!): AddProductToCartPayload!
+type Mutation
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: INVENTORY_API)
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: PROMOTIONS_API)
+  @fusion__type(schema: REVIEWS_API) {
+  addProductToCart(
+    input: AddProductToCartInput! @fusion__inputField(schema: CART_API)
+  ): AddProductToCartPayload!
     @cost(weight: "10")
+    @fusion__cost(schema: CART_API, weight: "10")
+    @fusion__field(schema: CART_API)
   checkout: CheckoutPayload!
     @cost(weight: "10")
-  createOrder(input: CreateOrderInput!): CreateOrderPayload!
+    @fusion__cost(schema: CART_API, weight: "10")
+    @fusion__field(schema: CART_API)
+  createOrder(input: CreateOrderInput! @fusion__inputField(schema: ORDER_API)): CreateOrderPayload!
     @cost(weight: "10")
-  createPayment(input: CreatePaymentInput!): CreatePaymentPayload!
+    @fusion__cost(schema: ORDER_API, weight: "10")
+    @fusion__field(schema: ORDER_API)
+  createPayment(
+    input: CreatePaymentInput! @fusion__inputField(schema: PAYMENTS_API)
+  ): CreatePaymentPayload!
     @cost(weight: "10")
-  createReview(input: CreateReviewInput!): CreateReviewPayload!
+    @fusion__cost(schema: PAYMENTS_API, weight: "10")
+    @fusion__field(schema: PAYMENTS_API)
+  "Creates a new promotion that products across the catalog can take part in."
+  createPromotion(
+    input: CreatePromotionInput! @fusion__inputField(schema: PROMOTIONS_API)
+  ): CreatePromotionPayload!
     @cost(weight: "10")
-  removeProductFromCart(input: RemoveProductFromCartInput!): RemoveProductFromCartPayload!
+    @fusion__cost(schema: PROMOTIONS_API, weight: "10")
+    @fusion__field(schema: PROMOTIONS_API)
+  createReview(
+    input: CreateReviewInput! @fusion__inputField(schema: REVIEWS_API)
+  ): CreateReviewPayload!
     @cost(weight: "10")
-  restockProduct(input: RestockProductInput!): RestockProductPayload!
+    @fusion__cost(schema: REVIEWS_API, weight: "10")
+    @fusion__field(schema: REVIEWS_API)
+  removeProductFromCart(
+    input: RemoveProductFromCartInput! @fusion__inputField(schema: CART_API)
+  ): RemoveProductFromCartPayload!
     @cost(weight: "10")
-  uploadProductPicture(input: UploadProductPictureInput!): UploadProductPicturePayload!
+    @fusion__cost(schema: CART_API, weight: "10")
+    @fusion__field(schema: CART_API)
+  restockProduct(
+    input: RestockProductInput! @fusion__inputField(schema: INVENTORY_API)
+  ): RestockProductPayload!
     @cost(weight: "10")
+    @fusion__cost(schema: INVENTORY_API, weight: "10")
+    @fusion__field(schema: INVENTORY_API)
+  uploadProductPicture(
+    input: UploadProductPictureInput! @fusion__inputField(schema: PRODUCTS_API)
+  ): UploadProductPicturePayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: PRODUCTS_API, weight: "10")
+    @fusion__field(schema: PRODUCTS_API)
 }
 
-type Subscription {
-  onCreateReview: Review
+type Subscription @fusion__type(schema: REVIEWS_API) {
+  onReviewCreated(after: String @fusion__inputField(schema: REVIEWS_API)): ReviewCreated!
+    @fusion__field(schema: REVIEWS_API)
+    @fusion__eventStream(
+      schema: REVIEWS_API
+      topics: ["onReviewCreated"]
+      message: "{ review { id } }"
+      cursorField: "cursor"
+      cursorArgument: "after"
+    )
+}
+
+type AddProductToCartPayload @fusion__type(schema: CART_API) {
+  cart: Cart @fusion__field(schema: CART_API)
+  errors: [AddProductToCartError!] @fusion__field(schema: CART_API)
+}
+
+type Cart @fusion__type(schema: CART_API) {
+  createdAt: DateTime! @fusion__field(schema: CART_API)
+  id: ID! @fusion__field(schema: CART_API)
+  items(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String @fusion__inputField(schema: CART_API)
+    "Returns the elements in the list that come before the specified cursor."
+    before: String @fusion__inputField(schema: CART_API)
+    "Returns the first _n_ elements from the list."
+    first: Int @fusion__inputField(schema: CART_API)
+    "Returns the last _n_ elements from the list."
+    last: Int @fusion__inputField(schema: CART_API)
+  ): CartItemsConnection
     @cost(weight: "10")
+    @fusion__cost(schema: CART_API, weight: "10")
+    @fusion__field(schema: CART_API)
 }
 
-type AddProductToCartPayload {
-  cart: Cart
-  errors: [AddProductToCartError!]
-}
-
-type Cart {
-  createdAt: DateTime!
-  id: ID!
-  items("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): CartItemsConnection
-    @cost(weight: "10")
-}
-
-type CartItem {
-  addedAt: DateTime!
-  id: ID!
-  product: Product!
-  quantity: Int!
+type CartItem @fusion__type(schema: CART_API) {
+  addedAt: DateTime! @fusion__field(schema: CART_API)
+  id: ID! @fusion__field(schema: CART_API)
+  product: Product! @fusion__field(schema: CART_API)
+  quantity: Int! @fusion__field(schema: CART_API)
 }
 
 "A connection to a list of items."
-type CartItemsConnection {
+type CartItemsConnection @fusion__type(schema: CART_API) {
   "A list of edges."
-  edges: [CartItemsEdge!]
+  edges: [CartItemsEdge!] @fusion__field(schema: CART_API)
   "A flattened list of the nodes."
-  nodes: [CartItem!]
+  nodes: [CartItem!] @fusion__field(schema: CART_API)
   "Information to aid in pagination."
-  pageInfo: PageInfo!
+  pageInfo: PageInfo! @fusion__field(schema: CART_API)
 }
 
 "An edge in a connection."
-type CartItemsEdge {
+type CartItemsEdge @fusion__type(schema: CART_API) {
   "A cursor for use in pagination."
-  cursor: String!
+  cursor: String! @fusion__field(schema: CART_API)
   "The item at the end of the edge."
-  node: CartItem!
+  node: CartItem! @fusion__field(schema: CART_API)
 }
 
-type CheckoutPayload {
-  cart: Cart
+type CheckoutPayload @fusion__type(schema: CART_API) {
+  cart: Cart @fusion__field(schema: CART_API)
 }
 
-type CreateOrderPayload {
-  order: Order
+type CreateOrderPayload @fusion__type(schema: ORDER_API) {
+  order: Order @fusion__field(schema: ORDER_API)
 }
 
-type CreatePaymentPayload {
-  payment: Payment
+type CreatePaymentPayload @fusion__type(schema: PAYMENTS_API) {
+  payment: Payment @fusion__field(schema: PAYMENTS_API)
 }
 
-type CreateReviewPayload {
-  review: Review
+type CreatePromotionPayload @fusion__type(schema: PROMOTIONS_API) {
+  promotion: Promotion @fusion__field(schema: PROMOTIONS_API)
 }
 
-type InventoryItem implements Node {
-  id: ID!
-  product: Product!
-  quantity: Int!
+type CreateReviewPayload @fusion__type(schema: REVIEWS_API) {
+  review: Review @fusion__field(schema: REVIEWS_API)
 }
 
-type Order implements Node {
-  id: ID!
-  items: [OrderItem!]!
+type InventoryItem implements Node
+  @fusion__type(schema: INVENTORY_API)
+  @fusion__implements(schema: INVENTORY_API, interface: "Node")
+  @fusion__lookup(
+    schema: INVENTORY_API
+    key: "id"
+    field: "inventoryItemById(id: ID!): InventoryItem"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
+  id: ID! @fusion__field(schema: INVENTORY_API)
+  product: Product! @fusion__field(schema: INVENTORY_API)
+  quantity: Int! @fusion__field(schema: INVENTORY_API)
+}
+
+type Order implements Node
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__implements(schema: ORDER_API, interface: "Node")
+  @fusion__lookup(
+    schema: ORDER_API
+    key: "id"
+    field: "orderById(id: ID!): Order"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: PAYMENTS_API
+    key: "id"
+    field: "orderById(id: ID!): Order"
+    map: ["id"]
+    path: null
+    internal: true
+  ) {
+  id: ID! @fusion__field(schema: ORDER_API) @fusion__field(schema: PAYMENTS_API)
+  items: [OrderItem!]! @fusion__field(schema: ORDER_API)
   payments: [Payment!]!
     @cost(weight: "10")
-  user: User!
-  weight: Int!
+    @fusion__cost(schema: PAYMENTS_API, weight: "10")
+    @fusion__field(schema: PAYMENTS_API)
+  user: User! @fusion__field(schema: ORDER_API)
+  weight: Int! @fusion__field(schema: ORDER_API)
 }
 
-type OrderItem {
-  id: Int!
-  order: Order
-  orderId: Int!
-  price: Float!
-  product: Product!
-  quantity: Int!
+type OrderItem @fusion__type(schema: ORDER_API) {
+  id: Int! @fusion__field(schema: ORDER_API)
+  order: Order @fusion__field(schema: ORDER_API)
+  orderId: Int! @fusion__field(schema: ORDER_API)
+  price: Float! @fusion__field(schema: ORDER_API)
+  product: Product! @fusion__field(schema: ORDER_API)
+  quantity: Int! @fusion__field(schema: ORDER_API)
 }
 
 "Information about pagination in a connection."
-type PageInfo {
+type PageInfo
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: REVIEWS_API) {
   "When paginating forwards, the cursor to continue."
   endCursor: String
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: REVIEWS_API)
   "Indicates whether more edges exist following the set defined by the clients arguments."
   hasNextPage: Boolean!
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: REVIEWS_API)
   "Indicates whether more edges exist prior the set defined by the clients arguments."
   hasPreviousPage: Boolean!
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: REVIEWS_API)
   "When paginating backwards, the cursor to continue."
   startCursor: String
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: REVIEWS_API)
 }
 
-type Payment implements Node {
-  amount: Decimal!
-  createdAt: DateTime!
-  id: ID!
-  order: Order!
-  status: PaymentStatus!
+type Payment implements Node
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__implements(schema: PAYMENTS_API, interface: "Node")
+  @fusion__lookup(
+    schema: PAYMENTS_API
+    key: "id"
+    field: "paymentById(id: ID!): Payment"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
+  amount: Decimal! @fusion__field(schema: PAYMENTS_API)
+  createdAt: DateTime! @fusion__field(schema: PAYMENTS_API)
+  id: ID! @fusion__field(schema: PAYMENTS_API)
+  order: Order! @fusion__field(schema: PAYMENTS_API)
+  status: PaymentStatus! @fusion__field(schema: PAYMENTS_API)
 }
 
-type Product implements Node {
-  deliveryEstimate(zip: String!): Int!
-  dimension: ProductDimension!
-  error: Int!
+type Product implements Node
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: INVENTORY_API)
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: PROMOTIONS_API)
+  @fusion__type(schema: RECOMMENDATIONS_API)
+  @fusion__type(schema: REVIEWS_API)
+  @fusion__type(schema: SHIPPING_API)
+  @fusion__implements(schema: PRODUCTS_API, interface: "Node")
+  @fusion__lookup(
+    schema: CART_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: INVENTORY_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: PRODUCTS_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: PROMOTIONS_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: RECOMMENDATIONS_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: REVIEWS_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: SHIPPING_API
+    key: "id"
+    field: "productById(id: ID!): Product"
+    map: ["id"]
+    path: null
+    internal: true
+  ) {
+  deliveryEstimate(zip: String! @fusion__inputField(schema: SHIPPING_API)): Int!
+    @fusion__field(schema: SHIPPING_API)
+    @fusion__requires(
+      schema: SHIPPING_API
+      requirements: "weight dimension { length width height }"
+      field: "deliveryEstimate(zip: String! dimension: ProductDimensionInput!): Int!"
+      map: [
+        null
+        "{\n  weight\n  length: dimension.length\n  width: dimension.width\n  height: dimension.height\n}"
+      ]
+    )
+  dimension: ProductDimension! @fusion__field(schema: PRODUCTS_API)
+  "The list price after applying the discount of the current promotion."
+  discountedPrice: Float!
+    @cost(weight: "10")
+    @fusion__cost(schema: PROMOTIONS_API, weight: "10")
+    @fusion__field(schema: PROMOTIONS_API)
+    @fusion__requires(
+      schema: PROMOTIONS_API
+      requirements: "price"
+      field: "discountedPrice(price: Float!): Float!"
+      map: ["price"]
+    )
+  error: Int! @fusion__field(schema: PRODUCTS_API)
   id: ID!
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: INVENTORY_API)
+    @fusion__field(schema: ORDER_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: PROMOTIONS_API)
+    @fusion__field(schema: RECOMMENDATIONS_API)
+    @fusion__field(schema: REVIEWS_API)
+    @fusion__field(schema: SHIPPING_API)
   item: InventoryItem
     @cost(weight: "10")
-  name: String!
-  pictureFileName: String
+    @fusion__tag(name: "team-inventor")
+    @fusion__cost(schema: INVENTORY_API, weight: "10")
+    @fusion__field(schema: INVENTORY_API)
+  name: String! @fusion__field(schema: PRODUCTS_API)
+  pictureFileName: String @fusion__field(schema: PRODUCTS_API)
   pictureUrl: URI
-  price: Float!
+    @fusion__tag(name: "team-products")
+    @fusion__field(schema: PRODUCTS_API)
+  price: Float! @fusion__field(schema: PRODUCTS_API)
+  "The promotion this product currently takes part in, if any."
+  promotion: Promotion
+    @cost(weight: "10")
+    @fusion__cost(schema: PROMOTIONS_API, weight: "10")
+    @fusion__field(schema: PROMOTIONS_API)
   quantity: Int!
     @cost(weight: "10")
-  reviews("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): ProductReviewsConnection
+    @fusion__tag(name: "team-inventor")
+    @fusion__cost(schema: INVENTORY_API, weight: "10")
+    @fusion__field(schema: INVENTORY_API)
+  recommendation: Recommendation
     @cost(weight: "10")
-  weight: Int!
+    @fusion__cost(schema: RECOMMENDATIONS_API, weight: "10")
+    @fusion__field(schema: RECOMMENDATIONS_API)
+  reviews(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String @fusion__inputField(schema: REVIEWS_API)
+    "Returns the elements in the list that come before the specified cursor."
+    before: String @fusion__inputField(schema: REVIEWS_API)
+    "Returns the first _n_ elements from the list."
+    first: Int @fusion__inputField(schema: REVIEWS_API)
+    "Returns the last _n_ elements from the list."
+    last: Int @fusion__inputField(schema: REVIEWS_API)
+  ): ProductReviewsConnection
+    @cost(weight: "10")
+    @fusion__cost(schema: REVIEWS_API, weight: "10")
+    @fusion__field(schema: REVIEWS_API)
+  weight: Int! @fusion__field(schema: PRODUCTS_API)
 }
 
-type ProductAmountCannotBeLowerThanOneError implements Error {
-  message: String!
+type ProductAmountCannotBeLowerThanOneError implements Error
+  @fusion__type(schema: CART_API)
+  @fusion__implements(schema: CART_API, interface: "Error") {
+  message: String! @fusion__field(schema: CART_API)
 }
 
-type ProductDimension {
-  height: Float!
-  length: Float!
-  width: Float!
+type ProductDimension @fusion__type(schema: PRODUCTS_API) {
+  height: Float! @fusion__field(schema: PRODUCTS_API)
+  length: Float! @fusion__field(schema: PRODUCTS_API)
+  width: Float! @fusion__field(schema: PRODUCTS_API)
 }
 
 "A connection to a list of items."
-type ProductReviewsConnection {
+type ProductReviewsConnection @fusion__type(schema: REVIEWS_API) {
   "A list of edges."
-  edges: [ProductReviewsEdge!]
+  edges: [ProductReviewsEdge!] @fusion__field(schema: REVIEWS_API)
   "A flattened list of the nodes."
-  nodes: [Review!]
+  nodes: [Review!] @fusion__field(schema: REVIEWS_API)
   "Information to aid in pagination."
-  pageInfo: PageInfo!
+  pageInfo: PageInfo! @fusion__field(schema: REVIEWS_API)
 }
 
 "An edge in a connection."
-type ProductReviewsEdge {
+type ProductReviewsEdge @fusion__type(schema: REVIEWS_API) {
   "A cursor for use in pagination."
-  cursor: String!
+  cursor: String! @fusion__field(schema: REVIEWS_API)
   "The item at the end of the edge."
-  node: Review!
+  node: Review! @fusion__field(schema: REVIEWS_API)
 }
 
 "A connection to a list of items."
-type ProductsConnection {
+type ProductsConnection @fusion__type(schema: PRODUCTS_API) {
   "A list of edges."
-  edges: [ProductsEdge!]
+  edges: [ProductsEdge!] @fusion__field(schema: PRODUCTS_API)
   "A flattened list of the nodes."
-  nodes: [Product!]
+  nodes: [Product!] @fusion__field(schema: PRODUCTS_API)
   "Information to aid in pagination."
-  pageInfo: PageInfo!
+  pageInfo: PageInfo! @fusion__field(schema: PRODUCTS_API)
 }
 
 "An edge in a connection."
-type ProductsEdge {
+type ProductsEdge @fusion__type(schema: PRODUCTS_API) {
   "A cursor for use in pagination."
-  cursor: String!
+  cursor: String! @fusion__field(schema: PRODUCTS_API)
   "The item at the end of the edge."
-  node: Product!
+  node: Product! @fusion__field(schema: PRODUCTS_API)
 }
 
-type RemoveProductFromCartPayload {
-  cart: Cart
-  errors: [RemoveProductFromCartError!]
+"A discount campaign that products across the catalog take part in."
+type Promotion
+  @fusion__type(schema: PROMOTIONS_API)
+  @fusion__lookup(
+    schema: PROMOTIONS_API
+    key: "id"
+    field: "promotionById(id: ID!): Promotion"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
+  description: String @fusion__field(schema: PROMOTIONS_API)
+  "The discount in percent that the promotion takes off the list price."
+  discountPercent: Int! @fusion__field(schema: PROMOTIONS_API)
+  id: ID! @fusion__field(schema: PROMOTIONS_API)
+  title: String! @fusion__field(schema: PROMOTIONS_API)
 }
 
-type RestockProductPayload {
-  product: Product
+type Recommendation implements Node
+  @fusion__type(schema: RECOMMENDATIONS_API)
+  @fusion__implements(schema: RECOMMENDATIONS_API, interface: "Node")
+  @fusion__lookup(
+    schema: RECOMMENDATIONS_API
+    key: "id"
+    field: "recommendationById(id: ID!): Recommendation"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
+  id: ID! @fusion__field(schema: RECOMMENDATIONS_API)
+  product: Product! @fusion__field(schema: RECOMMENDATIONS_API)
+  reason: String! @fusion__field(schema: RECOMMENDATIONS_API)
+  score: Float! @fusion__field(schema: RECOMMENDATIONS_API)
+  user: User! @fusion__field(schema: RECOMMENDATIONS_API)
 }
 
-type Review implements Node {
+type RemoveProductFromCartPayload @fusion__type(schema: CART_API) {
+  cart: Cart @fusion__field(schema: CART_API)
+  errors: [RemoveProductFromCartError!] @fusion__field(schema: CART_API)
+}
+
+type RestockProductPayload @fusion__type(schema: INVENTORY_API) {
+  product: Product @fusion__field(schema: INVENTORY_API)
+}
+
+type Review implements Node
+  @fusion__type(schema: REVIEWS_API)
+  @fusion__implements(schema: REVIEWS_API, interface: "Node")
+  @fusion__lookup(
+    schema: REVIEWS_API
+    key: "id"
+    field: "reviewById(id: ID!): Review"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
   author: User
     @cost(weight: "10")
-  body: String!
-  createAt: DateTime!
+    @fusion__cost(schema: REVIEWS_API, weight: "10")
+    @fusion__field(schema: REVIEWS_API)
+  body: String! @fusion__field(schema: REVIEWS_API)
+  createAt: DateTime! @fusion__field(schema: REVIEWS_API)
+  id: ID! @fusion__field(schema: REVIEWS_API)
+  product: Product! @fusion__field(schema: REVIEWS_API)
+  stars: Int! @fusion__field(schema: REVIEWS_API)
+}
+
+type ReviewCreated @fusion__type(schema: REVIEWS_API) {
+  cursor: String! @fusion__field(schema: REVIEWS_API)
+  review: Review! @fusion__field(schema: REVIEWS_API)
+}
+
+type UnknownProductError implements Error
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__implements(schema: PRODUCTS_API, interface: "Error") {
+  message: String! @fusion__field(schema: PRODUCTS_API)
+  productId: Int! @fusion__field(schema: PRODUCTS_API)
+}
+
+type UploadProductPicturePayload @fusion__type(schema: PRODUCTS_API) {
+  errors: [UploadProductPictureError!] @fusion__field(schema: PRODUCTS_API)
+  product: Product @fusion__field(schema: PRODUCTS_API)
+}
+
+type User implements Node
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: RECOMMENDATIONS_API)
+  @fusion__type(schema: REVIEWS_API)
+  @fusion__implements(schema: ACCOUNTS_API, interface: "Node")
+  @fusion__lookup(
+    schema: ACCOUNTS_API
+    key: "id"
+    field: "userById(id: ID!): User"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: ACCOUNTS_API
+    key: "username"
+    field: "userByUsername(username: String!): User"
+    map: ["username"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: ORDER_API
+    key: "id"
+    field: "userById(id: ID!): User"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: RECOMMENDATIONS_API
+    key: "id"
+    field: "userById(id: ID!): User"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
+    schema: REVIEWS_API
+    key: "id"
+    field: "userById(id: ID!): User"
+    map: ["id"]
+    path: null
+    internal: true
+  ) {
+  birthdate: DateTime! @fusion__field(schema: ACCOUNTS_API)
   id: ID!
-  product: Product!
-  stars: Int!
-}
-
-type UnknownProductError implements Error {
-  message: String!
-  productId: Int!
-}
-
-type UploadProductPicturePayload {
-  errors: [UploadProductPictureError!]
-  product: Product
-}
-
-type User implements Node {
-  birthdate: DateTime!
-  id: ID!
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: ORDER_API)
+    @fusion__field(schema: RECOMMENDATIONS_API)
+    @fusion__field(schema: REVIEWS_API)
   name: String!
-  reviews("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int): UserReviewsConnection
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: REVIEWS_API)
+  recommendations: [Recommendation!]!
     @cost(weight: "10")
-  username: String!
+    @fusion__cost(schema: RECOMMENDATIONS_API, weight: "10")
+    @fusion__field(schema: RECOMMENDATIONS_API)
+  reviews(
+    "Returns the elements in the list that come after the specified cursor."
+    after: String @fusion__inputField(schema: REVIEWS_API)
+    "Returns the elements in the list that come before the specified cursor."
+    before: String @fusion__inputField(schema: REVIEWS_API)
+    "Returns the first _n_ elements from the list."
+    first: Int @fusion__inputField(schema: REVIEWS_API)
+    "Returns the last _n_ elements from the list."
+    last: Int @fusion__inputField(schema: REVIEWS_API)
+  ): UserReviewsConnection
+    @cost(weight: "10")
+    @fusion__cost(schema: REVIEWS_API, weight: "10")
+    @fusion__field(schema: REVIEWS_API)
+  username: String! @fusion__field(schema: ACCOUNTS_API)
 }
 
 "A connection to a list of items."
-type UserReviewsConnection {
+type UserReviewsConnection @fusion__type(schema: REVIEWS_API) {
   "A list of edges."
-  edges: [UserReviewsEdge!]
+  edges: [UserReviewsEdge!] @fusion__field(schema: REVIEWS_API)
   "A flattened list of the nodes."
-  nodes: [Review!]
+  nodes: [Review!] @fusion__field(schema: REVIEWS_API)
   "Information to aid in pagination."
-  pageInfo: PageInfo!
+  pageInfo: PageInfo! @fusion__field(schema: REVIEWS_API)
 }
 
 "An edge in a connection."
-type UserReviewsEdge {
+type UserReviewsEdge @fusion__type(schema: REVIEWS_API) {
   "A cursor for use in pagination."
-  cursor: String!
+  cursor: String! @fusion__field(schema: REVIEWS_API)
   "The item at the end of the edge."
-  node: Review!
+  node: Review! @fusion__field(schema: REVIEWS_API)
 }
 
 "A connection to a list of items."
-type UsersConnection {
+type UsersConnection @fusion__type(schema: ACCOUNTS_API) {
   "A list of edges."
-  edges: [UsersEdge!]
+  edges: [UsersEdge!] @fusion__field(schema: ACCOUNTS_API)
   "A flattened list of the nodes."
-  nodes: [User!]
+  nodes: [User!] @fusion__field(schema: ACCOUNTS_API)
   "Information to aid in pagination."
-  pageInfo: PageInfo!
+  pageInfo: PageInfo! @fusion__field(schema: ACCOUNTS_API)
 }
 
 "An edge in a connection."
-type UsersEdge {
+type UsersEdge @fusion__type(schema: ACCOUNTS_API) {
   "A cursor for use in pagination."
-  cursor: String!
+  cursor: String! @fusion__field(schema: ACCOUNTS_API)
   "The item at the end of the edge."
-  node: User!
+  node: User! @fusion__field(schema: ACCOUNTS_API)
 }
 
-type Viewer {
+type Viewer @fusion__type(schema: CART_API) {
   cart: Cart!
     @cost(weight: "10")
+    @fusion__cost(schema: CART_API, weight: "10")
+    @fusion__field(schema: CART_API)
 }
 
-interface Error {
+interface Error
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: PRODUCTS_API) {
   message: String!
+    @fusion__field(schema: CART_API)
+    @fusion__field(schema: PRODUCTS_API)
 }
 
 "The node interface is implemented by entities that have a global unique identifier."
-interface Node {
+interface Node
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: INVENTORY_API)
+  @fusion__type(schema: ORDER_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: RECOMMENDATIONS_API)
+  @fusion__type(schema: REVIEWS_API)
+  @fusion__lookup(
+    schema: ACCOUNTS_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: INVENTORY_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: ORDER_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: PAYMENTS_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: PRODUCTS_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: RECOMMENDATIONS_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  )
+  @fusion__lookup(
+    schema: REVIEWS_API
+    key: "id"
+    field: "node(id: ID!): Node"
+    map: ["id"]
+    path: null
+    internal: false
+  ) {
   id: ID!
+    @fusion__field(schema: ACCOUNTS_API)
+    @fusion__field(schema: INVENTORY_API)
+    @fusion__field(schema: ORDER_API)
+    @fusion__field(schema: PAYMENTS_API)
+    @fusion__field(schema: PRODUCTS_API)
+    @fusion__field(schema: RECOMMENDATIONS_API)
+    @fusion__field(schema: REVIEWS_API)
 }
 
-union AddProductToCartError = ProductAmountCannotBeLowerThanOneError
+union AddProductToCartError
+  @fusion__type(schema: CART_API)
+  @fusion__unionMember(
+    schema: CART_API
+    member: "ProductAmountCannotBeLowerThanOneError"
+  ) = ProductAmountCannotBeLowerThanOneError
 
-union RemoveProductFromCartError = ProductAmountCannotBeLowerThanOneError
+union RemoveProductFromCartError
+  @fusion__type(schema: CART_API)
+  @fusion__unionMember(
+    schema: CART_API
+    member: "ProductAmountCannotBeLowerThanOneError"
+  ) = ProductAmountCannotBeLowerThanOneError
 
-union UploadProductPictureError = UnknownProductError
+union UploadProductPictureError
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__unionMember(schema: PRODUCTS_API, member: "UnknownProductError") =
+  | UnknownProductError
 
-input AddProductToCartInput {
-  productId: ID!
-  quantity: Int!
+input AddProductToCartInput @fusion__type(schema: CART_API) {
+  productId: ID! @fusion__inputField(schema: CART_API)
+  quantity: Int! @fusion__inputField(schema: CART_API)
 }
 
-input CreateOrderInput {
-  items: [OrderItemInput!]!
-  userId: ID!
-  weight: Int!
+input CreateOrderInput @fusion__type(schema: ORDER_API) {
+  items: [OrderItemInput!]! @fusion__inputField(schema: ORDER_API)
+  userId: ID! @fusion__inputField(schema: ORDER_API)
+  weight: Int! @fusion__inputField(schema: ORDER_API)
 }
 
-input CreatePaymentInput {
-  orderId: ID!
+input CreatePaymentInput @fusion__type(schema: PAYMENTS_API) {
+  orderId: ID! @fusion__inputField(schema: PAYMENTS_API)
 }
 
-input CreateReviewInput {
-  authorId: ID!
-  body: String!
-  productId: ID!
-  stars: Int!
+input CreatePromotionInput @fusion__type(schema: PROMOTIONS_API) {
+  description: String @fusion__inputField(schema: PROMOTIONS_API)
+  "The discount in percent that the promotion takes off the list price."
+  discountPercent: Int! @fusion__inputField(schema: PROMOTIONS_API)
+  title: String! @fusion__inputField(schema: PROMOTIONS_API)
 }
 
-input OrderItemInput {
-  price: Float!
-  productId: ID!
-  quantity: Int!
+input CreateReviewInput @fusion__type(schema: REVIEWS_API) {
+  authorId: ID! @fusion__inputField(schema: REVIEWS_API)
+  body: String! @fusion__inputField(schema: REVIEWS_API)
+  productId: ID! @fusion__inputField(schema: REVIEWS_API)
+  stars: Int! @fusion__inputField(schema: REVIEWS_API)
 }
 
-input ProductDimensionInput {
-  height: Float!
-  length: Float!
-  weight: Int!
-  width: Float!
+input OrderItemInput @fusion__type(schema: ORDER_API) {
+  price: Float! @fusion__inputField(schema: ORDER_API)
+  productId: ID! @fusion__inputField(schema: ORDER_API)
+  quantity: Int! @fusion__inputField(schema: ORDER_API)
 }
 
-input RemoveProductFromCartInput {
-  productId: ID!
-  quantity: Int!
+input ProductDimensionInput @fusion__type(schema: SHIPPING_API) {
+  height: Float! @fusion__inputField(schema: SHIPPING_API)
+  length: Float! @fusion__inputField(schema: SHIPPING_API)
+  weight: Int! @fusion__inputField(schema: SHIPPING_API)
+  width: Float! @fusion__inputField(schema: SHIPPING_API)
 }
 
-input RestockProductInput {
-  id: ID!
-  quantity: Int!
+input RemoveProductFromCartInput @fusion__type(schema: CART_API) {
+  productId: ID! @fusion__inputField(schema: CART_API)
+  quantity: Int! @fusion__inputField(schema: CART_API)
 }
 
-input UploadProductPictureInput {
-  picture: Upload!
-  productId: Int!
+input RestockProductInput @fusion__type(schema: INVENTORY_API) {
+  id: ID! @fusion__inputField(schema: INVENTORY_API)
+  quantity: Int! @fusion__inputField(schema: INVENTORY_API)
 }
 
-enum PaymentStatus {
-  AUTHORIZED
-  DECLINED
-  PENDING
-  REFUNDED
+input UploadProductPictureInput @fusion__type(schema: PRODUCTS_API) {
+  picture: Upload! @fusion__inputField(schema: PRODUCTS_API)
+  productId: Int! @fusion__inputField(schema: PRODUCTS_API)
 }
 
-enum ScalarSerializationType {
-  BOOLEAN
-  FLOAT
-  INT
-  LIST
-  OBJECT
+enum fusion__NodeResolution {
+  GATEWAY
+  SOURCE_SCHEMA
+}
+
+"The fusion__Schema enum is a generated type used within an execution schema document to refer to a source schema in a type-safe manner."
+enum fusion__Schema {
+  ACCOUNTS_API @fusion__schema_metadata(name: "accounts-api")
+  CART_API @fusion__schema_metadata(name: "cart-api")
+  INVENTORY_API @fusion__schema_metadata(name: "inventory-api")
+  ORDER_API @fusion__schema_metadata(name: "order-api")
+  PAYMENTS_API @fusion__schema_metadata(name: "payments-api")
+  PRODUCTS_API @fusion__schema_metadata(name: "products-api")
+  PROMOTIONS_API @fusion__schema_metadata(name: "promotions-api")
+  RECOMMENDATIONS_API @fusion__schema_metadata(name: "recommendations-api")
+  REVIEWS_API @fusion__schema_metadata(name: "reviews-api")
+  SHIPPING_API @fusion__schema_metadata(name: "shipping-api")
+}
+
+enum fusion__ShareableFieldRuntimeTypeRouting {
+  SOURCE_LOCAL
+  COMMON_RUNTIME_TYPES
+}
+
+enum PaymentStatus @fusion__type(schema: PAYMENTS_API) {
+  PENDING @fusion__enumValue(schema: PAYMENTS_API)
+  AUTHORIZED @fusion__enumValue(schema: PAYMENTS_API)
+  DECLINED @fusion__enumValue(schema: PAYMENTS_API)
+  REFUNDED @fusion__enumValue(schema: PAYMENTS_API)
+}
+
+enum ScalarSerializationType
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__type(schema: PRODUCTS_API)
+  @fusion__type(schema: REVIEWS_API) {
   STRING
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
+  BOOLEAN
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
+  INT
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
+  FLOAT
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
+  OBJECT
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
+  LIST
+    @fusion__enumValue(schema: ACCOUNTS_API)
+    @fusion__enumValue(schema: CART_API)
+    @fusion__enumValue(schema: PAYMENTS_API)
+    @fusion__enumValue(schema: PRODUCTS_API)
+    @fusion__enumValue(schema: REVIEWS_API)
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
+  @serializeAs(
+    type: STRING
+    pattern: "\"^\\\\d{4}-\\\\d{2}-\\\\d{2}[Tt]\\\\d{2}:\\\\d{2}:\\\\d{2}(?:\\\\.\\\\d{1,9})?(?:[Zz]|[+-]\\\\d{2}:\\\\d{2})$\""
+  )
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+  @fusion__type(schema: ACCOUNTS_API)
+  @fusion__type(schema: CART_API)
+  @fusion__type(schema: PAYMENTS_API)
+  @fusion__type(schema: REVIEWS_API)
 
 "The `Decimal` scalar type represents a decimal floating-point number with high precision."
 scalar Decimal
+  @serializeAs(type: FLOAT)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/decimal.html")
+  @fusion__type(schema: PAYMENTS_API)
+
+"The fusion__FieldDefinition scalar is used to represent a GraphQL field definition specified in the GraphQL spec."
+scalar fusion__FieldDefinition
+
+"The fusion__FieldSelectionMap scalar is used to represent the FieldSelectionMap type specified in the GraphQL Composite Schemas Spec."
+scalar fusion__FieldSelectionMap
+
+"The fusion__FieldSelectionPath scalar is used to represent a path of field names relative to the Query type."
+scalar fusion__FieldSelectionPath
+
+"The fusion__FieldSelectionSet scalar is used to represent a GraphQL selection set. To simplify the syntax, the outermost selection set is not wrapped in curly braces."
+scalar fusion__FieldSelectionSet
 
 "The `Upload` scalar type represents a file upload."
-scalar Upload
+scalar Upload @serializeAs(type: STRING) @fusion__type(schema: PRODUCTS_API)
 
 "The `URI` scalar type represents a Uniform Resource Identifier (URI) as defined by RFC 3986."
 scalar URI
+  @serializeAs(type: STRING)
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/uri.html")
+  @fusion__type(schema: PRODUCTS_API)
 
-directive @cost(weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+directive @cost(weight: String!) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
+
+"The @fusion__cost directive specifies cost metadata for each source schema."
+directive @fusion__cost(
+  "The name of the source schema that defined the cost metadata."
+  schema: fusion__Schema!
+  "The weight defined in the source schema."
+  weight: String!
+) repeatable on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION
+
+"The @fusion__enumValue directive specifies which source schema provides an enum value."
+directive @fusion__enumValue(
+  "The name of the source schema that provides the specified enum value."
+  schema: fusion__Schema!
+) repeatable on ENUM_VALUE
+
+directive @fusion__eventStream(
+  broker: String
+  cursorArgument: String
+  cursorField: String
+  message: fusion__FieldSelectionSet!
+  schema: fusion__Schema!
+  topics: [String!]
+) on FIELD_DEFINITION
+
+directive @fusion__execution(
+  nodeResolution: fusion__NodeResolution! = GATEWAY
+  shareableFieldRuntimeTypeRouting: fusion__ShareableFieldRuntimeTypeRouting! = SOURCE_LOCAL
+) on SCHEMA
+
+"The @fusion__field directive specifies which source schema provides a field in a composite type and what execution behavior it has."
+directive @fusion__field(
+  "Indicates that this field is only partially provided and must be combined with `provides`."
+  partial: Boolean! = false
+  "A selection set of fields this field provides in the composite schema."
+  provides: fusion__FieldSelectionSet
+  "The name of the source schema that originally provided this field."
+  schema: fusion__Schema!
+  "Indicates that the source field was declared as external before connector preprocessing."
+  sourceExternal: Boolean! = false
+  "The field type in the source schema if it differs in nullability or structure."
+  sourceType: String
+) repeatable on FIELD_DEFINITION
+
+"The @fusion__gateway_field directive marks a field that is implemented by the gateway itself rather than resolved from an underlying source schema, such as the global object identification node field."
+directive @fusion__gateway_field on FIELD_DEFINITION
+
+"The @fusion__implements directive specifies on which source schema an interface is implemented by an object or interface type."
+directive @fusion__implements(
+  "The name of the interface type."
+  interface: String!
+  "The name of the source schema on which the annotated type implements the specified interface."
+  schema: fusion__Schema!
+) repeatable on OBJECT | INTERFACE
+
+"The @fusion__inaccessible directive is used to prevent specific type system members from being accessible through the client-facing composite schema, even if they are accessible in the underlying source schemas."
+directive @fusion__inaccessible on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | INTERFACE
+  | UNION
+  | ENUM
+  | ENUM_VALUE
+  | INPUT_OBJECT
+  | INPUT_FIELD_DEFINITION
+
+"The @fusion__inputField directive specifies which source schema provides an input field in a composite input type."
+directive @fusion__inputField(
+  "The name of the source schema that originally provided this input field."
+  schema: fusion__Schema!
+  "The field type in the source schema if it differs in nullability or structure."
+  sourceType: String
+) repeatable on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"The @fusion__interfaceObject directive specifies the source schemas that expose an interface as an @interfaceObject stand-in, so values of the interface produced by those schemas are opaque."
+directive @fusion__interfaceObject(
+  "The name of the source schema that exposes this interface as an @interfaceObject stand-in."
+  schema: fusion__Schema!
+) repeatable on INTERFACE
+
+"The @fusion__listSize directive specifies list size metadata for each source schema."
+directive @fusion__listSize(
+  "The assumed size of the list as defined in the source schema."
+  assumedSize: Int
+  "The single slicing argument requirement of the list as defined in the source schema."
+  requireOneSlicingArgument: Boolean
+  "The name of the source schema that defined the list size metadata."
+  schema: fusion__Schema!
+  "The sized fields of the list as defined in the source schema."
+  sizedFields: [String!]
+  "The slicing argument default value of the list as defined in the source schema."
+  slicingArgumentDefaultValue: Int
+  "The slicing arguments of the list as defined in the source schema."
+  slicingArguments: [String!]
+) repeatable on FIELD_DEFINITION
+
+"The @fusion__lookup directive specifies how the distributed executor can resolve data for an entity type from a source schema by a stable key."
+directive @fusion__lookup(
+  "The GraphQL field definition in the source schema that can be used to look up the entity."
+  field: fusion__FieldDefinition!
+  "Is the lookup meant as an entry point or just to provide more data."
+  internal: Boolean! = false
+  "A selection set on the annotated entity type that describes the stable key for the lookup."
+  key: fusion__FieldSelectionSet!
+  "The map describes how the key values are resolved from the annotated entity type."
+  map: [fusion__FieldSelectionMap!]!
+  "The path to the lookup field relative to the Query type."
+  path: fusion__FieldSelectionPath
+  "The name of the source schema where the annotated entity type can be looked up from."
+  schema: fusion__Schema!
+) repeatable on OBJECT | INTERFACE | UNION
+
+"The @fusion__requires directive specifies if a field has requirements on a source schema."
+directive @fusion__requires(
+  "The GraphQL field definition in the source schema that this field depends on."
+  field: fusion__FieldDefinition!
+  "The map describes how the argument values for the source schema are resolved from the arguments of the field exposed in the client-facing composite schema and from required data relative to the current type."
+  map: [fusion__FieldSelectionMap]!
+  "A selection set on the annotated field that describes its requirements."
+  requirements: fusion__FieldSelectionSet!
+  "The name of the source schema where this field has requirements to data on other source schemas."
+  schema: fusion__Schema!
+) repeatable on FIELD_DEFINITION
+
+"The @fusion__schema_metadata directive is used to provide additional metadata for a source schema."
+directive @fusion__schema_metadata(
+  allowNonResolvableInterfaceObjects: Boolean
+  kind: String
+  "The name of the source schema."
+  name: String!
+) on ENUM_VALUE
+
+directive @fusion__tag(name: String!) repeatable on
+  | SCHEMA
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | INTERFACE
+  | UNION
+  | ENUM
+  | ENUM_VALUE
+  | INPUT_OBJECT
+  | INPUT_FIELD_DEFINITION
+
+"The @fusion__type directive specifies which source schemas provide parts of a composite type."
+directive @fusion__type(
+  "The name of the source schema that originally provided part of the annotated type."
+  schema: fusion__Schema!
+) repeatable on SCALAR | OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT
+
+"The @fusion__unionMember directive specifies which source schema provides a member type of a union."
+directive @fusion__unionMember(
+  "The name of the member type."
+  member: String!
+  "The name of the source schema that provides the specified member type."
+  schema: fusion__Schema!
+) repeatable on UNION
+
+directive @serializeAs(pattern: String, type: [ScalarSerializationType!]!) on
+  | SCALAR
