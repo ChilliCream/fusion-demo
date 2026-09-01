@@ -1,3 +1,4 @@
+import "./styles/globals.css";
 import { RelayEnvironmentProvider } from "react-relay";
 import { RelayEnvironment } from "./RelayEnvironment";
 import { StrictMode } from "react";
