@@ -30,7 +30,7 @@ export function FormField({
         </label>
       )}
       {children}
-      {error && <span className="text-sm text-red-500">{error}</span>}
+      {error && <span className="text-sm text-cc-danger">{error}</span>}
     </div>
   );
 }

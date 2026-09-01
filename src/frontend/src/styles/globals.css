@@ -141,6 +141,7 @@
   }
 
   html {
+    color-scheme: dark;
     background-color: var(--color-cc-bg);
     color: var(--color-cc-ink);
     -webkit-font-smoothing: antialiased;
