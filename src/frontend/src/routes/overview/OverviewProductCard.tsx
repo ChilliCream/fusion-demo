@@ -185,7 +185,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 right-0 z-0 h-56 w-56 opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-40"
+        className="pointer-events-none absolute -top-24 right-0 z-0 h-56 w-56 opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-40 group-focus-within:opacity-40"
         style={{
           background:
             "radial-gradient(50% 50% at 60% 40%, rgba(22,185,228,0.18), transparent 70%)",
@@ -226,7 +226,7 @@ export function ProductCard({ product }: ProductCardProps) {
           it via z-30 so a click here always lands on the button and never
           reaches the overlay underneath.
         */}
-        <div className="absolute right-3 bottom-3 z-30 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
+        <div className="absolute right-3 bottom-3 z-30 translate-y-1.5 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <Button
             variant="solid"
             size="sm"
