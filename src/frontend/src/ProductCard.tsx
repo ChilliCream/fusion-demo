@@ -19,7 +19,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CheckIcon from "@mui/icons-material/Check";
 import LoginIcon from "@mui/icons-material/Login";
 import { memo, useState } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./auth/useAuth";
 import LoginDialog from "./LoginDialog";
 
 const ProductCardFragment = graphql`

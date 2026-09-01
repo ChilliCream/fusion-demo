@@ -10,7 +10,7 @@ import {
   Box,
   CircularProgress,
 } from '@mui/material';
-import { useAuth } from './AuthContext';
+import { useAuth } from './auth/useAuth';
 
 interface LoginDialogProps {
   open: boolean;

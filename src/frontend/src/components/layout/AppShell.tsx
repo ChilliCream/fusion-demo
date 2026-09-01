@@ -1,11 +1,14 @@
 import { Outlet } from "react-router";
-import { Header } from "./Header";
+import { LoginModal } from "../../auth/LoginModal";
 import { Footer } from "./Footer";
+import { Header } from "./Header";
 
 /**
  * The page shell shared by every route: sticky header, flexible main
  * content area, and slim footer. The starfield background comes from the
- * design base's `body` styles in `src/styles/globals.css`.
+ * design base's `body` styles in `src/styles/globals.css`. The login modal
+ * is mounted once here (rather than inside `Header`) so it isn't nested
+ * under the header's landmark, and shows/hides itself via `AuthContext`.
  */
 export function AppShell() {
   return (
@@ -15,6 +18,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <Footer />
+      <LoginModal />
     </div>
   );
 }

@@ -1,18 +1,21 @@
 import { Link } from "react-router";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/useAuth";
 import { ChilliCreamWinking } from "../icons/ChilliCreamWinking";
 import { ChilliCreamText } from "../icons/ChilliCreamText";
 import { CartIcon } from "../icons/CartIcon";
 import { Button } from "../ui/Button";
+import { AccountMenu } from "./AccountMenu";
 import { CartBadge } from "./CartBadge";
 
 /**
  * Sticky store header: brand mark + "Store" eyebrow on the left, cart
- * shortcut and sign-in placeholder on the right. Look ported from the
- * `.site-header` rules in `prototype/store-look/index.html`.
+ * shortcut and account slot on the right. Look ported from the
+ * `.site-header` rules in `prototype/store-look/index.html`. Signed out,
+ * the account slot opens the login modal (mounted by `AppShell`); signed
+ * in, it shows the username with a Logout menu.
  */
 export function Header() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLogin } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 h-18 border-b border-cc-card-border bg-cc-card-bg shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[18px]">
@@ -36,13 +39,13 @@ export function Header() {
             <CartIcon className="h-[22px] w-[22px]" />
             {isAuthenticated && <CartBadge />}
           </Link>
-          {/*
-            Non-functional placeholder: the sign-in pill / account menu is
-            wired up by the auth task (fusion-demo-js-0bx.4).
-          */}
-          <Button variant="outline" size="sm">
-            Sign in
-          </Button>
+          {isAuthenticated ? (
+            <AccountMenu />
+          ) : (
+            <Button variant="outline" size="sm" onClick={() => openLogin()}>
+              Sign in
+            </Button>
+          )}
         </div>
       </div>
     </header>
