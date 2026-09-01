@@ -142,8 +142,17 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     setIsAdding(true);
     commitAddToCart({
       variables: { input: { productId: data.id, quantity } },
-      onCompleted: () => {
+      onCompleted: (_response, errors) => {
         setIsAdding(false);
+
+        // Transport-level errors (Relay's second `onCompleted` argument) mean
+        // the add didn't actually happen server-side, so this must not show
+        // the "Added ✓" state - same as a thrown `onError`. There's no error
+        // UI here to surface it further (out of scope here).
+        if (errors?.length) {
+          return;
+        }
+
         setIsAdded(true);
         setQuantity(1);
 

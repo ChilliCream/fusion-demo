@@ -61,8 +61,12 @@ export function CartSummary({
     setError(null);
     commitCheckout({
       variables: {},
-      onCompleted: () => {
+      onCompleted: (_response, errors) => {
         setIsCheckingOut(false);
+        if (errors?.length) {
+          setError("Checkout failed. Please try again.");
+          return;
+        }
         onCheckoutSuccess();
       },
       onError: () => {

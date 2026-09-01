@@ -135,9 +135,11 @@ interface CartLineItemProps {
  * zero; trash is the only path there, and needs no confirmation (demo).
  *
  * All three actions share one `isBusy` flag so they can't race each other on
- * the same row. A mutation error - either a non-empty `errors` entry on the
- * payload or a thrown GraphQL/network error - is shown inline and leaves the
- * cart untouched (no optimistic update is applied; the row's displayed
+ * the same row. A mutation error - a non-empty `errors` entry on the
+ * payload, a non-empty transport-level `errors` array (Relay's second
+ * `onCompleted` argument, checked before the payload's own `errors`), or a
+ * thrown GraphQL/network error via `onError` - is shown inline and leaves
+ * the cart untouched (no optimistic update is applied; the row's displayed
  * `quantity` only changes once the mutation's re-spread `CartView_cart`
  * actually updates the underlying store record).
  */
@@ -157,11 +159,15 @@ export function CartLineItem({ item }: CartLineItemProps) {
     setError(null);
     commitAdd({
       variables: { input: { productId: data.product.id, quantity: 1 } },
-      onCompleted: (response) => {
+      onCompleted: (response, transportErrors) => {
         setIsBusy(false);
-        const errors = response.addProductToCart.errors ?? [];
-        if (errors.length > 0) {
-          setError(errors[0].message ?? GENERIC_ERROR_MESSAGE);
+        if (transportErrors?.length) {
+          setError(GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        const payloadErrors = response.addProductToCart.errors ?? [];
+        if (payloadErrors.length > 0) {
+          setError(payloadErrors[0].message ?? GENERIC_ERROR_MESSAGE);
         }
       },
       onError: () => {
@@ -179,11 +185,15 @@ export function CartLineItem({ item }: CartLineItemProps) {
     setError(null);
     commitRemove({
       variables: { input: { productId: data.product.id, quantity: 1 } },
-      onCompleted: (response) => {
+      onCompleted: (response, transportErrors) => {
         setIsBusy(false);
-        const errors = response.removeProductFromCart.errors ?? [];
-        if (errors.length > 0) {
-          setError(errors[0].message ?? GENERIC_ERROR_MESSAGE);
+        if (transportErrors?.length) {
+          setError(GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        const payloadErrors = response.removeProductFromCart.errors ?? [];
+        if (payloadErrors.length > 0) {
+          setError(payloadErrors[0].message ?? GENERIC_ERROR_MESSAGE);
         }
       },
       onError: () => {
@@ -203,11 +213,15 @@ export function CartLineItem({ item }: CartLineItemProps) {
       variables: {
         input: { productId: data.product.id, quantity: data.quantity },
       },
-      onCompleted: (response) => {
+      onCompleted: (response, transportErrors) => {
         setIsBusy(false);
-        const errors = response.removeProductFromCart.errors ?? [];
-        if (errors.length > 0) {
-          setError(errors[0].message ?? GENERIC_ERROR_MESSAGE);
+        if (transportErrors?.length) {
+          setError(GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        const payloadErrors = response.removeProductFromCart.errors ?? [];
+        if (payloadErrors.length > 0) {
+          setError(payloadErrors[0].message ?? GENERIC_ERROR_MESSAGE);
         }
       },
       onError: () => {
