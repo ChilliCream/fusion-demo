@@ -32,7 +32,7 @@ function CartContent({ fetchKey }: CartContentProps) {
   const data = useLazyLoadQuery<CartPageQuery>(
     CartPageQueryNode,
     {},
-    { fetchKey, fetchPolicy: "network-only" },
+    { fetchKey },
   );
   return <CartView cart={data.viewer.cart} />;
 }

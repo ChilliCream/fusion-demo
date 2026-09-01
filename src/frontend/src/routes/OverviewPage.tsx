@@ -26,7 +26,7 @@ function OverviewContent({ fetchKey }: OverviewContentProps) {
   const data = useLazyLoadQuery<OverviewPageQuery>(
     OverviewPageQueryNode,
     {},
-    { fetchKey, fetchPolicy: "network-only" },
+    { fetchKey },
   );
   return <ProductGrid queryRef={data} />;
 }

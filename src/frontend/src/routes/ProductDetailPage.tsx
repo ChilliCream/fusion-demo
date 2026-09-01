@@ -37,7 +37,7 @@ function ProductDetailContent({ id, fetchKey }: ProductDetailContentProps) {
   const data = useLazyLoadQuery<ProductDetailPageQuery>(
     ProductDetailPageQueryNode,
     { id },
-    { fetchKey, fetchPolicy: "network-only" },
+    { fetchKey },
   );
 
   if (!data.productById) {
