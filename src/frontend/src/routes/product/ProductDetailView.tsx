@@ -210,7 +210,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
         </div>
 
         <div>
-          <h1 className="mb-3 font-heading text-h3 font-semibold text-cc-heading">
+          <h1 className="mb-3 font-heading text-h3 font-semibold text-cc-heading max-[900px]:text-h4">
             {data.name}
           </h1>
 

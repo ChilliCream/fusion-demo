@@ -95,7 +95,11 @@ export function CartSummary({
         <span>${subtotal.toFixed(2)}</span>
       </div>
 
-      {error && <p className="text-sm text-cc-danger">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm text-cc-danger">
+          {error}
+        </p>
+      )}
 
       <Button
         variant="solid"

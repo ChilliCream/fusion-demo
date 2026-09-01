@@ -264,7 +264,11 @@ export function CartLineItem({ item }: CartLineItemProps) {
             </span>
           )}
         </div>
-        {error && <p className="mt-2 text-sm text-cc-danger">{error}</p>}
+        {error && (
+          <p role="alert" className="mt-2 text-sm text-cc-danger">
+            {error}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end sm:justify-start">

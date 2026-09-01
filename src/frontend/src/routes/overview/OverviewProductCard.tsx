@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
 import { Link } from "react-router";
 import type { OverviewProductCard_product$key } from "./__generated__/OverviewProductCard_product.graphql";
@@ -100,6 +100,20 @@ export function ProductCard({ product }: ProductCardProps) {
   );
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const addedResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  // Cleanup the transient "Added ✓" timeout on unmount so it never fires a
+  // state update against an unmounted component (same pattern as
+  // ProductDetailView's own add-to-cart timeout).
+  useEffect(() => {
+    return () => {
+      if (addedResetTimeoutRef.current !== null) {
+        clearTimeout(addedResetTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const reviewNodes = data.reviews?.nodes ?? [];
   const reviewCount = reviewNodes.length;
@@ -129,7 +143,14 @@ export function ProductCard({ product }: ProductCardProps) {
       onCompleted: () => {
         setIsAdding(false);
         setIsAdded(true);
-        setTimeout(() => setIsAdded(false), ADDED_RESET_DELAY_MS);
+
+        if (addedResetTimeoutRef.current !== null) {
+          clearTimeout(addedResetTimeoutRef.current);
+        }
+        addedResetTimeoutRef.current = setTimeout(() => {
+          setIsAdded(false);
+          addedResetTimeoutRef.current = null;
+        }, ADDED_RESET_DELAY_MS);
       },
       onError: () => {
         setIsAdding(false);
