@@ -166,7 +166,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <article className="group relative isolate flex h-full flex-col overflow-hidden rounded-xl border border-cc-card-border bg-cc-card-bg backdrop-blur-sm transition-colors group-hover:border-cc-card-border-hover">
+    <article className="group relative isolate flex h-full flex-col overflow-hidden rounded-xl border border-cc-card-border bg-cc-card-bg backdrop-blur-sm transition-colors hover:border-cc-card-border-hover">
       {/*
         Stretched-link overlay: covers the whole tile and carries the
         client-side navigation + the tile's accessible name (it renders no
