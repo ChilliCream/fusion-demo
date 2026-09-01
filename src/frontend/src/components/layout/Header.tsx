@@ -33,9 +33,17 @@ export function Header() {
         <div className="flex items-center gap-3.5">
           <Link
             to="/cart"
-            aria-label="Cart"
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-cc-heading transition-colors hover:bg-cc-hover"
           >
+            {/* No static `aria-label` here: a fixed label would win over the
+                badge's live count in accessible-name computation (a link's
+                own `aria-label` always overrides its text content, so the
+                count would never be announced). Instead, the accessible
+                name is composed from this `sr-only` "Cart" text plus
+                `CartBadge`'s own `sr-only` ", N items" suffix when signed
+                in with a non-empty cart, matching the prototype's static
+                "Cart, 3 items" label but with a live count. */}
+            <span className="sr-only">Cart</span>
             <CartIcon className="h-[22px] w-[22px]" />
             {isAuthenticated && <CartBadge />}
           </Link>

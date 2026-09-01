@@ -29,6 +29,12 @@ const MAX_DISPLAYED_COUNT = 9;
  * The small pill on the header cart icon showing the sum of item quantities
  * in `viewer.cart`, capped at "9+" for display. Only mounted by `Header`
  * while the viewer is authenticated.
+ *
+ * Renders two pieces of text: the visible, capped-at-"9+" pill (marked
+ * `aria-hidden`) and an `sr-only` ", N items" suffix carrying the real
+ * count. `Header` composes its cart link's accessible name from its own
+ * `sr-only` "Cart" text plus this suffix (when non-null) - see the comment
+ * there for why a static `aria-label` can't be used instead.
  */
 function CartBadgeCount() {
   const data = useLazyLoadQuery<CartBadgeQuery>(CartBadgeQueryNode, {});
@@ -46,9 +52,17 @@ function CartBadgeCount() {
   }
 
   return (
-    <span className="absolute -top-0.5 -right-0.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-cc-accent px-1 text-[11px] leading-none font-bold text-cc-surface">
-      {count > MAX_DISPLAYED_COUNT ? "9+" : count}
-    </span>
+    <>
+      <span
+        aria-hidden="true"
+        className="absolute -top-0.5 -right-0.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-cc-accent px-1 text-[11px] leading-none font-bold text-cc-surface"
+      >
+        {count > MAX_DISPLAYED_COUNT ? "9+" : count}
+      </span>
+      <span className="sr-only">
+        , {count} {count === 1 ? "item" : "items"}
+      </span>
+    </>
   );
 }
 
