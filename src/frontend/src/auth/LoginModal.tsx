@@ -1,4 +1,11 @@
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { useAuth } from "./useAuth";
@@ -15,6 +22,13 @@ export function LoginModal() {
   const { isLoginModalOpen, closeLogin, login, loading, error } = useAuth();
   const [username, setUsername] = useState("demo-user");
   const [password, setPassword] = useState("demo-password");
+  // Tracks whether the pointer actually went down on the backdrop itself
+  // (rather than inside the dialog) so a text-selection drag that starts on
+  // an input and is released over the backdrop doesn't close the modal: a
+  // "click" event still fires on the backdrop in that case (browsers
+  // resolve mousedown/mouseup target mismatches to the nearest common
+  // ancestor), which would otherwise discard the pending add-to-cart intent.
+  const pointerDownOnBackdrop = useRef(false);
 
   useEffect(() => {
     if (!isLoginModalOpen) {
@@ -43,10 +57,21 @@ export function LoginModal() {
     }
   };
 
+  function handleBackdropPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    pointerDownOnBackdrop.current = event.target === event.currentTarget;
+  }
+
+  function handleBackdropClick(event: ReactMouseEvent<HTMLDivElement>) {
+    if (pointerDownOnBackdrop.current && event.target === event.currentTarget) {
+      closeLogin();
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-cc-black/60 p-4 backdrop-blur-sm"
-      onClick={closeLogin}
+      onPointerDown={handleBackdropPointerDown}
+      onClick={handleBackdropClick}
     >
       <div
         role="dialog"
