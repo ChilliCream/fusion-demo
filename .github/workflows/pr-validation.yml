@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -31,6 +31,17 @@ jobs:
             dotnet run --project "src/SourceSchemas/$project" --no-build -c Release -- schema export
           done
 
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Export Promotions Source Schema
+        working-directory: src/SourceSchemas/Promotions
+        run: |
+          npm ci
+          npm run export-schema
+
       - name: Validate GraphQL schema
         uses: ChilliCream/nitro-fusion-validate@v16.5.0
         with:
@@ -41,6 +52,7 @@ jobs:
             src/SourceSchemas/Order/schema.graphqls
             src/SourceSchemas/Payments/schema.graphqls
             src/SourceSchemas/Products/schema.graphqls
+            src/SourceSchemas/Promotions/schema.graphqls
             src/SourceSchemas/Reviews/schema.graphqls
             src/SourceSchemas/Shipping/schema.graphqls
           stage: ${{ vars.NITRO_STAGE }}
@@ -112,12 +124,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
           cache: yarn
           cache-dependency-path: src/frontend/yarn.lock
 

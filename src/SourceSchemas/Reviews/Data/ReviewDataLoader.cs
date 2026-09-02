@@ -23,9 +23,9 @@ internal static class ReviewDataLoader
         CancellationToken cancellationToken)
         => await context.Reviews
             .Where(u => ids.Contains(u.AuthorId))
-            .With(query.Include(t => t.ProductId), DefaultOrder)
-            .ToBatchPageAsync(t => t.ProductId, pagingArgs, cancellationToken);
-    
+            .With(query.Include(t => t.AuthorId), DefaultOrder)
+            .ToBatchPageAsync(t => t.AuthorId, pagingArgs, cancellationToken);
+
     [DataLoader]
     public static async Task<Dictionary<int, Page<Review>>> GetReviewsByProductIdAsync(
         IReadOnlyList<int> productIds,

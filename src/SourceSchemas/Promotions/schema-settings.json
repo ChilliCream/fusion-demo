@@ -1,0 +1,27 @@
+{
+  "name": "promotions-api",
+  "transports": {
+    "http": {
+      "url": "{{API_URL}}",
+      "clientName": "fusion",
+      "capabilities": {
+        "batching": {
+          "variableBatching": false,
+          "requestBatching": false,
+          "aliasBatching": true
+        }
+      }
+    }
+  },
+  "environments": {
+    "aspire": {
+      "API_URL": "http://localhost:5118/graphql"
+    },
+    "dev": {
+      "API_URL": "https://ccc-eu1-demo-ca-promotions.azurewebsites.net/graphql"
+    },
+    "prod": {
+      "API_URL": "https://api.example.com"
+    }
+  }
+}

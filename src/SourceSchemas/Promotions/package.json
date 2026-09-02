@@ -1,0 +1,25 @@
+{
+  "name": "promotions",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node --enable-source-maps dist/main.js",
+    "export-schema": "tsx src/export-schema.ts"
+  },
+  "dependencies": {
+    "graphql": "^16.11.0",
+    "graphql-federation-subgraph": "^0.4.0",
+    "graphql-yoga": "^5.16.0",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

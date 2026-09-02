@@ -1,0 +1,155 @@
+name: Promotions API Release
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/SourceSchemas/Promotions/**"
+      - ".github/workflows/deploy-promotions.yml"
+  workflow_dispatch: {}
+
+env:
+  APP_NAME: ccc-eu1-demo-ca-promotions
+  PROJECT_PATH: src/SourceSchemas/Promotions
+  SCHEMA_FILE: src/SourceSchemas/Promotions/schema.graphqls
+  SOURCE_SCHEMA_NAME: promotions-api
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Compute image tag
+        id: meta
+        run: |
+          TS=$(date -u +'%Y%m%dT%H%M%SZ')
+          SHORTSHA=${GITHUB_SHA::7}
+          VERSION=ccc-eu1-demo-ca-promotions-${SHORTSHA}
+          echo "tag=${TS}-${SHORTSHA}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    env:
+      DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-promotions:${{ needs.prepare.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push Docker image
+        working-directory: ${{ env.PROJECT_PATH }}
+        run: |
+          docker build -t "$DOCKER_IMAGE" .
+          docker push "$DOCKER_IMAGE"
+
+      - name: Export Source Schema
+        working-directory: ${{ env.PROJECT_PATH }}
+        run: |
+          npm ci
+          npm run export-schema
+
+      - name: Patch schema-settings.json with API ID
+        run: |
+          SETTINGS_FILE="$(dirname "$SCHEMA_FILE")/schema-settings.json"
+          jq --arg apiId "${{ vars.NITRO_PROMOTIONS_API_ID }}" \
+            '. * {extensions: {nitro: {apiId: $apiId}}}' \
+            "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+
+      - name: Upload Source Schema
+        uses: ChilliCream/nitro-fusion-upload@v16.5.0
+        with:
+          source-schema-files: ${{ env.SCHEMA_FILE }}
+          tag: ${{ needs.prepare.outputs.version }}
+          api-id: ${{ vars.NITRO_GATEWAY_API_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [prepare, build]
+    environment: ${{ vars.DEPLOY_ENVIRONMENT }}
+    concurrency:
+      group: deploy-ccc-eu1-demo-ca-promotions
+      cancel-in-progress: false
+    env:
+      DOCKER_IMAGE: ${{ secrets.ACR_LOGIN_SERVER }}/ccc-eu1-demo-ca-promotions:${{ needs.prepare.outputs.tag }}
+
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create or Update App Service
+        run: |
+          # Create the web app if it doesn't exist
+          if ! az webapp show --name $APP_NAME --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} &> /dev/null; then
+            echo "Creating new App Service: $APP_NAME"
+            az webapp create \
+              --name $APP_NAME \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --plan ${{ secrets.APP_SERVICE_PLAN }} \
+              --deployment-container-image-name "$DOCKER_IMAGE"
+          fi
+
+          # Configure container settings
+          az webapp config container set \
+            --name $APP_NAME \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --container-image-name "$DOCKER_IMAGE" \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }} \
+            --container-registry-user ${{ secrets.ACR_USERNAME }} \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+          # Configure app settings
+          az webapp config appsettings set \
+            --name $APP_NAME \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings \
+              WEBSITES_PORT=8080 \
+              PORT=8080 \
+              NODE_ENV=production \
+              DATABASE_URL="${{ secrets.PROMOTIONS_DATABASE_URL }}"
+
+          # Enable continuous deployment from ACR
+          az webapp deployment container config \
+            --name $APP_NAME \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --enable-cd true
+
+          # Restart the app to apply changes
+          az webapp restart \
+            --name $APP_NAME \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+
+      - name: Publish Gateway Schema
+        uses: ChilliCream/nitro-fusion-publish@v16.5.0
+        with:
+          source-schemas: ${{ env.SOURCE_SCHEMA_NAME }}
+          tag: ${{ needs.prepare.outputs.version }}
+          stage: ${{ vars.NITRO_STAGE }}
+          api-id: ${{ vars.NITRO_GATEWAY_API_ID }}
+          api-key: ${{ secrets.NITRO_API_KEY }}
+          cloud-url: ${{ secrets.NITRO_CLOUD_URL }}
