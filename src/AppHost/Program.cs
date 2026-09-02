@@ -95,7 +95,7 @@ var cartApi = builder
     .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 
-builder
+var gatewayApi = builder
     .AddProject<Projects.Demo_Gateway>("gateway-api")
     .WithNitroApiId("QXBpCmcwMTlkOTVlMmEwMTU3MDQwYWM1ZTdlODMxZWY0OTRmZQ==")
     .WithNitroComposition(
@@ -117,5 +117,22 @@ builder
     .WithReference(shippingApi)
     .WithReference(cartApi)
     .WithReference(promotionsApi);
+
+// The store frontend is a Vite + React SPA using yarn 1.x (yarn.lock). AddViteApp (from
+// Aspire.Hosting.JavaScript) wires the Aspire-assigned host/port into the Vite dev server for us
+// (it injects a PORT env var and passes --port from the resource's own http endpoint) and exposes
+// that http endpoint on the dashboard automatically. Env is sourced from resource references
+// rather than literals so the values always match whatever Aspire actually allocates - this is
+// what fixes the previous manual-dev-server quirk of having to hardcode
+// VITE_KEYCLOAK_URL=https://localhost:8080 to match Aspire's HTTPS proxy for Keycloak.
+builder
+    .AddViteApp("frontend", "../frontend")
+    .WithYarn()
+    .WithReference(gatewayApi)
+    .WithReference(keycloak)
+    .WithEnvironment("VITE_GRAPHQL_ENDPOINT", ReferenceExpression.Create($"{gatewayApi.GetEndpoint("http")}/graphql"))
+    .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
+    .WaitFor(gatewayApi)
+    .WaitFor(keycloak);
 
 builder.Build().Run();

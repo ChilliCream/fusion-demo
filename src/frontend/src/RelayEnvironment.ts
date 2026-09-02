@@ -13,7 +13,11 @@ const ENABLE_PERSISTED_OPERATIONS =
   String(import.meta.env.VITE_ENABLE_PERSISTED_OPERATIONS).toLowerCase() === "true";
 const TOKEN_KEY = 'auth_token';
 
-const fetchFn: FetchFunction = async (request, variables) => {
+// Exported so one-shot lookups (e.g. DeliveryEstimateCard) can hit the
+// network directly - reusing endpoint resolution and auth headers - without
+// going through `fetchQuery`/the Relay store, where a non-null field error
+// on a shared root-field storage key would clobber unrelated cached data.
+export const fetchFn: FetchFunction = async (request, variables) => {
   // Get token from localStorage
   const token = localStorage.getItem(TOKEN_KEY);
 
