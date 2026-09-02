@@ -5,7 +5,7 @@ import type { AuthProviderAddToCartMutation } from "./__generated__/AuthProvider
 import { RelayEnvironment } from "../RelayEnvironment";
 
 const KEYCLOAK_URL =
-  import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8080";
+  import.meta.env.VITE_KEYCLOAK_URL || "https://localhost:8080";
 const TOKEN_KEY = "auth_token";
 const USER_KEY = "auth_user";
 
@@ -110,7 +110,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(
+        err instanceof TypeError
+          ? `Unable to reach the sign-in server at ${KEYCLOAK_URL}. Ensure the demo stack is running.`
+          : err instanceof Error
+            ? err.message
+            : "Login failed",
+      );
       throw err;
     } finally {
       setLoading(false);
