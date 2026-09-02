@@ -29,7 +29,7 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
-# The SQL migrations are applied on startup when a database is configured
+# The SQL migrations are applied on startup
 COPY migrations ./migrations
 
 # Expose port 8080 (Container Apps standard)

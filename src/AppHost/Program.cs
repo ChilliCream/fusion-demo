@@ -71,13 +71,6 @@ var shippingApi = builder
     .AddProject<Projects.Demo_Shipping>("shipping-api")
     .WithGraphQLHttpEndpoint();
 
-// The promotions API is a TypeScript source schema (graphql-yoga + graphql-federation-subgraph).
-// WithGraphQLHttpEndpoint (the JavaScript overload from HotChocolate.Fusion.Aspire) lets the
-// app join the local schema composition: the schema is downloaded live from the app's
-// /graphql/schema.graphql endpoint and the gateway routes to the app's allocated endpoint,
-// just like the .NET source schemas. The database is
-// wired through the standard PG* variables that the node-postgres client reads natively,
-// avoiding ADO.NET connection string parsing in TypeScript.
 var postgresEndpoint = postgres.Resource.PrimaryEndpoint;
 var postgresUser = postgres.Resource.UserNameParameter is { } userName
     ? ReferenceExpression.Create($"{userName}")

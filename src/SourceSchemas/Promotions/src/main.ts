@@ -9,8 +9,7 @@ import {
 import { schema, type PromotionsContext } from "./schema.js";
 import { createPromotionStore } from "./store.js";
 
-// Mirrors ExportSchemaOnStartup of the .NET source schemas: keep the checked-in
-// schema.graphqls in sync with the executable schema outside of production.
+// Mirrors ExportSchemaOnStartup of the .NET source schemas.
 if (process.env.NODE_ENV !== "production") {
   writeFileSync(
     fileURLToPath(new URL("../schema.graphqls", import.meta.url)),
@@ -18,8 +17,6 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-// The store requires a configured PostgreSQL database (DATABASE_URL or the
-// standard PG* variables) and applies pending migrations before serving.
 const store = await createPromotionStore();
 
 const context: PromotionsContext = { store };

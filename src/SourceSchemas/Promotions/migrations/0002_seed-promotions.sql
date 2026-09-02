@@ -1,12 +1,9 @@
 -- Up Migration
 
--- The catalog seeded by the Products service is furniture (Table, Couch,
--- Chair, ..., ids 1-18), so the campaign copy speaks furniture-store, and the
--- descriptions stay category-agnostic because promotionForProduct assigns
--- promotions by hashing the product id — a description must fit whatever
--- product it happens to land on. With the current catalog (global ids like
--- "UHJvZHVjdDox"), ids 1-3 each cover at least one product and id 4 covers
--- none, which is why the NULL-description row sits first.
+-- The campaign copy targets the furniture catalog seeded by the Products
+-- service, but descriptions stay category-agnostic: promotionForProduct assigns
+-- promotions by hashing the product id, so a description must fit whatever
+-- product it lands on.
 INSERT INTO promotions (id, title, description, discount_percent)
 OVERRIDING SYSTEM VALUE
 VALUES

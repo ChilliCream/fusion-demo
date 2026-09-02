@@ -11,9 +11,8 @@ export interface CreatePromotionInput {
   discountPercent: number;
 }
 
-// Promotions are assigned by hashing the stable product id, so any product resolves
-// to the same promotion on every request without this service knowing the catalog.
-// Roughly half of the hash space maps to no promotion at all.
+// Hashing the stable product id assigns every product the same promotion on each
+// request; roughly half of the hash space maps to no promotion at all.
 export function promotionForProduct(
   productId: string,
   promotions: readonly Promotion[]

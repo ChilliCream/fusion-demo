@@ -15,9 +15,8 @@ export async function createPromotionStore(): Promise<PromotionStore> {
 
   const pool = new pg.Pool(config);
 
-  // An idle pooled connection that drops (e.g. a Postgres restart) emits
-  // 'error' on the pool; without a listener Node turns that into an uncaught
-  // exception and kills the process. The next query reconnects on its own.
+  // Without an 'error' listener, a dropped idle connection would crash the
+  // process; the next query reconnects on its own.
   pool.on("error", (error) => {
     console.error("Idle PostgreSQL client error", error);
   });
@@ -30,9 +29,8 @@ function databaseConfig(): pg.PoolConfig {
     return { connectionString: process.env.DATABASE_URL };
   }
 
-  // An empty config makes pg read the standard PGHOST/PGPORT/PGUSER/
-  // PGPASSWORD/PGDATABASE variables, which is how the Aspire AppHost wires
-  // the promotions database in.
+  // An empty config makes pg read the standard PG* variables, which is how
+  // the Aspire AppHost wires the promotions database in.
   if (process.env.PGHOST) {
     return {};
   }
@@ -66,8 +64,7 @@ class PgPromotionStore implements PromotionStore {
   async getPromotionById(id: string): Promise<Promotion | null> {
     const numericId = Number(id);
 
-    // Ids are integer primary keys; anything else cannot match and would
-    // make PostgreSQL fail the cast instead of returning an empty result.
+    // Non-integer ids cannot match and would fail the integer cast in PostgreSQL.
     if (!Number.isInteger(numericId) || numericId < 1 || numericId > MAX_INT32) {
       return null;
     }
