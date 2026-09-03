@@ -14,8 +14,6 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        // AppHost now wires Keycloak__Authority for cart-api the same way it does for
-        // gateway-api; this https fallback only matters when running outside Aspire.
         var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "https://localhost:8080";
         options.Authority = $"{keycloakUrl}/realms/fusion-demo";
         options.Audience = "graphql-api";
@@ -29,10 +27,6 @@ builder.Services
 
         if (builder.Environment.IsDevelopment())
         {
-            // Aspire's Keycloak resource is only reachable over its HTTPS dev-proxy, so
-            // the wired authority is https despite the "http" endpoint name above.
-            // Accept its self-signed local dev certificate when fetching the OIDC
-            // metadata over https (see task fusion-demo-yt-dmm.6 comment).
             options.BackchannelHttpHandler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback =
