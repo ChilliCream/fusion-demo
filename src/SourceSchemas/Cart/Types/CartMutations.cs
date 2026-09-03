@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Demo.Cart.Data;
+using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Cart.Types;
@@ -6,10 +8,12 @@ namespace Demo.Cart.Types;
 [MutationType]
 public static partial class CartMutations
 {
+    [Authorize]
     [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart> AddProductToCartAsync(
         [ID<Product>] int productId,
         int quantity,
+        ClaimsPrincipal claimsPrincipal,
         CartContext context,
         CancellationToken cancellationToken)
     {
@@ -18,17 +22,7 @@ public static partial class CartMutations
             throw new ProductAmountCannotBeLowerThanOneException(productId, quantity);
         }
 
-        var cart = await context.Carts.FirstOrDefaultAsync(cancellationToken);
-
-        if (cart is null)
-        {
-            cart = new Data.Cart
-            {
-                CreatedAt = DateTime.UtcNow
-            };
-            context.Carts.Add(cart);
-            await context.SaveChangesAsync(cancellationToken);
-        }
+        var cart = await context.GetOrCreateCartAsync(claimsPrincipal, cancellationToken);
 
         var existingCartItem = await context.CartItems.FirstOrDefaultAsync(
             item => item.CartId == cart.Id
@@ -55,10 +49,12 @@ public static partial class CartMutations
         return cart;
     }
 
+    [Authorize]
     [Error<ProductAmountCannotBeLowerThanOneException>]
     public static async Task<Data.Cart?> RemoveProductFromCartAsync(
         [ID<Product>] int productId,
         int quantity,
+        ClaimsPrincipal claimsPrincipal,
         CartContext context,
         CancellationToken cancellationToken)
     {
@@ -67,8 +63,7 @@ public static partial class CartMutations
             throw new ProductAmountCannotBeLowerThanOneException(productId, quantity);
         }
 
-        var cart = await context.Carts
-            .FirstOrDefaultAsync(cancellationToken);
+        var cart = await context.FindCartAsync(claimsPrincipal, cancellationToken);
 
         if (cart is null)
         {
@@ -94,11 +89,13 @@ public static partial class CartMutations
         return cart;
     }
 
+    [Authorize]
     public static async Task<Data.Cart?> CheckoutAsync(
+        ClaimsPrincipal claimsPrincipal,
         CartContext context,
         CancellationToken cancellationToken)
     {
-        var cart = await context.Carts.FirstOrDefaultAsync(cancellationToken);
+        var cart = await context.FindCartAsync(claimsPrincipal, cancellationToken);
 
         if (cart is null)
         {

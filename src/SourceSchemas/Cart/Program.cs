@@ -14,16 +14,29 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080";
+        // Aspire's local Keycloak resource is only reachable via its HTTPS dev-proxy
+        // (see AppHost's VITE_KEYCLOAK_URL comment), so the fallback must be https.
+        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "https://localhost:8080";
         options.Authority = $"{keycloakUrl}/realms/fusion-demo";
         options.Audience = "graphql-api";
-        options.RequireHttpsMetadata = false;
+        options.RequireHttpsMetadata = false; // For development only
         options.TokenValidationParameters = new()
         {
             ValidateAudience = false,
             ValidateIssuer = true,
             ValidateLifetime = true
         };
+
+        if (builder.Environment.IsDevelopment())
+        {
+            // Accept Aspire's self-signed local dev certificate when fetching
+            // Keycloak's OIDC metadata over https.
+            options.BackchannelHttpHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+        }
     });
 
 builder.Services.AddAuthorization();
