@@ -15,8 +15,8 @@ builder.Services
     .AddJwtBearer(options =>
     {
         // AppHost now wires Keycloak__Authority for cart-api the same way it does for
-        // gateway-api; this fallback only matters when running outside Aspire.
-        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080";
+        // gateway-api; this https fallback only matters when running outside Aspire.
+        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "https://localhost:8080";
         options.Authority = $"{keycloakUrl}/realms/fusion-demo";
         options.Audience = "graphql-api";
         options.RequireHttpsMetadata = false; // For development only
