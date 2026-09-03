@@ -4,13 +4,13 @@ import { Link } from "react-router";
 import type { CartLineItem_cartItem$key } from "./__generated__/CartLineItem_cartItem.graphql";
 import type { CartLineItemAddMutation } from "./__generated__/CartLineItemAddMutation.graphql";
 import type { CartLineItemRemoveMutation } from "./__generated__/CartLineItemRemoveMutation.graphql";
+import { lineTotal } from "./cartTotals";
 
 const CartLineItemFragment = graphql`
   fragment CartLineItem_cartItem on CartItem {
     id
     quantity
     unitPrice
-    lineTotal
     product {
       id
       name
@@ -314,7 +314,7 @@ export function CartLineItem({ item }: CartLineItemProps) {
 
         <div className="flex items-center gap-3">
           <span className="font-heading text-sm font-semibold text-cc-heading">
-            ${data.lineTotal.toFixed(2)}
+            ${lineTotal(data.unitPrice, data.quantity).toFixed(2)}
           </span>
           <button
             type="button"

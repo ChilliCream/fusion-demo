@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8325f3bd077639286c1a4234195e84bb>>
+ * @generated SignedSource<<eeab6eac74bd9658a9254904e92ba1f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CartLineItem_cartItem$data = {
   readonly id: string;
-  readonly lineTotal: number;
   readonly product: {
     readonly id: string;
     readonly name: string;
@@ -58,13 +57,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "unitPrice",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "lineTotal",
       "storageKey": null
     },
     {
@@ -118,6 +110,6 @@ return {
 };
 })();
 
-(node as any).hash = "66b9dc5d91e6166c2a5ba0869340c1a4";
+(node as any).hash = "c0d0fc49c3e289d8146e7668c850af29";
 
 export default node;

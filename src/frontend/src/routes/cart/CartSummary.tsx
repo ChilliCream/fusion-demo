@@ -23,7 +23,7 @@ const CheckoutMutation = graphql`
 `;
 
 interface CartSummaryProps {
-  /** Sum of every line's server-computed `lineTotal`. */
+  /** Sum of every line's `lineTotal(unitPrice, quantity)` (see cartTotals.ts). */
   subtotal: number;
   /** `round2(subtotal * promoCode.discountPercent / 100)` when an
    * unexpired promo code is applied, otherwise 0. */

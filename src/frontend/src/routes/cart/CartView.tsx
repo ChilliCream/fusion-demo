@@ -13,7 +13,7 @@ const CartViewFragment = graphql`
       nodes {
         id
         quantity
-        lineTotal
+        unitPrice
         product {
           price
           discountedPrice

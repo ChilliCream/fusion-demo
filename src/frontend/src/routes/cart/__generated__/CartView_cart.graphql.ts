@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1327173ebc7d0584a607eb151dc68927>>
+ * @generated SignedSource<<d7e60b8778a71d0d7a8fe238dbf4211a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type CartView_cart$data = {
   readonly items: {
     readonly nodes: ReadonlyArray<{
       readonly id: string;
-      readonly lineTotal: number;
       readonly product: {
         readonly discountedPrice: number;
         readonly price: number;
@@ -23,6 +22,7 @@ export type CartView_cart$data = {
         } | null | undefined;
       };
       readonly quantity: number;
+      readonly unitPrice: number;
       readonly " $fragmentSpreads": FragmentRefs<"CartLineItem_cartItem">;
     }> | null | undefined;
   } | null | undefined;
@@ -87,7 +87,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "lineTotal",
+              "name": "unitPrice",
               "storageKey": null
             },
             {
@@ -183,6 +183,6 @@ return {
 };
 })();
 
-(node as any).hash = "ed46cd2b2363557cd2caed0b5c3a696c";
+(node as any).hash = "6de3f0173408dd509c25962775f9869e";
 
 export default node;

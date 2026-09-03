@@ -1,8 +1,8 @@
 /**
  * Cart-level money arithmetic, summed in the frontend from the server-priced
- * lines (`CartItem.unitPrice` / `CartItem.lineTotal`) and the applied
- * `Cart.promoCode`. This is the one place the sum happens - reused by every
- * cart-money task in this map, never duplicated (fusion-demo-yt-ezu).
+ * lines (`CartItem.unitPrice`) and the applied `Cart.promoCode`. This is the
+ * one place the sum happens - reused by every cart-money task in this map,
+ * never duplicated (fusion-demo-yt-ezu).
  *
  * Cart-level totals live here instead of on the server because Fusion
  * 16.6.2 cannot aggregate a list across schemas (a requirement naming a
@@ -10,12 +10,21 @@
  * list-of-scalars requirement silently returns null) - see the ruling on
  * "Revise: where are cart totals computed" (fusion-demo-yt-sry.12). Only
  * per-item money is server-computed; this module derives everything above
- * that from `lineTotal` and `promoCode`.
+ * that from `unitPrice` and `promoCode`.
+ *
+ * `CartItem.lineTotal` itself is not selected anywhere under
+ * `src/frontend/src`: selecting it alongside `unitPrice` (both
+ * `@require(\"product.discountedPrice\")`-driven) next to a client `product`
+ * selection on `CartItem` crashes gateway planning (Fusion 16.6.2 planner
+ * bug, see the diagnostic comment on fusion-demo-yt-ezu.1). `lineTotal`
+ * below mirrors the server's own formula
+ * (`Math.Round(unitPrice * quantity, 2, AwayFromZero)` in `CartItemNode.cs`)
+ * so the derived total matches what the server would have reported.
  */
 
 export interface CartTotalsLineItem {
   quantity: number;
-  lineTotal: number;
+  unitPrice: number;
   product: {
     price: number;
     discountedPrice: number;
@@ -29,7 +38,7 @@ export interface CartTotalsPromoCode {
 }
 
 export interface CartTotals {
-  /** Sum of every line's `lineTotal`. */
+  /** Sum of every line's derived `lineTotal(unitPrice, quantity)`. */
   subtotal: number;
   /** `round2(subtotal * discountPercent / 100)` when an unexpired code is
    * applied, otherwise 0. */
@@ -53,6 +62,15 @@ export function round2(value: number): number {
   return (sign * Math.round(Math.abs(value) * 100)) / 100;
 }
 
+/**
+ * A line's total, derived client-side from `unitPrice * quantity` rather
+ * than selected from `CartItem.lineTotal` (see the module doc comment for
+ * why). Mirrors the server's own formula.
+ */
+export function lineTotal(unitPrice: number, quantity: number): number {
+  return round2(unitPrice * quantity);
+}
+
 /** Sums server-priced cart lines into subtotal/discount/total/savings. */
 export function computeCartTotals(
   items: readonly CartTotalsLineItem[],
@@ -62,7 +80,7 @@ export function computeCartTotals(
   let savings = 0;
 
   for (const item of items) {
-    subtotal += item.lineTotal;
+    subtotal += lineTotal(item.unitPrice, item.quantity);
     if (item.product.promotion) {
       savings +=
         (item.product.price - item.product.discountedPrice) * item.quantity;
