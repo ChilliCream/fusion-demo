@@ -131,11 +131,9 @@ const resolvers = {
         return args.price;
       }
 
-      return (
-        Math.round(
-          ((args.price * (100 - promotion.discountPercent)) / 100) * 100
-        ) / 100
-      );
+      const cents =
+        Math.round(args.price * 100) * (100 - promotion.discountPercent);
+      return Math.round(cents / 100) / 100;
     }
   }
 };
