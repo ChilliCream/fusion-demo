@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7e60b8778a71d0d7a8fe238dbf4211a>>
+ * @generated SignedSource<<86b01eaa0737f742e0206b71026b6ff5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,7 @@ export type CartView_cart$data = {
     readonly isExpired: boolean;
     readonly title: string;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"CartPromoCode_cart">;
   readonly " $fragmentType": "CartView_cart";
 };
 export type CartView_cart$key = {
@@ -176,6 +177,11 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CartPromoCode_cart"
     }
   ],
   "type": "Cart",
@@ -183,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "6de3f0173408dd509c25962775f9869e";
+(node as any).hash = "37abaddd049ad217fd5f9dd18ebeaede";
 
 export default node;

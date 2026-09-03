@@ -30,6 +30,7 @@ const CartViewFragment = graphql`
       discountPercent
       isExpired
     }
+    ...CartPromoCode_cart
   }
 `;
 
@@ -146,6 +147,8 @@ export function CartView({ cart }: CartViewProps) {
             discount={discount}
             total={total}
             savings={savings}
+            promoCode={data.promoCode ? { code: data.promoCode.code } : null}
+            cart={data}
             onCheckoutSuccess={() => setCheckedOut(true)}
           />
         </div>

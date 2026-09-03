@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa78f89b8faa3b9ac7b6f8a3c83de8ce>>
+ * @generated SignedSource<<a3063ed44e2b7f9df8bb6ab59cb81d68>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -243,12 +243,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "69128ef26f312de0393c762388d623bf",
+    "cacheID": "6dfc90e6e218e7589a4f7c1e1bd9c4b4",
     "id": null,
     "metadata": {},
     "name": "CartSummaryCheckoutMutation",
     "operationKind": "mutation",
-    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n"
+    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();

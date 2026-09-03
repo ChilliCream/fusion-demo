@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5acddcbca3a119c7df14491a5c665ce>>
+ * @generated SignedSource<<83e7a2d6ca3ed81b861f212cefb43572>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -236,12 +236,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3f34341d6a990d60c3c284c32fe4cc0e",
+    "cacheID": "8167044110484cdcba4f2620d83c7cd5",
     "id": null,
     "metadata": {},
     "name": "CartPageQuery",
     "operationKind": "query",
-    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n"
+    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();

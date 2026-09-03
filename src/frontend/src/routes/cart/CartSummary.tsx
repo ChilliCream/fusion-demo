@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import type { CartSummaryCheckoutMutation } from "./__generated__/CartSummaryCheckoutMutation.graphql";
+import type { CartPromoCode_cart$key } from "./__generated__/CartPromoCode_cart.graphql";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
+import { CartPromoCode } from "./CartPromoCode";
 
 // Re-spreads CartBadge_cart (header badge) and CartView_cart (this page's
 // own data) on the checkout payload's cart, same pattern as the line item's
@@ -32,16 +34,20 @@ interface CartSummaryProps {
   total: number;
   /** Total promo savings across all lines; 0 when nothing is discounted. */
   savings: number;
+  /** The applied promo code's `code`, used to label the Discount line
+   * ("Discount (SAVE10)"); `null` when no code is applied. */
+  promoCode: { code: string } | null;
+  /** Fragment key for the promo code row's own `Cart.id` + `promoCode`. */
+  cart: CartPromoCode_cart$key;
   /** Called once `Mutation.checkout` completes with no error. */
   onCheckoutSuccess: () => void;
 }
 
 /**
- * The sticky summary rail: subtotal (server line totals summed by
- * `cartTotals.ts`), a "You save" line shown only when `savings > 0`, a
- * "Discount" line shown only when `discount > 0` (the label gains the
- * applied code in a later task), the total, and the Checkout button with a
- * pending state.
+ * The sticky summary rail: the `CartPromoCode` row, subtotal (server line
+ * totals summed by `cartTotals.ts`), a "You save" line shown only when
+ * `savings > 0`, a "Discount (CODE)" line shown only when `discount > 0`,
+ * the total, and the Checkout button with a pending state.
  *
  * `Mutation.checkout` takes no input, and - unlike `AddProductToCartPayload`
  * / `RemoveProductFromCartPayload` - its payload (`CheckoutPayload`) has no
@@ -54,6 +60,8 @@ export function CartSummary({
   discount,
   total,
   savings,
+  promoCode,
+  cart,
   onCheckoutSuccess,
 }: CartSummaryProps) {
   const [commitCheckout] =
@@ -90,6 +98,8 @@ export function CartSummary({
         Summary
       </h2>
 
+      <CartPromoCode cart={cart} />
+
       <div className="flex items-center justify-between text-sm text-cc-ink-dim">
         <span>Subtotal</span>
         <span className="text-cc-heading">${subtotal.toFixed(2)}</span>
@@ -104,7 +114,7 @@ export function CartSummary({
 
       {discount > 0 && (
         <div className="flex items-center justify-between text-sm text-cc-success">
-          <span>Discount</span>
+          <span>Discount{promoCode ? ` (${promoCode.code})` : ""}</span>
           <span>-${discount.toFixed(2)}</span>
         </div>
       )}

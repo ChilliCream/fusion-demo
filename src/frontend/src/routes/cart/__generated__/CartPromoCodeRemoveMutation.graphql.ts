@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<166dadfd86bd92ffb7490013255b4d6e>>
+ * @generated SignedSource<<68cd71979718f95d68cd9409e0310769>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,15 +10,14 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AddProductToCartInput = {
-  productId: string;
-  quantity: number;
+export type RemovePromoCodeInput = {
+  cartId: string;
 };
-export type CartLineItemAddMutation$variables = {
-  input: AddProductToCartInput;
+export type CartPromoCodeRemoveMutation$variables = {
+  input: RemovePromoCodeInput;
 };
-export type CartLineItemAddMutation$data = {
-  readonly addProductToCart: {
+export type CartPromoCodeRemoveMutation$data = {
+  readonly removePromoCode: {
     readonly cart: {
       readonly id: string;
       readonly " $fragmentSpreads": FragmentRefs<"CartBadge_cart" | "CartView_cart">;
@@ -29,9 +28,9 @@ export type CartLineItemAddMutation$data = {
     }> | null | undefined;
   };
 };
-export type CartLineItemAddMutation = {
-  response: CartLineItemAddMutation$data;
-  variables: CartLineItemAddMutation$variables;
+export type CartPromoCodeRemoveMutation = {
+  response: CartPromoCodeRemoveMutation$data;
+  variables: CartPromoCodeRemoveMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -93,14 +92,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CartLineItemAddMutation",
+    "name": "CartPromoCodeRemoveMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "AddProductToCartPayload",
+        "concreteType": "RemovePromoCodePayload",
         "kind": "LinkedField",
-        "name": "addProductToCart",
+        "name": "removePromoCode",
         "plural": false,
         "selections": [
           {
@@ -137,14 +136,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "CartLineItemAddMutation",
+    "name": "CartPromoCodeRemoveMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "AddProductToCartPayload",
+        "concreteType": "RemovePromoCodePayload",
         "kind": "LinkedField",
-        "name": "addProductToCart",
+        "name": "removePromoCode",
         "plural": false,
         "selections": [
           {
@@ -301,16 +300,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4c72f174782ffc4d621f74030919cd74",
+    "cacheID": "ed40b738bbfbd2739aa97d376accf885",
     "id": null,
     "metadata": {},
-    "name": "CartLineItemAddMutation",
+    "name": "CartPromoCodeRemoveMutation",
     "operationKind": "mutation",
-    "text": "mutation CartLineItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
+    "text": "mutation CartPromoCodeRemoveMutation(\n  $input: RemovePromoCodeInput!\n) {\n  removePromoCode(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();
 
-(node as any).hash = "14cea50ef34e9ffe69af09077e84e129";
+(node as any).hash = "9d1389b2ed2a28db92730af23e8e21ba";
 
 export default node;
