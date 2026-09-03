@@ -1,6 +1,15 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError, Kind, type ValueNode } from "graphql";
 import { buildSubgraphSchema } from "graphql-federation-subgraph";
-import { promotionForProduct, type CreatePromotionInput, type Promotion } from "./data.js";
+import {
+  isPromoCodeExpired,
+  normalizePromoCode,
+  promotionForProduct,
+  PROMO_CODE_FORMAT,
+  type CreatePromoCodeInput,
+  type CreatePromotionInput,
+  type PromoCode,
+  type Promotion
+} from "./data.js";
 import type { PromotionStore } from "./store.js";
 
 export interface PromotionsContext {
@@ -18,11 +27,18 @@ const typeDefs = /* GraphQL */ `
     promotions: [Promotion!]! @cost(weight: "10")
     promotionById(id: ID!): Promotion @lookup @cost(weight: "10")
     productById(id: ID!): Product @lookup @internal
+    promoCodeById(id: ID!): PromoCode @lookup @internal
+    cartById(id: ID!): Cart @lookup @internal
   }
 
   type Mutation {
     "Creates a new promotion that products across the catalog can take part in."
     createPromotion(input: CreatePromotionInput!): CreatePromotionPayload! @cost(weight: "10")
+    createPromoCode(input: CreatePromoCodeInput!): CreatePromoCodePayload!
+    "Applies a promo code to a cart, replacing any code already applied."
+    applyPromoCode(input: ApplyPromoCodeInput!): ApplyPromoCodePayload!
+    "Removes the promo code currently applied to a cart, if any."
+    removePromoCode(input: RemovePromoCodeInput!): RemovePromoCodePayload!
   }
 
   input CreatePromotionInput {
@@ -53,6 +69,98 @@ const typeDefs = /* GraphQL */ `
     id: ID!
   }
 
+  scalar DateTime
+    @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+  input CreatePromoCodeInput {
+    code: String!
+    title: String!
+    discountPercent: Int!
+    expiresAt: DateTime
+  }
+
+  type CreatePromoCodePayload {
+    promoCode: PromoCode
+    errors: [CreatePromoCodeError!]
+  }
+
+  union CreatePromoCodeError =
+    | PromoCodeAlreadyExistsError
+    | InvalidDiscountPercentError
+    | InvalidPromoCodeFormatError
+
+  interface Error {
+    message: String!
+  }
+
+  type PromoCodeAlreadyExistsError implements Error {
+    message: String!
+    code: String!
+  }
+
+  type InvalidDiscountPercentError implements Error {
+    message: String!
+    discountPercent: Int!
+  }
+
+  type InvalidPromoCodeFormatError implements Error {
+    message: String!
+    code: String!
+  }
+
+  type PromoCode @key(fields: "id") {
+    id: ID!
+    code: String!
+    title: String!
+    discountPercent: Int!
+    expiresAt: DateTime
+    isExpired: Boolean!
+  }
+
+  type Cart @key(fields: "id") {
+    id: ID!
+    "The promo code currently applied to this cart, if any."
+    promoCode: PromoCode @cost(weight: "10")
+  }
+
+  input ApplyPromoCodeInput {
+    cartId: ID!
+    code: String!
+  }
+
+  type ApplyPromoCodePayload {
+    cart: Cart
+    errors: [ApplyPromoCodeError!]
+  }
+
+  union ApplyPromoCodeError = PromoCodeNotFoundError | PromoCodeExpiredError
+
+  type PromoCodeNotFoundError implements Error {
+    message: String!
+    code: String!
+  }
+
+  type PromoCodeExpiredError implements Error {
+    message: String!
+    code: String!
+    expiresAt: DateTime!
+  }
+
+  input RemovePromoCodeInput {
+    cartId: ID!
+  }
+
+  type RemovePromoCodePayload {
+    cart: Cart
+    errors: [RemovePromoCodeError!]
+  }
+
+  union RemovePromoCodeError = NoPromoCodeAppliedError
+
+  type NoPromoCodeAppliedError implements Error {
+    message: String!
+  }
+
   "The purpose of the \`cost\` directive is to define a \`weight\` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
   directive @cost(
     "The \`weight\` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
@@ -70,6 +178,55 @@ interface ProductRef {
   id: string;
 }
 
+interface CartRef {
+  id: string;
+}
+
+type CreatePromoCodeErrorResult =
+  | { __typename: "PromoCodeAlreadyExistsError"; message: string; code: string }
+  | { __typename: "InvalidDiscountPercentError"; message: string; discountPercent: number }
+  | { __typename: "InvalidPromoCodeFormatError"; message: string; code: string };
+
+interface CreatePromoCodeResult {
+  promoCode: PromoCode | null;
+  errors: CreatePromoCodeErrorResult[] | null;
+}
+
+interface ApplyPromoCodeInput {
+  cartId: string;
+  code: string;
+}
+
+type ApplyPromoCodeErrorResult =
+  | { __typename: "PromoCodeNotFoundError"; message: string; code: string }
+  | { __typename: "PromoCodeExpiredError"; message: string; code: string; expiresAt: string };
+
+interface ApplyPromoCodeResult {
+  cart: CartRef | null;
+  errors: ApplyPromoCodeErrorResult[] | null;
+}
+
+interface RemovePromoCodeInput {
+  cartId: string;
+}
+
+type RemovePromoCodeErrorResult = { __typename: "NoPromoCodeAppliedError"; message: string };
+
+interface RemovePromoCodeResult {
+  cart: CartRef | null;
+  errors: RemovePromoCodeErrorResult[] | null;
+}
+
+function toIsoDateTime(value: string): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new GraphQLError(`"${value}" is not a valid DateTime.`);
+  }
+
+  return date.toISOString();
+}
+
 const resolvers = {
   Query: {
     promotions: (
@@ -83,6 +240,14 @@ const resolvers = {
       context: PromotionsContext
     ): Promise<Promotion | null> => context.store.getPromotionById(args.id),
     productById: (_parent: unknown, args: { id: string }): ProductRef => ({
+      id: args.id
+    }),
+    promoCodeById: (
+      _parent: unknown,
+      args: { id: string },
+      context: PromotionsContext
+    ): Promise<PromoCode | null> => context.store.getPromoCodeById(args.id),
+    cartById: (_parent: unknown, args: { id: string }): CartRef => ({
       id: args.id
     })
   },
@@ -108,6 +273,167 @@ const resolvers = {
       }
 
       return { promotion: await context.store.createPromotion(args.input) };
+    },
+    createPromoCode: async (
+      _parent: unknown,
+      args: { input: CreatePromoCodeInput },
+      context: PromotionsContext
+    ): Promise<CreatePromoCodeResult> => {
+      const { title, discountPercent, expiresAt } = args.input;
+      const code = normalizePromoCode(args.input.code);
+
+      if (!PROMO_CODE_FORMAT.test(code)) {
+        return {
+          promoCode: null,
+          errors: [
+            {
+              __typename: "InvalidPromoCodeFormatError",
+              message: `"${code}" is not a valid promo code. Codes must be 3-32 characters of A-Z, 0-9, and -.`,
+              code
+            }
+          ]
+        };
+      }
+
+      if (discountPercent < 1 || discountPercent > 100) {
+        return {
+          promoCode: null,
+          errors: [
+            {
+              __typename: "InvalidDiscountPercentError",
+              message: "The discount percent must be between 1 and 100.",
+              discountPercent
+            }
+          ]
+        };
+      }
+
+      const existing = await context.store.getPromoCodeByCode(code);
+
+      if (existing !== null) {
+        return {
+          promoCode: null,
+          errors: [
+            {
+              __typename: "PromoCodeAlreadyExistsError",
+              message: `A promo code "${code}" already exists.`,
+              code
+            }
+          ]
+        };
+      }
+
+      const promoCode = await context.store.createPromoCode({
+        code,
+        title,
+        discountPercent,
+        expiresAt: expiresAt ?? null
+      });
+
+      return { promoCode, errors: null };
+    },
+    applyPromoCode: async (
+      _parent: unknown,
+      args: { input: ApplyPromoCodeInput },
+      context: PromotionsContext
+    ): Promise<ApplyPromoCodeResult> => {
+      const { cartId } = args.input;
+      const code = normalizePromoCode(args.input.code);
+
+      const promoCode = await context.store.getPromoCodeByCode(code);
+
+      if (promoCode === null) {
+        return {
+          cart: null,
+          errors: [
+            {
+              __typename: "PromoCodeNotFoundError",
+              message: `No promo code "${code}" was found.`,
+              code
+            }
+          ]
+        };
+      }
+
+      if (isPromoCodeExpired(promoCode.expiresAt)) {
+        return {
+          cart: null,
+          errors: [
+            {
+              __typename: "PromoCodeExpiredError",
+              message: `The promo code "${code}" has expired.`,
+              code,
+              // isPromoCodeExpired(promoCode.expiresAt) is only true when expiresAt is set.
+              expiresAt: promoCode.expiresAt as string
+            }
+          ]
+        };
+      }
+
+      await context.store.applyPromoCode(cartId, promoCode.id);
+
+      return { cart: { id: cartId }, errors: null };
+    },
+    removePromoCode: async (
+      _parent: unknown,
+      args: { input: RemovePromoCodeInput },
+      context: PromotionsContext
+    ): Promise<RemovePromoCodeResult> => {
+      const { cartId } = args.input;
+      const removed = await context.store.removePromoCode(cartId);
+
+      if (!removed) {
+        return {
+          cart: null,
+          errors: [
+            {
+              __typename: "NoPromoCodeAppliedError",
+              message: `No promo code is applied to cart "${cartId}".`
+            }
+          ]
+        };
+      }
+
+      return { cart: { id: cartId }, errors: null };
+    }
+  },
+  Cart: {
+    promoCode: (
+      parent: CartRef,
+      _args: unknown,
+      context: PromotionsContext
+    ): Promise<PromoCode | null> => context.store.getAppliedPromoCode(parent.id)
+  },
+  PromoCode: {
+    isExpired: (parent: PromoCode): boolean => isPromoCodeExpired(parent.expiresAt)
+  },
+  DateTime: {
+    serialize(value: unknown): string {
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+
+      if (typeof value === "string") {
+        return toIsoDateTime(value);
+      }
+
+      throw new GraphQLError(
+        `DateTime cannot represent a non-date value: ${String(value)}`
+      );
+    },
+    parseValue(value: unknown): string {
+      if (typeof value !== "string") {
+        throw new GraphQLError("DateTime must be a string.");
+      }
+
+      return toIsoDateTime(value);
+    },
+    parseLiteral(ast: ValueNode): string {
+      if (ast.kind !== Kind.STRING) {
+        throw new GraphQLError("DateTime must be a string.");
+      }
+
+      return toIsoDateTime(ast.value);
     }
   },
   Product: {
@@ -131,7 +457,9 @@ const resolvers = {
         return args.price;
       }
 
-      return Math.round(args.price * (100 - promotion.discountPercent)) / 100;
+      const cents =
+        Math.round(args.price * 100) * (100 - promotion.discountPercent);
+      return Math.round(cents / 100) / 100;
     }
   }
 };

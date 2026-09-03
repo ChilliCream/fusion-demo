@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<328b4b5ca0a3416a00f32566d03c495d>>
+ * @generated SignedSource<<166dadfd86bd92ffb7490013255b4d6e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -189,6 +189,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "unitPrice",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "Product",
                         "kind": "LinkedField",
                         "name": "product",
@@ -243,6 +250,46 @@ return {
                   }
                 ],
                 "storageKey": "items(first:50)"
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PromoCode",
+                "kind": "LinkedField",
+                "name": "promoCode",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "code",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "discountPercent",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isExpired",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -254,12 +301,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "66f0cc0f4a0213702b67064a656477f8",
+    "cacheID": "4c72f174782ffc4d621f74030919cd74",
     "id": null,
     "metadata": {},
     "name": "CartLineItemAddMutation",
     "operationKind": "mutation",
-    "text": "mutation CartLineItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "mutation CartLineItemAddMutation(\n  $input: AddProductToCartInput!\n) {\n  addProductToCart(input: $input) {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();

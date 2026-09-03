@@ -14,16 +14,25 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080";
+        var keycloakUrl = builder.Configuration["Keycloak:Authority"] ?? "https://localhost:8080";
         options.Authority = $"{keycloakUrl}/realms/fusion-demo";
         options.Audience = "graphql-api";
-        options.RequireHttpsMetadata = false;
+        options.RequireHttpsMetadata = false; // For development only
         options.TokenValidationParameters = new()
         {
             ValidateAudience = false,
             ValidateIssuer = true,
             ValidateLifetime = true
         };
+
+        if (builder.Environment.IsDevelopment())
+        {
+            options.BackchannelHttpHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+        }
     });
 
 builder.Services.AddAuthorization();

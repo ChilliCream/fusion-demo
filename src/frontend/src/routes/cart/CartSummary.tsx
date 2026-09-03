@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import type { CartSummaryCheckoutMutation } from "./__generated__/CartSummaryCheckoutMutation.graphql";
+import type { CartPromoCode_cart$key } from "./__generated__/CartPromoCode_cart.graphql";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
+import { CartPromoCode } from "./CartPromoCode";
 
 // Re-spreads CartBadge_cart (header badge) and CartView_cart (this page's
 // own data) on the checkout payload's cart, same pattern as the line item's
-// mutations, so both reflect the now-emptied cart if the visitor navigates
-// back to /cart later. Unlike the cart-edit mutations, `CheckoutPayload`
-// has no `errors` union in the schema (only `cart`) - see this component's
-// doc comment for how failure is surfaced instead.
+// mutations - but unlike those, `checkout` deletes the shopper's cart row
+// and returns a NEW Cart with a new id, so re-spreading alone doesn't help:
+// `viewer.cart` in the store still links to the old (now stale) record.
+// The `updater` below relinks `viewer.cart` to the payload's cart so
+// CartBadge/CartPage read the fresh, empty cart with no reload, and deletes
+// the old record so nothing can resolve it by accident. Selects the
+// payload's `errors` union, same pattern as CartPromoCode's mutations: a
+// non-empty list is a payload-level failure (`CartIsEmptyError`), never a
+// thrown error.
 const CheckoutMutation = graphql`
   mutation CartSummaryCheckoutMutation {
     checkout {
@@ -18,34 +25,70 @@ const CheckoutMutation = graphql`
         ...CartBadge_cart
         ...CartView_cart
       }
+      errors {
+        __typename
+        ... on Error {
+          message
+        }
+      }
     }
   }
 `;
 
+const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
+
+/** The receipt shown on the post-checkout panel: values read off the
+ * already-rendered summary at the moment Checkout is pressed, per the
+ * design ruling (fusion-demo-yt-sry.12) that `CheckoutPayload` carries no
+ * totals - the receipt repeats what the shopper last saw, not a
+ * server-confirmed figure. */
+export interface CheckoutReceipt {
+  /** The applied promo code's `code`, or `null` when none was applied. */
+  promoCode: { code: string } | null;
+  /** `0` when no code was applied. */
+  discount: number;
+  total: number;
+}
+
 interface CartSummaryProps {
-  /** Σ quantity × unit price (discountedPrice when the item has a promotion). */
+  /** Sum of every line's `lineTotal(unitPrice, quantity)` (see cartTotals.ts). */
   subtotal: number;
+  /** `round2(subtotal * promoCode.discountPercent / 100)` when an
+   * unexpired promo code is applied, otherwise 0. */
+  discount: number;
+  /** `subtotal - discount`. */
+  total: number;
   /** Total promo savings across all lines; 0 when nothing is discounted. */
   savings: number;
-  /** Called once `Mutation.checkout` completes with no error. */
-  onCheckoutSuccess: () => void;
+  /** The applied promo code's `code`, used to label the Discount line
+   * ("Discount (SAVE10)"); `null` when no code is applied. */
+  promoCode: { code: string } | null;
+  /** Fragment key for the promo code row's own `Cart.id` + `promoCode`. */
+  cart: CartPromoCode_cart$key;
+  /** Called once `Mutation.checkout` completes with no payload error, with
+   * the receipt captured from this render's own totals. */
+  onCheckoutSuccess: (receipt: CheckoutReceipt) => void;
 }
 
 /**
- * The sticky summary rail: subtotal (already promo-adjusted per line), a
- * "You save" line shown only when `savings > 0`, a total (same as subtotal -
- * no tax/shipping lines, per this task's non-goals), and the Checkout
- * button with a pending state.
+ * The sticky summary rail: the `CartPromoCode` row, subtotal (server line
+ * totals summed by `cartTotals.ts`), a "You save" line shown only when
+ * `savings > 0`, a "Discount (CODE)" line shown only when `discount > 0`,
+ * the total, and the Checkout button with a pending state.
  *
- * `Mutation.checkout` takes no input, and - unlike `AddProductToCartPayload`
- * / `RemoveProductFromCartPayload` - its payload (`CheckoutPayload`) has no
- * `errors` union in `src/frontend/src/schema.graphql`, only `cart`. So a
- * checkout failure can only surface here as a thrown GraphQL/network error,
- * handled via `onError`; there's no payload-level failure state to check.
+ * `Mutation.checkout` takes no input. Its payload (`CheckoutPayload`)
+ * carries `errors: [CheckoutError!]` (currently just `CartIsEmptyError`),
+ * checked the same way as `CartPromoCode`'s mutations: a non-empty list is
+ * shown inline here, never thrown. `onError` (transport/GraphQL failure)
+ * falls back to the same generic copy.
  */
 export function CartSummary({
   subtotal,
+  discount,
+  total,
   savings,
+  promoCode,
+  cart,
   onCheckoutSuccess,
 }: CartSummaryProps) {
   const [commitCheckout] =
@@ -59,19 +102,49 @@ export function CartSummary({
     }
     setIsCheckingOut(true);
     setError(null);
+    // Captured now, before the mutation commits: the receipt is the
+    // pre-checkout values this summary is already showing, not anything
+    // the payload returns (fusion-demo-yt-sry.12).
+    const receipt: CheckoutReceipt = { promoCode, discount, total };
     commitCheckout({
       variables: {},
-      onCompleted: (_response, errors) => {
-        setIsCheckingOut(false);
-        if (errors?.length) {
-          setError("Checkout failed. Please try again.");
+      updater: (store) => {
+        const payloadCart = store
+          .getRootField("checkout")
+          ?.getLinkedRecord("cart");
+        if (!payloadCart) {
+          // Payload-error path (e.g. CartIsEmptyError): no new cart to
+          // link, leave the store as-is.
           return;
         }
-        onCheckoutSuccess();
+        const viewer = store.getRoot().getLinkedRecord("viewer");
+        if (!viewer) {
+          return;
+        }
+        const oldCart = viewer.getLinkedRecord("cart");
+        viewer.setLinkedRecord(payloadCart, "cart");
+        // Drop the deleted-on-the-server cart record so nothing can resolve
+        // it from the store by accident (e.g. a stale reference elsewhere).
+        if (oldCart && oldCart.getDataID() !== payloadCart.getDataID()) {
+          store.delete(oldCart.getDataID());
+        }
+      },
+      onCompleted: (response, transportErrors) => {
+        setIsCheckingOut(false);
+        if (transportErrors?.length) {
+          setError(GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        const payloadErrors = response.checkout.errors ?? [];
+        if (payloadErrors.length > 0) {
+          setError(payloadErrors[0].message ?? GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        onCheckoutSuccess(receipt);
       },
       onError: () => {
         setIsCheckingOut(false);
-        setError("Checkout failed. Please try again.");
+        setError(GENERIC_ERROR_MESSAGE);
       },
     });
   }
@@ -81,6 +154,8 @@ export function CartSummary({
       <h2 className="font-heading text-h6 font-semibold text-cc-heading">
         Summary
       </h2>
+
+      <CartPromoCode cart={cart} />
 
       <div className="flex items-center justify-between text-sm text-cc-ink-dim">
         <span>Subtotal</span>
@@ -94,9 +169,16 @@ export function CartSummary({
         </div>
       )}
 
+      {discount > 0 && (
+        <div className="flex items-center justify-between text-sm text-cc-success">
+          <span>Discount{promoCode ? ` (${promoCode.code})` : ""}</span>
+          <span>-${discount.toFixed(2)}</span>
+        </div>
+      )}
+
       <div className="flex items-center justify-between border-t border-cc-card-border pt-4 font-heading text-base font-semibold text-cc-heading">
         <span>Total</span>
-        <span>${subtotal.toFixed(2)}</span>
+        <span>${total.toFixed(2)}</span>
       </div>
 
       {error && (
