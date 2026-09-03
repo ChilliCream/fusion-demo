@@ -5,7 +5,7 @@ import type { CartView_cart$key } from "./__generated__/CartView_cart.graphql";
 import { Card } from "../../components/ui/Card";
 import { computeCartTotals } from "./cartTotals";
 import { CartLineItem } from "./CartLineItem";
-import { CartSummary } from "./CartSummary";
+import { CartSummary, type CheckoutReceipt } from "./CartSummary";
 
 const CartViewFragment = graphql`
   fragment CartView_cart on Cart {
@@ -73,12 +73,27 @@ function CartEmptyPanel() {
   );
 }
 
-function CartOrderPlacedPanel() {
+/**
+ * The post-checkout takeover: "Order placed", the code and discount line
+ * when a code was applied, and the total charged - all from the
+ * `CheckoutReceipt` captured off the summary at the moment Checkout was
+ * pressed (see `CartSummary`'s doc comment for why the payload itself
+ * carries none of this).
+ */
+function CartOrderPlacedPanel({ receipt }: { receipt: CheckoutReceipt }) {
   return (
     <Card className="mx-auto max-w-md text-center">
       <CheckCircleIcon className="mx-auto mb-4 h-14 w-14 text-cc-success" />
-      <p className="mb-5 font-heading text-h6 font-semibold text-cc-heading">
+      <p className="mb-2 font-heading text-h6 font-semibold text-cc-heading">
         Order placed — thanks!
+      </p>
+      {receipt.promoCode && (
+        <p className="mb-1 text-sm text-cc-success">
+          Discount ({receipt.promoCode.code}) -${receipt.discount.toFixed(2)}
+        </p>
+      )}
+      <p className="mb-5 text-cc-ink">
+        Total charged: ${receipt.total.toFixed(2)}
       </p>
       <Link to="/" className={OUTLINE_LINK_CLASSES}>
         Continue shopping
@@ -108,15 +123,15 @@ interface CartViewProps {
  */
 export function CartView({ cart }: CartViewProps) {
   const data = useFragment(CartViewFragment, cart);
-  const [checkedOut, setCheckedOut] = useState(false);
+  const [receipt, setReceipt] = useState<CheckoutReceipt | null>(null);
 
   const items = (data.items?.nodes ?? []).filter(
     (node): node is NonNullable<typeof node> =>
       node !== null && node.quantity > 0,
   );
 
-  if (checkedOut) {
-    return <CartOrderPlacedPanel />;
+  if (receipt) {
+    return <CartOrderPlacedPanel receipt={receipt} />;
   }
 
   if (items.length === 0) {
@@ -149,7 +164,7 @@ export function CartView({ cart }: CartViewProps) {
             savings={savings}
             promoCode={data.promoCode ? { code: data.promoCode.code } : null}
             cart={data}
-            onCheckoutSuccess={() => setCheckedOut(true)}
+            onCheckoutSuccess={setReceipt}
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3063ed44e2b7f9df8bb6ab59cb81d68>>
+ * @generated SignedSource<<203cd5d1a446d2ebfc0cb69dc350b532>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,10 @@ export type CartSummaryCheckoutMutation$data = {
       readonly id: string;
       readonly " $fragmentSpreads": FragmentRefs<"CartBadge_cart" | "CartView_cart">;
     } | null | undefined;
+    readonly errors: ReadonlyArray<{
+      readonly __typename: string;
+      readonly message?: string;
+    }> | null | undefined;
   };
 };
 export type CartSummaryCheckoutMutation = {
@@ -30,6 +34,38 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "errors",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__typename",
+      "storageKey": null
+    },
+    {
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "message",
+          "storageKey": null
+        }
+      ],
+      "type": "Error",
+      "abstractKey": "__isError"
+    }
+  ],
   "storageKey": null
 };
 return {
@@ -68,7 +104,8 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
@@ -236,23 +273,24 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "6dfc90e6e218e7589a4f7c1e1bd9c4b4",
+    "cacheID": "b8f801ae045f70be451f9f7e1d3e0b27",
     "id": null,
     "metadata": {},
     "name": "CartSummaryCheckoutMutation",
     "operationKind": "mutation",
-    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
+    "text": "mutation CartSummaryCheckoutMutation {\n  checkout {\n    cart {\n      id\n      ...CartBadge_cart\n      ...CartView_cart\n    }\n    errors {\n      __typename\n      ... on Error {\n        __isError: __typename\n        message\n      }\n    }\n  }\n}\n\nfragment CartBadge_cart on Cart {\n  items(first: 50) {\n    nodes {\n      quantity\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();
 
-(node as any).hash = "00564eae557394390003e47e2221c4db";
+(node as any).hash = "450a69f09b6139807f23b1cec8f42daa";
 
 export default node;

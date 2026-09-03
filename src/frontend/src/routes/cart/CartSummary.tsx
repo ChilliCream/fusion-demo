@@ -9,9 +9,10 @@ import { CartPromoCode } from "./CartPromoCode";
 // Re-spreads CartBadge_cart (header badge) and CartView_cart (this page's
 // own data) on the checkout payload's cart, same pattern as the line item's
 // mutations, so both reflect the now-emptied cart if the visitor navigates
-// back to /cart later. Unlike the cart-edit mutations, `CheckoutPayload`
-// has no `errors` union in the schema (only `cart`) - see this component's
-// doc comment for how failure is surfaced instead.
+// back to /cart later (a fresh cart with a new id - checkout deletes the
+// old one). Selects the payload's `errors` union, same pattern as
+// CartPromoCode's mutations: a non-empty list is a payload-level failure
+// (`CartIsEmptyError`), never a thrown error.
 const CheckoutMutation = graphql`
   mutation CartSummaryCheckoutMutation {
     checkout {
@@ -20,9 +21,30 @@ const CheckoutMutation = graphql`
         ...CartBadge_cart
         ...CartView_cart
       }
+      errors {
+        __typename
+        ... on Error {
+          message
+        }
+      }
     }
   }
 `;
+
+const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
+
+/** The receipt shown on the post-checkout panel: values read off the
+ * already-rendered summary at the moment Checkout is pressed, per the
+ * design ruling (fusion-demo-yt-sry.12) that `CheckoutPayload` carries no
+ * totals - the receipt repeats what the shopper last saw, not a
+ * server-confirmed figure. */
+export interface CheckoutReceipt {
+  /** The applied promo code's `code`, or `null` when none was applied. */
+  promoCode: { code: string } | null;
+  /** `0` when no code was applied. */
+  discount: number;
+  total: number;
+}
 
 interface CartSummaryProps {
   /** Sum of every line's `lineTotal(unitPrice, quantity)` (see cartTotals.ts). */
@@ -39,8 +61,9 @@ interface CartSummaryProps {
   promoCode: { code: string } | null;
   /** Fragment key for the promo code row's own `Cart.id` + `promoCode`. */
   cart: CartPromoCode_cart$key;
-  /** Called once `Mutation.checkout` completes with no error. */
-  onCheckoutSuccess: () => void;
+  /** Called once `Mutation.checkout` completes with no payload error, with
+   * the receipt captured from this render's own totals. */
+  onCheckoutSuccess: (receipt: CheckoutReceipt) => void;
 }
 
 /**
@@ -49,11 +72,11 @@ interface CartSummaryProps {
  * `savings > 0`, a "Discount (CODE)" line shown only when `discount > 0`,
  * the total, and the Checkout button with a pending state.
  *
- * `Mutation.checkout` takes no input, and - unlike `AddProductToCartPayload`
- * / `RemoveProductFromCartPayload` - its payload (`CheckoutPayload`) has no
- * `errors` union in `src/frontend/src/schema.graphql`, only `cart`. So a
- * checkout failure can only surface here as a thrown GraphQL/network error,
- * handled via `onError`; there's no payload-level failure state to check.
+ * `Mutation.checkout` takes no input. Its payload (`CheckoutPayload`)
+ * carries `errors: [CheckoutError!]` (currently just `CartIsEmptyError`),
+ * checked the same way as `CartPromoCode`'s mutations: a non-empty list is
+ * shown inline here, never thrown. `onError` (transport/GraphQL failure)
+ * falls back to the same generic copy.
  */
 export function CartSummary({
   subtotal,
@@ -75,19 +98,28 @@ export function CartSummary({
     }
     setIsCheckingOut(true);
     setError(null);
+    // Captured now, before the mutation commits: the receipt is the
+    // pre-checkout values this summary is already showing, not anything
+    // the payload returns (fusion-demo-yt-sry.12).
+    const receipt: CheckoutReceipt = { promoCode, discount, total };
     commitCheckout({
       variables: {},
-      onCompleted: (_response, errors) => {
+      onCompleted: (response, transportErrors) => {
         setIsCheckingOut(false);
-        if (errors?.length) {
-          setError("Checkout failed. Please try again.");
+        if (transportErrors?.length) {
+          setError(GENERIC_ERROR_MESSAGE);
           return;
         }
-        onCheckoutSuccess();
+        const payloadErrors = response.checkout.errors ?? [];
+        if (payloadErrors.length > 0) {
+          setError(payloadErrors[0].message ?? GENERIC_ERROR_MESSAGE);
+          return;
+        }
+        onCheckoutSuccess(receipt);
       },
       onError: () => {
         setIsCheckingOut(false);
-        setError("Checkout failed. Please try again.");
+        setError(GENERIC_ERROR_MESSAGE);
       },
     });
   }
