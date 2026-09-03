@@ -14,6 +14,9 @@ export interface PromotionStore {
   getPromoCodeById(id: string): Promise<PromoCode | null>;
   getPromoCodeByCode(code: string): Promise<PromoCode | null>;
   createPromoCode(input: CreatePromoCodeInput): Promise<PromoCode>;
+  getAppliedPromoCode(cartId: string): Promise<PromoCode | null>;
+  applyPromoCode(cartId: string, promoCodeId: string): Promise<void>;
+  removePromoCode(cartId: string): Promise<boolean>;
 }
 
 export async function createPromotionStore(): Promise<PromotionStore> {
@@ -156,6 +159,39 @@ class PgPromotionStore implements PromotionStore {
     }
 
     return toPromoCode(row);
+  }
+
+  async getAppliedPromoCode(cartId: string): Promise<PromoCode | null> {
+    const result = await this.pool.query<PromoCodeRow>(
+      `SELECT pc.id, pc.code, pc.title, pc.discount_percent, pc.expires_at
+       FROM cart_promo_codes cpc
+       JOIN promo_codes pc ON pc.id = cpc.promo_code_id
+       WHERE cpc.cart_id = $1`,
+      [cartId]
+    );
+
+    const row = result.rows[0];
+
+    return row === undefined ? null : toPromoCode(row);
+  }
+
+  async applyPromoCode(cartId: string, promoCodeId: string): Promise<void> {
+    await this.pool.query(
+      `INSERT INTO cart_promo_codes (cart_id, promo_code_id)
+       VALUES ($1, $2)
+       ON CONFLICT (cart_id) DO UPDATE
+         SET promo_code_id = excluded.promo_code_id, applied_at = now()`,
+      [cartId, Number(promoCodeId)]
+    );
+  }
+
+  async removePromoCode(cartId: string): Promise<boolean> {
+    const result = await this.pool.query(
+      "DELETE FROM cart_promo_codes WHERE cart_id = $1",
+      [cartId]
+    );
+
+    return (result.rowCount ?? 0) > 0;
   }
 }
 
