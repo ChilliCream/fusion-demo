@@ -90,25 +90,27 @@ public static partial class CartMutations
     }
 
     [Authorize]
-    public static async Task<Data.Cart?> CheckoutAsync(
+    [Error<CartIsEmptyException>]
+    public static async Task<Data.Cart> CheckoutAsync(
         ClaimsPrincipal claimsPrincipal,
         CartContext context,
         CancellationToken cancellationToken)
     {
-        var cart = await context.FindCartAsync(claimsPrincipal, cancellationToken);
-
-        if (cart is null)
-        {
-            return null;
-        }
+        var cart = await context.GetOrCreateCartAsync(claimsPrincipal, cancellationToken);
 
         var cartItems = await context.CartItems
             .Where(i => i.CartId == cart.Id)
             .ToListAsync(cancellationToken);
 
+        if (cartItems.Count == 0)
+        {
+            throw new CartIsEmptyException();
+        }
+
         context.CartItems.RemoveRange(cartItems);
+        context.Carts.Remove(cart);
         await context.SaveChangesAsync(cancellationToken);
 
-        return cart;
+        return await context.GetOrCreateCartAsync(claimsPrincipal, cancellationToken);
     }
 }
