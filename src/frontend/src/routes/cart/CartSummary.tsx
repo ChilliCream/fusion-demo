@@ -8,11 +8,15 @@ import { CartPromoCode } from "./CartPromoCode";
 
 // Re-spreads CartBadge_cart (header badge) and CartView_cart (this page's
 // own data) on the checkout payload's cart, same pattern as the line item's
-// mutations, so both reflect the now-emptied cart if the visitor navigates
-// back to /cart later (a fresh cart with a new id - checkout deletes the
-// old one). Selects the payload's `errors` union, same pattern as
-// CartPromoCode's mutations: a non-empty list is a payload-level failure
-// (`CartIsEmptyError`), never a thrown error.
+// mutations - but unlike those, `checkout` deletes the shopper's cart row
+// and returns a NEW Cart with a new id, so re-spreading alone doesn't help:
+// `viewer.cart` in the store still links to the old (now stale) record.
+// The `updater` below relinks `viewer.cart` to the payload's cart so
+// CartBadge/CartPage read the fresh, empty cart with no reload, and deletes
+// the old record so nothing can resolve it by accident. Selects the
+// payload's `errors` union, same pattern as CartPromoCode's mutations: a
+// non-empty list is a payload-level failure (`CartIsEmptyError`), never a
+// thrown error.
 const CheckoutMutation = graphql`
   mutation CartSummaryCheckoutMutation {
     checkout {
@@ -104,6 +108,27 @@ export function CartSummary({
     const receipt: CheckoutReceipt = { promoCode, discount, total };
     commitCheckout({
       variables: {},
+      updater: (store) => {
+        const payloadCart = store
+          .getRootField("checkout")
+          ?.getLinkedRecord("cart");
+        if (!payloadCart) {
+          // Payload-error path (e.g. CartIsEmptyError): no new cart to
+          // link, leave the store as-is.
+          return;
+        }
+        const viewer = store.getRoot().getLinkedRecord("viewer");
+        if (!viewer) {
+          return;
+        }
+        const oldCart = viewer.getLinkedRecord("cart");
+        viewer.setLinkedRecord(payloadCart, "cart");
+        // Drop the deleted-on-the-server cart record so nothing can resolve
+        // it from the store by accident (e.g. a stale reference elsewhere).
+        if (oldCart && oldCart.getDataID() !== payloadCart.getDataID()) {
+          store.delete(oldCart.getDataID());
+        }
+      },
       onCompleted: (response, transportErrors) => {
         setIsCheckingOut(false);
         if (transportErrors?.length) {
