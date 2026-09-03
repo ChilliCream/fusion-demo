@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "relay": "relay-compiler --watch",
-    "relay:persist": "relay-compiler --repersist"
+    "relay:persist": "relay-compiler --repersist",
+    "schema:refresh": "node scripts/refresh-schema.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
