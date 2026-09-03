@@ -1,0 +1,103 @@
+scalar FieldSelectionMap
+
+scalar FieldSelectionSet
+
+directive @lookup on FIELD_DEFINITION
+
+directive @internal on OBJECT | FIELD_DEFINITION
+
+directive @require(field: FieldSelectionMap!) on ARGUMENT_DEFINITION
+
+directive @key(fields: FieldSelectionSet!) repeatable on OBJECT | INTERFACE
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+type Query {
+  "Fetches the currently running promotions."
+  promotions: [Promotion!]! @cost(weight: "10")
+  promotionById(id: ID!): Promotion @lookup @cost(weight: "10")
+  productById(id: ID!): Product @lookup @internal
+  promoCodeById(id: ID!): PromoCode @lookup @internal
+}
+
+type Mutation {
+  "Creates a new promotion that products across the catalog can take part in."
+  createPromotion(input: CreatePromotionInput!): CreatePromotionPayload! @cost(weight: "10")
+  createPromoCode(input: CreatePromoCodeInput!): CreatePromoCodePayload!
+}
+
+input CreatePromotionInput {
+  title: String!
+  description: String
+  "The discount in percent that the promotion takes off the list price."
+  discountPercent: Int!
+}
+
+type CreatePromotionPayload {
+  promotion: Promotion
+}
+
+"A discount campaign that products across the catalog take part in."
+type Promotion @key(fields: "id") {
+  id: ID!
+  title: String!
+  description: String
+  "The discount in percent that the promotion takes off the list price."
+  discountPercent: Int!
+}
+
+type Product @key(fields: "id") {
+  "The promotion this product currently takes part in, if any."
+  promotion: Promotion @cost(weight: "10")
+  "The list price after applying the discount of the current promotion."
+  discountedPrice(price: Float! @require(field: "price")): Float! @cost(weight: "10")
+  id: ID!
+}
+
+scalar DateTime
+
+input CreatePromoCodeInput {
+  code: String!
+  title: String!
+  discountPercent: Int!
+  expiresAt: DateTime
+}
+
+type CreatePromoCodePayload {
+  promoCode: PromoCode
+  errors: [CreatePromoCodeError!]
+}
+
+union CreatePromoCodeError = PromoCodeAlreadyExistsError | InvalidDiscountPercentError | InvalidPromoCodeFormatError
+
+interface Error {
+  message: String!
+}
+
+type PromoCodeAlreadyExistsError implements Error {
+  message: String!
+  code: String!
+}
+
+type InvalidDiscountPercentError implements Error {
+  message: String!
+  discountPercent: Int!
+}
+
+type InvalidPromoCodeFormatError implements Error {
+  message: String!
+  code: String!
+}
+
+type PromoCode @key(fields: "id") {
+  id: ID!
+  code: String!
+  title: String!
+  discountPercent: Int!
+  expiresAt: DateTime
+  isExpired: Boolean!
+}
