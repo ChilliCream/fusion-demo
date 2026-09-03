@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<282803162b7746613045da6c2a41b9c1>>
+ * @generated SignedSource<<1327173ebc7d0584a607eb151dc68927>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type CartView_cart$data = {
   readonly items: {
     readonly nodes: ReadonlyArray<{
       readonly id: string;
+      readonly lineTotal: number;
       readonly product: {
         readonly discountedPrice: number;
         readonly price: number;
@@ -24,6 +25,12 @@ export type CartView_cart$data = {
       readonly quantity: number;
       readonly " $fragmentSpreads": FragmentRefs<"CartLineItem_cartItem">;
     }> | null | undefined;
+  } | null | undefined;
+  readonly promoCode: {
+    readonly code: string;
+    readonly discountPercent: number;
+    readonly isExpired: boolean;
+    readonly title: string;
   } | null | undefined;
   readonly " $fragmentType": "CartView_cart";
 };
@@ -79,6 +86,13 @@ return {
             {
               "alias": null,
               "args": null,
+              "kind": "ScalarField",
+              "name": "lineTotal",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "concreteType": "Product",
               "kind": "LinkedField",
               "name": "product",
@@ -123,6 +137,45 @@ return {
         }
       ],
       "storageKey": "items(first:50)"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PromoCode",
+      "kind": "LinkedField",
+      "name": "promoCode",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "code",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "title",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "discountPercent",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isExpired",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Cart",
@@ -130,6 +183,6 @@ return {
 };
 })();
 
-(node as any).hash = "8de819c3291f755cf939898abfd83610";
+(node as any).hash = "ed46cd2b2363557cd2caed0b5c3a696c";
 
 export default node;

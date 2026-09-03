@@ -3,6 +3,7 @@ import { graphql, useFragment } from "react-relay";
 import { Link } from "react-router";
 import type { CartView_cart$key } from "./__generated__/CartView_cart.graphql";
 import { Card } from "../../components/ui/Card";
+import { computeCartTotals } from "./cartTotals";
 import { CartLineItem } from "./CartLineItem";
 import { CartSummary } from "./CartSummary";
 
@@ -12,6 +13,7 @@ const CartViewFragment = graphql`
       nodes {
         id
         quantity
+        lineTotal
         product {
           price
           discountedPrice
@@ -21,6 +23,12 @@ const CartViewFragment = graphql`
         }
         ...CartLineItem_cartItem
       }
+    }
+    promoCode {
+      code
+      title
+      discountPercent
+      isExpired
     }
   }
 `;
@@ -114,18 +122,10 @@ export function CartView({ cart }: CartViewProps) {
     return <CartEmptyPanel />;
   }
 
-  let subtotal = 0;
-  let savings = 0;
-  for (const item of items) {
-    const { product } = item;
-    const unitPrice = product.promotion
-      ? product.discountedPrice
-      : product.price;
-    subtotal += unitPrice * item.quantity;
-    if (product.promotion) {
-      savings += (product.price - product.discountedPrice) * item.quantity;
-    }
-  }
+  const { subtotal, discount, total, savings } = computeCartTotals(
+    items,
+    data.promoCode,
+  );
 
   return (
     <div>
@@ -143,6 +143,8 @@ export function CartView({ cart }: CartViewProps) {
         <div className="sticky top-24 max-[900px]:static">
           <CartSummary
             subtotal={subtotal}
+            discount={discount}
+            total={total}
             savings={savings}
             onCheckoutSuccess={() => setCheckedOut(true)}
           />

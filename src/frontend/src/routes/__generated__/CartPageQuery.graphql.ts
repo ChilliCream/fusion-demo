@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9168ac5293d021297923e1f24b59cc34>>
+ * @generated SignedSource<<1f9ef9cbe5914b96f411eb14c7ab4d07>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -124,6 +124,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "lineTotal",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "Product",
                         "kind": "LinkedField",
                         "name": "product",
@@ -172,12 +179,59 @@ return {
                           }
                         ],
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "unitPrice",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
                   }
                 ],
                 "storageKey": "items(first:50)"
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PromoCode",
+                "kind": "LinkedField",
+                "name": "promoCode",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "code",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "discountPercent",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isExpired",
+                    "storageKey": null
+                  },
+                  (v0/*: any*/)
+                ],
+                "storageKey": null
               },
               (v0/*: any*/)
             ],
@@ -189,12 +243,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "22065c66867c82b064d0bee41f31fb57",
+    "cacheID": "c2a0a069d6a0ce86686f503659a738ef",
     "id": null,
     "metadata": {},
     "name": "CartPageQuery",
     "operationKind": "query",
-    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  lineTotal\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      lineTotal\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n"
   }
 };
 })();

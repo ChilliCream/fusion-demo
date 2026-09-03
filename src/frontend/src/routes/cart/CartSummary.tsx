@@ -23,8 +23,13 @@ const CheckoutMutation = graphql`
 `;
 
 interface CartSummaryProps {
-  /** Σ quantity × unit price (discountedPrice when the item has a promotion). */
+  /** Sum of every line's server-computed `lineTotal`. */
   subtotal: number;
+  /** `round2(subtotal * promoCode.discountPercent / 100)` when an
+   * unexpired promo code is applied, otherwise 0. */
+  discount: number;
+  /** `subtotal - discount`. */
+  total: number;
   /** Total promo savings across all lines; 0 when nothing is discounted. */
   savings: number;
   /** Called once `Mutation.checkout` completes with no error. */
@@ -32,10 +37,11 @@ interface CartSummaryProps {
 }
 
 /**
- * The sticky summary rail: subtotal (already promo-adjusted per line), a
- * "You save" line shown only when `savings > 0`, a total (same as subtotal -
- * no tax/shipping lines, per this task's non-goals), and the Checkout
- * button with a pending state.
+ * The sticky summary rail: subtotal (server line totals summed by
+ * `cartTotals.ts`), a "You save" line shown only when `savings > 0`, a
+ * "Discount" line shown only when `discount > 0` (the label gains the
+ * applied code in a later task), the total, and the Checkout button with a
+ * pending state.
  *
  * `Mutation.checkout` takes no input, and - unlike `AddProductToCartPayload`
  * / `RemoveProductFromCartPayload` - its payload (`CheckoutPayload`) has no
@@ -45,6 +51,8 @@ interface CartSummaryProps {
  */
 export function CartSummary({
   subtotal,
+  discount,
+  total,
   savings,
   onCheckoutSuccess,
 }: CartSummaryProps) {
@@ -94,9 +102,16 @@ export function CartSummary({
         </div>
       )}
 
+      {discount > 0 && (
+        <div className="flex items-center justify-between text-sm text-cc-success">
+          <span>Discount</span>
+          <span>-${discount.toFixed(2)}</span>
+        </div>
+      )}
+
       <div className="flex items-center justify-between border-t border-cc-card-border pt-4 font-heading text-base font-semibold text-cc-heading">
         <span>Total</span>
-        <span>${subtotal.toFixed(2)}</span>
+        <span>${total.toFixed(2)}</span>
       </div>
 
       {error && (

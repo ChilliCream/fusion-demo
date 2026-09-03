@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f7c011ab219645c80f5bdec653999d4>>
+ * @generated SignedSource<<8325f3bd077639286c1a4234195e84bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CartLineItem_cartItem$data = {
   readonly id: string;
+  readonly lineTotal: number;
   readonly product: {
-    readonly discountedPrice: number;
     readonly id: string;
     readonly name: string;
     readonly pictureUrl: any | null | undefined;
@@ -23,6 +23,7 @@ export type CartLineItem_cartItem$data = {
     } | null | undefined;
   };
   readonly quantity: number;
+  readonly unitPrice: number;
   readonly " $fragmentType": "CartLineItem_cartItem";
 };
 export type CartLineItem_cartItem$key = {
@@ -50,6 +51,20 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "quantity",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "unitPrice",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "lineTotal",
       "storageKey": null
     },
     {
@@ -85,13 +100,6 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "discountedPrice",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "Promotion",
           "kind": "LinkedField",
           "name": "promotion",
@@ -110,6 +118,6 @@ return {
 };
 })();
 
-(node as any).hash = "260d1b864526ead2d373a8ac11745106";
+(node as any).hash = "66b9dc5d91e6166c2a5ba0869340c1a4";
 
 export default node;
