@@ -57,6 +57,7 @@ jobs:
             -p:ContainerRepository=ccc-eu1-demo-ca-load-generator \
             -p:ContainerImageTag=${{ needs.prepare.outputs.tag }} \
             -p:ContainerRegistry=${{ secrets.ACR_LOGIN_SERVER }} \
+            -p:ContainerPort=8080 \
             -p:RuntimeIdentifier=linux-x64
 
   deploy:
@@ -106,12 +107,20 @@ jobs:
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --settings \
               DOTNET_ENVIRONMENT=Production \
+              WEBSITES_PORT=8080 \
+              WEBSITE_WARMUP_PATH=/health \
               NITRO_API_ID=${{ vars.NITRO_LOAD_GENERATOR_API_ID }} \
               NITRO_API_KEY=${{ secrets.NITRO_API_KEY }} \
               NITRO_STAGE=${{ vars.NITRO_STAGE }} \
               NITRO_OTEL_URL=${{ secrets.NITRO_OTEL_URL }} \
               LoadGenerator__GraphQL__ClientId=${{ vars.NITRO_LOAD_GENERATOR_CLIENT_ID }} \
               LoadGenerator__GraphQL__ClientVersion=v3
+
+          # Keep the background workers running when the site is idle
+          az webapp config set \
+            --name ccc-eu1-demo-ca-load-generator \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --always-on true
 
           # Restart the app to apply changes
           az webapp restart \
