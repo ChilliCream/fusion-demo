@@ -4,7 +4,10 @@ on:
     branches: [main]
     paths:
       - "src/SourceSchemas/Promotions/**"
+      - "src/Defaults/**"
       - ".github/workflows/deploy-promotions.yml"
+      - ".github/workflows/deploy-source-schema.yml"
+      - "Directory.Packages.props"
   workflow_dispatch: {}
 
 env:
