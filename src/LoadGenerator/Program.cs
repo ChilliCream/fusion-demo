@@ -7,6 +7,7 @@ using OpenTelemetry.Trace;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Logging.AddOpenTelemetry(logging =>
 {
     logging.IncludeFormattedMessage = true;
@@ -67,6 +68,7 @@ builder.Services.AddHttpClient("OpenApi", (_, client) =>
     client.BaseAddress = new Uri(options.GatewayUrl.TrimEnd('/') + "/");
 });
 
+builder.Services.AddHostedService<HealthEndpointService>();
 builder.Services.AddHostedService<GraphQLWorker>();
 builder.Services.AddHostedService<McpToolWorker>();
 builder.Services.AddHostedService<McpPromptWorker>();
