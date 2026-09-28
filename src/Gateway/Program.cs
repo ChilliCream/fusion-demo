@@ -4,6 +4,8 @@ using HotChocolate.Fusion.Subscriptions.NATS;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 
+const string customSchemaName = "custom-schema";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults(Env.GatewayApi, Env.Version);
@@ -49,10 +51,10 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = null; // Allow anonymous by default
 });
 
-builder.Services.AddNitro().AddDefaults();
+builder.Services.AddNitro().AddFusion(customSchemaName);
 
 builder
-    .AddGraphQLGateway()
+    .AddGraphQLGateway(customSchemaName)
     .ModifyRequestOptions(
         o =>
         {
