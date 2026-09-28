@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<282803162b7746613045da6c2a41b9c1>>
+ * @generated SignedSource<<86b01eaa0737f742e0206b71026b6ff5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,9 +22,17 @@ export type CartView_cart$data = {
         } | null | undefined;
       };
       readonly quantity: number;
+      readonly unitPrice: number;
       readonly " $fragmentSpreads": FragmentRefs<"CartLineItem_cartItem">;
     }> | null | undefined;
   } | null | undefined;
+  readonly promoCode: {
+    readonly code: string;
+    readonly discountPercent: number;
+    readonly isExpired: boolean;
+    readonly title: string;
+  } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"CartPromoCode_cart">;
   readonly " $fragmentType": "CartView_cart";
 };
 export type CartView_cart$key = {
@@ -79,6 +87,13 @@ return {
             {
               "alias": null,
               "args": null,
+              "kind": "ScalarField",
+              "name": "unitPrice",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "concreteType": "Product",
               "kind": "LinkedField",
               "name": "product",
@@ -123,6 +138,50 @@ return {
         }
       ],
       "storageKey": "items(first:50)"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PromoCode",
+      "kind": "LinkedField",
+      "name": "promoCode",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "code",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "title",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "discountPercent",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isExpired",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CartPromoCode_cart"
     }
   ],
   "type": "Cart",
@@ -130,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "8de819c3291f755cf939898abfd83610";
+(node as any).hash = "37abaddd049ad217fd5f9dd18ebeaede";
 
 export default node;

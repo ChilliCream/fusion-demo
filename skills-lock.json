@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "skills": {
+    "graphql-schema-design": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/graphql-schema-design/SKILL.md",
+      "computedHash": "bda4068f2737ce382cea589bc0033617f8e8ce80609c41f359f0047ed3de832f"
+    },
+    "hotchocolate-best-practices": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/hotchocolate-best-practices/SKILL.md",
+      "computedHash": "75a26637821a2fabbc62983827bc31a517cf6878035e2d4ef588b03d7b916aba"
+    },
+    "hotchocolate-fix-bug": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/hotchocolate-fix-bug/SKILL.md",
+      "computedHash": "4f5c053cb7dfbcf3668291f9047bbd30c419e55e695934e1b38892cf77e24f4c"
+    },
+    "nitro-mail": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-mail/SKILL.md",
+      "computedHash": "2a257e6da39fe6a872f6da42c8b15b516a148e62724b9d9356d992cf391a5dd9"
+    },
+    "nitro-memory": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-memory/SKILL.md",
+      "computedHash": "b92d4265dba5f5fda17c289c0f2ae498e22cd10261967a2015e466df9ac0908c"
+    },
+    "nitro-research": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-research/SKILL.md",
+      "computedHash": "297685d2d2adada0270acb5fb3973697d561ab729920441880244b50acb411ba"
+    },
+    "nitro-task": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-task/SKILL.md",
+      "computedHash": "aa8dfe7e937911e134d216cfba67897899196f5ea69d14569a988066968a06c1"
+    },
+    "nitro-task-orchestrator": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-task-orchestrator/SKILL.md",
+      "computedHash": "5a68fd5cfdce682b876667a26c195c5fd2b4be4b28ada87cb0de7853d5e161bd"
+    },
+    "nitro-task-planner": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-task-planner/SKILL.md",
+      "computedHash": "5d4f4b71216d685783ef4248a536ea1c0fdae85651cf771297f016142fa317bf"
+    },
+    "nitro-wayfinder": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/nitro-wayfinder/SKILL.md",
+      "computedHash": "af87decc2493c8bee39cdb08e5659eaa9da3a454813df3859818902b234b618a"
+    },
+    "prototype-feature": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/prototype-feature/SKILL.md",
+      "computedHash": "72552dfca0d8fec6e6d8b1936b082fc165d82e769977d6358de15fb56c9e00a3"
+    },
+    "prototype-to-contract": {
+      "source": "ChilliCream/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/prototype-to-contract/SKILL.md",
+      "computedHash": "b53e65bce31bbe339fbfe8da564e1dd9b9550c184725dccbf7661f5498cd932b"
+    }
+  }
+}

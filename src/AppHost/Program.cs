@@ -92,6 +92,8 @@ var cartApi = builder
     .AddProject<Projects.Demo_Cart>("cart-api")
     .WithReference(cartDb)
     .WithEnvironment("ConnectionStrings__cart_db", cartDb.Resource.ConnectionStringExpression)
+    .WithReference(keycloak)
+    .WithEnvironment("Keycloak__Authority", keycloak.GetEndpoint("http"))
     .WithGraphQLHttpEndpoint()
     .WaitFor(postgres);
 

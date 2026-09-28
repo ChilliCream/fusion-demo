@@ -4,17 +4,18 @@ import { Link } from "react-router";
 import type { CartLineItem_cartItem$key } from "./__generated__/CartLineItem_cartItem.graphql";
 import type { CartLineItemAddMutation } from "./__generated__/CartLineItemAddMutation.graphql";
 import type { CartLineItemRemoveMutation } from "./__generated__/CartLineItemRemoveMutation.graphql";
+import { lineTotal } from "./cartTotals";
 
 const CartLineItemFragment = graphql`
   fragment CartLineItem_cartItem on CartItem {
     id
     quantity
+    unitPrice
     product {
       id
       name
       pictureUrl
       price
-      discountedPrice
       promotion {
         id
       }
@@ -231,11 +232,6 @@ export function CartLineItem({ item }: CartLineItemProps) {
     });
   }
 
-  const unitPrice = data.product.promotion
-    ? data.product.discountedPrice
-    : data.product.price;
-  const lineTotal = unitPrice * data.quantity;
-
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-cc-card-border bg-cc-card-bg p-4 backdrop-blur-sm sm:flex-row sm:items-center">
       <Link
@@ -266,7 +262,7 @@ export function CartLineItem({ item }: CartLineItemProps) {
           {data.product.promotion ? (
             <>
               <span className="font-semibold text-cc-heading">
-                ${data.product.discountedPrice.toFixed(2)}
+                ${data.unitPrice.toFixed(2)}
               </span>
               <span className="text-cc-ink-dim line-through">
                 ${data.product.price.toFixed(2)}
@@ -274,7 +270,7 @@ export function CartLineItem({ item }: CartLineItemProps) {
             </>
           ) : (
             <span className="font-semibold text-cc-heading">
-              ${data.product.price.toFixed(2)}
+              ${data.unitPrice.toFixed(2)}
             </span>
           )}
         </div>
@@ -318,7 +314,7 @@ export function CartLineItem({ item }: CartLineItemProps) {
 
         <div className="flex items-center gap-3">
           <span className="font-heading text-sm font-semibold text-cc-heading">
-            ${lineTotal.toFixed(2)}
+            ${lineTotal(data.unitPrice, data.quantity).toFixed(2)}
           </span>
           <button
             type="button"

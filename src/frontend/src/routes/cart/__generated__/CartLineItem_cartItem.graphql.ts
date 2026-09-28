@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f7c011ab219645c80f5bdec653999d4>>
+ * @generated SignedSource<<eeab6eac74bd9658a9254904e92ba1f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type CartLineItem_cartItem$data = {
   readonly id: string;
   readonly product: {
-    readonly discountedPrice: number;
     readonly id: string;
     readonly name: string;
     readonly pictureUrl: any | null | undefined;
@@ -23,6 +22,7 @@ export type CartLineItem_cartItem$data = {
     } | null | undefined;
   };
   readonly quantity: number;
+  readonly unitPrice: number;
   readonly " $fragmentType": "CartLineItem_cartItem";
 };
 export type CartLineItem_cartItem$key = {
@@ -50,6 +50,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "quantity",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "unitPrice",
       "storageKey": null
     },
     {
@@ -85,13 +92,6 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "discountedPrice",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "Promotion",
           "kind": "LinkedField",
           "name": "promotion",
@@ -110,6 +110,6 @@ return {
 };
 })();
 
-(node as any).hash = "260d1b864526ead2d373a8ac11745106";
+(node as any).hash = "c0d0fc49c3e289d8146e7668c850af29";
 
 export default node;

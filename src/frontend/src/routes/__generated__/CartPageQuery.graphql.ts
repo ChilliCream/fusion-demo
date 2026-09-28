@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9168ac5293d021297923e1f24b59cc34>>
+ * @generated SignedSource<<83e7a2d6ca3ed81b861f212cefb43572>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -124,6 +124,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "unitPrice",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "Product",
                         "kind": "LinkedField",
                         "name": "product",
@@ -179,6 +186,46 @@ return {
                 ],
                 "storageKey": "items(first:50)"
               },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PromoCode",
+                "kind": "LinkedField",
+                "name": "promoCode",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "code",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "discountPercent",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isExpired",
+                    "storageKey": null
+                  },
+                  (v0/*: any*/)
+                ],
+                "storageKey": null
+              },
               (v0/*: any*/)
             ],
             "storageKey": null
@@ -189,12 +236,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "22065c66867c82b064d0bee41f31fb57",
+    "cacheID": "8167044110484cdcba4f2620d83c7cd5",
     "id": null,
     "metadata": {},
     "name": "CartPageQuery",
     "operationKind": "query",
-    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  product {\n    id\n    name\n    pictureUrl\n    price\n    discountedPrice\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n}\n"
+    "text": "query CartPageQuery {\n  viewer {\n    cart {\n      ...CartView_cart\n      id\n    }\n  }\n}\n\nfragment CartLineItem_cartItem on CartItem {\n  id\n  quantity\n  unitPrice\n  product {\n    id\n    name\n    pictureUrl\n    price\n    promotion {\n      id\n    }\n  }\n}\n\nfragment CartPromoCode_cart on Cart {\n  id\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n}\n\nfragment CartView_cart on Cart {\n  items(first: 50) {\n    nodes {\n      id\n      quantity\n      unitPrice\n      product {\n        price\n        discountedPrice\n        promotion {\n          id\n        }\n        id\n      }\n      ...CartLineItem_cartItem\n    }\n  }\n  promoCode {\n    code\n    title\n    discountPercent\n    isExpired\n    id\n  }\n  ...CartPromoCode_cart\n}\n"
   }
 };
 })();
