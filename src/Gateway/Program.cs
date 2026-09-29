@@ -88,8 +88,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapGraphQL();
 app.MapGraphQLMcp();
-// TODO: This shouldn't be neccessary...
-app.MapOpenApiEndpoints(customSchemaName);
+app.MapOpenApiEndpoints();
 app.MapOpenApi();
 app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "eShop"));
 

@@ -43,7 +43,7 @@ jobs:
           npm run export-schema
 
       - name: Validate GraphQL schema
-        uses: ChilliCream/nitro-fusion-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-fusion-validate@v16.7.0-p.14
         with:
           source-schema-files: |
             src/SourceSchemas/Accounts/schema.graphqls
@@ -62,7 +62,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate Products MCP documents
-        uses: ChilliCream/nitro-mcp-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-mcp-validate@v16.7.0-p.14
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Products/Prompts/*/*.json
@@ -73,7 +73,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate Inventory MCP documents
-        uses: ChilliCream/nitro-mcp-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-mcp-validate@v16.7.0-p.14
         with:
           mcp-feature-collection-id: ${{ vars.NITRO_MCP_INVENTORY_FEATURE_COLLECTION_ID }}
           prompt-patterns: src/Gateway/Mcp/Inventory/Prompts/*/*.json
@@ -84,7 +84,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate Shared OpenAPI collection
-        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.14
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_SHARED_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Shared/*.graphql
@@ -94,7 +94,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate Inventory OpenAPI collection
-        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.14
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_INVENTORY_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Inventory/*.graphql
@@ -104,7 +104,7 @@ jobs:
           comment-mode: "review"
 
       - name: Validate Products OpenAPI collection
-        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-openapi-validate@v16.7.0-p.14
         with:
           openapi-collection-id: ${{ vars.NITRO_OPENAPI_COLLECTION_ID }}
           patterns: src/Gateway/OpenApi/Products/*.graphql
@@ -145,7 +145,7 @@ jobs:
           VITE_ENABLE_PERSISTED_OPERATIONS: "true"
 
       - name: Validate Client
-        uses: ChilliCream/nitro-client-validate@v16.7.0-p.10
+        uses: ChilliCream/nitro-client-validate@v16.7.0-p.14
         with:
           client-id: ${{ vars.NITRO_FRONTEND_CLIENT_ID }}
           operations-file: src/frontend/operations.json
