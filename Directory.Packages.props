@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <HotChocolateVersion>16.7.0-p.14</HotChocolateVersion>
+    <HotChocolateVersion>16.7.0-p.15</HotChocolateVersion>
     <NitroVersion>16.7.0-p.10</NitroVersion>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
