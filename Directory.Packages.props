@@ -2,11 +2,15 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <HotChocolateVersion>16.7.0-p.15</HotChocolateVersion>
+    <HotChocolateVersion>16.7.0-p.16</HotChocolateVersion>
     <NitroVersion>16.7.0-p.10</NitroVersion>
   </PropertyGroup>
   <ItemGroup Label="HotChocolate">
     <PackageVersion Include="HotChocolate" Version="$(HotChocolateVersion)" />
+    <!-- Keep HotChocolate dependencies pulled in by Nitro on the same preview. -->
+    <PackageVersion Include="HotChocolate.Adapters.Mcp" Version="$(HotChocolateVersion)" />
+    <PackageVersion Include="HotChocolate.Adapters.OpenApi" Version="$(HotChocolateVersion)" />
+    <PackageVersion Include="HotChocolate.Fusion.Diagnostics" Version="$(HotChocolateVersion)" />
     <PackageVersion Include="HotChocolate.AspNetCore" Version="$(HotChocolateVersion)" />
     <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="$(HotChocolateVersion)" />
     <PackageVersion Include="HotChocolate.AspNetCore.CommandLine" Version="$(HotChocolateVersion)" />
@@ -29,7 +33,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="ModelContextProtocol.Core" Version="1.3.0" />
+    <PackageVersion Include="ModelContextProtocol.Core" Version="1.4.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
   <ItemGroup Label="Nitro">
@@ -39,24 +43,24 @@
     <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="$(NitroVersion)" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.6" />
-    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.4.6-preview.1.26319.6" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.4.6" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.6" />
-    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.4.6" />
-    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
-    <PackageVersion Include="Aspire.NATS.Net" Version="13.4.6" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.6.0-preview.1.26479.8" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.0" />
+    <PackageVersion Include="Aspire.NATS.Net" Version="13.6.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.10.0" />
     <PackageVersion Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.8" />
   </ItemGroup>
   <ItemGroup Label="OpenTelemetry">
-    <PackageVersion Include="OpenTelemetry.Api" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Api" Version="1.17.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.15.3" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.17.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.17.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.1-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
@@ -64,8 +68,8 @@
   <ItemGroup Label="Other">
     <!-- Pin transitive Microsoft.OpenApi to a patched version (GHSA-v5pm-xwqc-g5wc, fixed in 2.7.5). -->
     <PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.12" />
     <PackageVersion Include="SharpYaml" Version="3.7.1" />
   </ItemGroup>
 </Project>
