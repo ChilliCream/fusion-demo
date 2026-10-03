@@ -55,6 +55,8 @@ builder.Services.AddNitro().AddFusion(customSchemaName);
 
 builder
     .AddGraphQLGateway(customSchemaName)
+    // A 50-item cart with product/promotion selections exceeds the default field cost limit of 1000.
+    .ModifyCostOptions(o => o.MaxFieldCost = 2000)
     .ModifyRequestOptions(
         o =>
         {
