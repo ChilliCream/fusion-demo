@@ -18,6 +18,7 @@
     "relay-runtime": "20.1.1"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.28.4",
     "@eslint/js": "^9.39.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.10.0",
@@ -38,5 +39,15 @@
     "vite": "^7.2.2",
     "vite-plugin-relay": "2.1.0"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "onFail": "error",
+      "version": ">=11.18.0"
+    }
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "fsevents": false
+  }
 }

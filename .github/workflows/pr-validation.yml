@@ -31,7 +31,7 @@ jobs:
             dotnet run --project "src/SourceSchemas/$project" --no-build -c Release -- schema export
           done
 
-      - name: Set up Node.js 22
+      - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -130,17 +130,17 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: yarn
-          cache-dependency-path: src/frontend/yarn.lock
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
       - name: Persist Relay operations
-        run: yarn relay:persist
+        run: npm run relay:persist
         env:
           VITE_ENABLE_PERSISTED_OPERATIONS: "true"
 
