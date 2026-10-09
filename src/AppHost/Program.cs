@@ -118,7 +118,7 @@ var gatewayApi = builder
     .WithReference(cartApi)
     .WithReference(promotionsApi);
 
-// The store frontend is a Vite + React SPA using yarn 1.x (yarn.lock). AddViteApp (from
+// The store frontend is a Vite + React SPA using npm (package-lock.json). AddViteApp (from
 // Aspire.Hosting.JavaScript) wires the Aspire-assigned host/port into the Vite dev server for us
 // (it injects a PORT env var and passes --port from the resource's own http endpoint) and exposes
 // that http endpoint on the dashboard automatically. Env is sourced from resource references
@@ -127,7 +127,7 @@ var gatewayApi = builder
 // VITE_KEYCLOAK_URL=https://localhost:8080 to match Aspire's HTTPS proxy for Keycloak.
 builder
     .AddViteApp("frontend", "../frontend")
-    .WithYarn()
+    .WithNpm()
     .WithReference(gatewayApi)
     .WithReference(keycloak)
     .WithEnvironment("VITE_GRAPHQL_ENDPOINT", ReferenceExpression.Create($"{gatewayApi.GetEndpoint("http")}/graphql"))

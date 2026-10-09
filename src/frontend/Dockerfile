@@ -1,13 +1,13 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
-COPY package.json yarn.lock ./
+COPY .npmrc package.json package-lock.json ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy source files
 COPY . .
@@ -26,11 +26,11 @@ ARG VITE_ENABLE_PERSISTED_OPERATIONS
 ENV VITE_ENABLE_PERSISTED_OPERATIONS=$VITE_ENABLE_PERSISTED_OPERATIONS
 
 RUN if [ "$VITE_ENABLE_PERSISTED_OPERATIONS" = "true" ]; then \
-  yarn relay:persist; \
+  npm run relay:persist; \
   fi
 
 # Build the application
-RUN yarn build
+RUN npm run build
 
 # Persisted operations export stage
 FROM scratch AS operations
