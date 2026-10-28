@@ -43,14 +43,14 @@
     <PackageVersion Include="ChilliCream.Nitro.OpenTelemetry" Version="$(NitroVersion)" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.6.0-preview.1.26479.8" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.0" />
-    <PackageVersion Include="Aspire.NATS.Net" Version="13.6.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="13.6.4-preview.1.26523.11" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.6.4" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.4" />
+    <PackageVersion Include="Aspire.NATS.Net" Version="13.6.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.10.0" />
